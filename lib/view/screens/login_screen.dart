@@ -1,7 +1,7 @@
+import 'package:doctor_visit/controller/login_controller/login_controller.dart';
 import 'package:doctor_visit/theme/colors/appcolors.dart';
 import 'package:doctor_visit/view/bottom_nav_screen/bottom_nav_screen.dart';
-import 'package:doctor_visit/view/widgets/common_text_field.dart';
-import 'package:doctor_visit/view/widgets/common_title_text.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,9 +11,12 @@ class LoginScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final loginController = ref.read(loginProvider.notifier);
+    final loginState = ref.watch(loginProvider);
+
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
-        statusBarColor: AppColors.appPrimaryRed, // 🔴 your red
+        statusBarColor: AppColors.appPrimaryRed, //  your red
         statusBarIconBrightness: Brightness.light, // icons = white
         statusBarBrightness: Brightness.dark, // for iOS
       ),
@@ -48,35 +51,57 @@ class LoginScreen extends ConsumerWidget {
                         //   hint: "Pin",
                         //   icon: Icons.pin,
                         // ),
-                        PinCodeField(),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.red,
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 10,
-                              horizontal: 20,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                          onPressed: () {
-                            // submit logic
-                            Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => BottomNavScreen(),
+                        PinCodeField(pinController: loginState.pincontroller),
+                        SizedBox(
+                          height: 50,
+                          width: 150,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.red,
+                              // padding: const EdgeInsets.symmetric(
+                              //   vertical: 10,
+                              //   horizontal: 20,
+                              // ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
                               ),
-                              (route) => false,
-                            );
-                          },
-                          child: const Text(
-                            "Login",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
                             ),
+                            onPressed: () {
+                              // submit logic
+                              loginController.loginApiCalling(
+                                pin: loginState.pincontroller.text,
+                                context: context,
+                              );
+
+                              // Navigator.pushAndRemoveUntil(
+                              //   context,
+                              //   MaterialPageRoute(
+                              //     builder: (context) => BottomNavScreen(),
+                              //   ),
+                              //   (route) => false,
+                              // );
+                            },
+                            child: loginState.isLoading
+                                ? Center(
+                                    child: SizedBox(
+                                      height: 20,
+                                      width: 20,
+                                      child: CircularProgressIndicator(
+                                        color: AppColors.appWhite,
+                                        strokeWidth: 3,
+                                      ),
+                                    ),
+                                  )
+                                : Center(
+                                    child: Text(
+                                      "Login",
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
                           ),
                         ),
                       ],
@@ -94,7 +119,8 @@ class LoginScreen extends ConsumerWidget {
 
 //otp
 class PinCodeField extends StatefulWidget {
-  const PinCodeField({super.key});
+  final TextEditingController pinController;
+  const PinCodeField({super.key, required this.pinController});
 
   @override
   State<PinCodeField> createState() => _PinCodeFieldState();
@@ -119,6 +145,10 @@ class _PinCodeFieldState extends State<PinCodeField> {
     }
 
     super.dispose();
+  }
+
+  void updateMainPin() {
+    widget.pinController.text = controllers.map((e) => e.text).join();
   }
 
   Widget buildPinBox(int index) {
@@ -146,6 +176,7 @@ class _PinCodeFieldState extends State<PinCodeField> {
         ),
 
         onChanged: (value) {
+          updateMainPin();
           if (value.isNotEmpty && index < 3) {
             FocusScope.of(context).requestFocus(focusNodes[index + 1]);
           }
