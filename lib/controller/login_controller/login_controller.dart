@@ -62,11 +62,13 @@ class LoginController extends StateNotifier<LoginState> {
         );
 
         log(result.toString());
-        // Navigator.pushAndRemoveUntil(
-        //   context,
-        //   MaterialPageRoute(builder: (context) => BottomNavScreen()),
-        //   (route) => false,
-        // );
+        if (response.message == 'Login successful.') {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => BottomNavScreen()),
+            (route) => false,
+          );
+        }
       }
       log("controller response $response");
     } catch (e) {
