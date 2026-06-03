@@ -1,42 +1,42 @@
-import 'dart:convert';
 import 'dart:developer';
 
-import 'package:crypto/crypto.dart';
 import 'package:doctor_visit/apis/login/login_api_service.dart';
 import 'package:doctor_visit/controller/login_controller/login_state.dart';
 import 'package:doctor_visit/core/api_errors/api_errors.dart';
+import 'package:doctor_visit/core/constants/app_constants.dart';
 import 'package:doctor_visit/model/login/login_response_model.dart';
 import 'package:doctor_visit/view/bottom_nav_screen/bottom_nav_screen.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginController extends StateNotifier<LoginState> {
   LoginController() : super(LoginState(pincontroller: TextEditingController()));
 
-  int decryptValue({required String encryptedText, required String secretKey}) {
+  void decryptValue({
+    required String encryptedUsername,
+    required String secretKey,
+    required String encryptedEmployeeID,
+  }) {
     try {
-      // MD5-derived 16-byte key
-      final keyBytes = md5.convert(utf8.encode(secretKey)).bytes;
-
-      final key = encrypt.Key(Uint8List.fromList(keyBytes));
-
-      final iv = encrypt.IV.fromLength(16);
+      final key = encrypt.Key.fromUtf8(secretKey);
 
       final encrypter = encrypt.Encrypter(
-        encrypt.AES(key, mode: encrypt.AESMode.cbc),
+        encrypt.AES(key, mode: encrypt.AESMode.ecb, padding: 'PKCS7'),
       );
 
-      final decrypted = encrypter.decrypt64(encryptedText, iv: iv);
+      final decryptedName = encrypter.decrypt64(encryptedUsername);
+      final decryptedEmployeeID = encrypter.decrypt64(encryptedEmployeeID);
 
-      log("Decrypted : $decrypted");
+      log("Decrypted username: $decryptedName");
+      log("Decrypted employeeId: $decryptedEmployeeID");
 
-      return int.parse(decrypted);
+      AppConstants.userName = decryptedName;
+      AppConstants.employeeID = decryptedEmployeeID;
     } catch (e) {
-      log("Decrypt error : $e");
-      return 0;
+      log("Decrypt error: $e");
     }
   }
 
@@ -56,13 +56,15 @@ class LoginController extends StateNotifier<LoginState> {
         AppMessage.show(context, "Invalid pin.");
         return;
       } else {
-        final result = decryptValue(
-          encryptedText: response.empid ?? '',
+        decryptValue(
+          encryptedUsername: response.username ?? '',
+          encryptedEmployeeID: response.empid ?? '',
           secretKey: "sblw-3hn8-sqoy19",
         );
 
-        log(result.toString());
-        if (response.message == 'Login successful.') {
+        if (response.success == true) {
+          AppConstants.yearID = response.yrId.toString();
+          mstKeyAndDetKeyChecking();
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => BottomNavScreen()),
@@ -78,6 +80,23 @@ class LoginController extends StateNotifier<LoginState> {
     } finally {
       state = state.copyWith(isLoading: false);
     }
+  }
+
+  //mstKey checking
+  Future<void> mstKeyAndDetKeyChecking() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? mstKey = prefs.getString('mst_key');
+    final String? detKey = prefs.getString('det_key');
+
+    if (mstKey != null && mstKey.isNotEmpty) {
+      AppConstants.mstKey = mstKey;
+    }
+    if (detKey != null && detKey.isNotEmpty) {
+      AppConstants.detKey = detKey;
+    }
+
+    log('Stored mstkey : $mstKey');
+    log('Stored detKey : $detKey');
   }
 }
 

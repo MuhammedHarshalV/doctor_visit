@@ -1,34 +1,29 @@
-import 'package:doctor_visit/model/doctor_model.dart';
+import 'package:doctor_visit/model/doctos_assign_get/doctors_assign_response_model.dart';
+import 'package:doctor_visit/model/work_completion_and_start_duty/work_completion_and_start_duty_response_model.dart';
 
 class HomeScreenState {
-  final int doctorCount;
+  final List<DrList> doctorsListAPI;
+  final Data? workRetatedData;
+  final bool isLoading;
   final bool isOn;
-  final bool isGoing;
-  final bool isStartGoing;
-  final List<DoctorModel> doctorsList;
-
   HomeScreenState({
-    required this.doctorCount,
+    this.doctorsListAPI = const [],
+    this.workRetatedData,
+    this.isLoading = false,
     this.isOn = false,
-    this.isGoing = false,
-    this.doctorsList = const [],
-    this.isStartGoing = false,
   });
 
   HomeScreenState copyWith({
-    int? doctorCount,
+    List<DrList>? doctorsListAPI,
+    bool? isLoading,
     bool? isOn,
-    bool? isGoing,
-    List<DoctorModel>? doctorsList,
-    bool? isStartGoing,
+    Data? workRetatedData,
   }) {
     return HomeScreenState(
-      doctorCount: doctorCount ?? this.doctorCount,
+      doctorsListAPI: doctorsListAPI ?? this.doctorsListAPI,
       isOn: isOn ?? this.isOn,
-      isGoing: isGoing ?? this.isGoing,
-      isStartGoing: isStartGoing ?? this.isStartGoing,
-
-      doctorsList: doctorsList ?? this.doctorsList,
+      isLoading: isLoading ?? this.isLoading,
+      workRetatedData: workRetatedData ?? this.workRetatedData,
     );
   }
 }

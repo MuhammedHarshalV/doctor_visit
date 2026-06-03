@@ -1,3 +1,4 @@
+import 'package:doctor_visit/controller/profile_details_controller/profile_details_controller.dart';
 import 'package:doctor_visit/theme/colors/appcolors.dart';
 import 'package:doctor_visit/view/screens/profile_screen.dart';
 import 'package:doctor_visit/view/widgets/switch_botton.dart';
@@ -14,7 +15,7 @@ class CommonAppBar extends ConsumerWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // You can access providers here if needed
-    // final user = ref.watch(userProvider);
+    final profilestate = ref.watch(profileDetailsProvider);
 
     return AppBar(
       backgroundColor: AppColors.appPrimaryRed,
@@ -61,11 +62,16 @@ class CommonAppBar extends ConsumerWidget implements PreferredSizeWidget {
             hoverColor: Colors.transparent,
             focusColor: Colors.transparent,
 
-            onTap: () {
+            onTap: () async {
+              if (profilestate.profileDetails.isEmpty) {
+       await         ref
+                    .read(profileDetailsProvider.notifier)
+                    .getProProfileDetails();
+              }
               PersistentNavBarNavigator.pushNewScreen(
                 context,
                 screen: const ProfileScreen(),
-                withNavBar: false, // 🔥 THIS HIDES BOTTOM NAV
+                withNavBar: false, //  THIS HIDES BOTTOM NAV
                 pageTransitionAnimation: PageTransitionAnimation.cupertino,
               );
             },

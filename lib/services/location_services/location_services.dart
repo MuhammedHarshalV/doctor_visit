@@ -3,11 +3,11 @@ import 'package:geolocator/geolocator.dart';
 
 Future<Position> getCurrentLocation() async {
   // Step 1: Check if location service is enabled
-  final bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-  if (!serviceEnabled) {
-    throw 'Location services are disabled. Please enable GPS.';
-    
-  }
+  // final bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+  // if (!serviceEnabled) {
+  //   throw 'Location services are disabled. Please enable GPS.';
+
+  // }
 
   // Step 2: Check permission status
   LocationPermission permission = await Geolocator.checkPermission();

@@ -1,18 +1,36 @@
 import 'dart:developer';
 
+import 'package:doctor_visit/apis/expenses/progress_percentage_api.dart';
 import 'package:doctor_visit/controller/expense_controller/expense_state.dart';
 import 'package:doctor_visit/controller/doctor_visit_controller/doctor_visit_state.dart';
 import 'package:doctor_visit/model/day_expense_model.dart';
+import 'package:doctor_visit/model/progress_percentage/progress_percentage_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
 
 class ExpenseController extends StateNotifier<ExpenseState> {
-  ExpenseController() : super(ExpenseState(totalExpense: 0, category: 1)) {
+  ExpenseController() : super(ExpenseState()) {
     iniatialCall();
   }
+  @override
+  void dispose() {
+    log("ExpenseController disposed");
+    super.dispose();
+  }
+
   Future<void> iniatialCall() async {
-    await checkDatabaseStatus();
+    //  await checkDatabaseStatus();
+    await getProgressPercentage();
+  }
+
+  //progress_api
+  Future<void> getProgressPercentage() async {
+    final ProgressPercentageResponseModel response =
+        await GetProgressPercentage.getProgressPercentage();
+    state = state.copyWith(progressPeercentage: [response]);
+
+    log('response from controller: ${response.toString()}');
   }
 
   //  Open Box ──

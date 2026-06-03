@@ -44,43 +44,49 @@ class ProgressScreen extends ConsumerWidget {
                     style: TextStyle(color: Colors.grey),
                   ),
                   const SizedBox(height: 16),
-                  buildMainProgressCard(),
-                  const SizedBox(height: 20),
-                  Row(
-                    children: [
-                      buildStatCard(
-                        "Completed",
-                        "2",
-                        Icons.done_all,
-                        Colors.green,
-                        Colors.green.shade50,
-                      ),
-                      const SizedBox(width: 12),
-                      buildStatCard(
-                        "Upcoming",
-                        "4",
-                        Icons.access_time,
-                        Colors.orange,
-                        Colors.orange.shade50,
-                      ),
-                      const SizedBox(width: 12),
-                      buildStatCard(
-                        "Total",
-                        "6",
-                        Icons.group,
-                        Colors.redAccent,
-                        Colors.red.shade50,
-                      ),
-                    ],
+                  buildMainProgressCard(
+                    percentage: progressState.progressPeercentage.isEmpty
+                        ? '0'
+                        : progressState.progressPeercentage.first.percentage
+                              .toString(),
                   ),
+                  const SizedBox(height: 20),
+                  // Row(
+                  //   children: [
+                  //     buildStatCard(
+                  //       "Completed",
+                  //       progressState.progressPeercentage.first.compltCount
+                  //           .toString(),
+                  //       Icons.done_all,
+                  //       Colors.green,
+                  //       Colors.green.shade50,
+                  //     ),
+                  //     const SizedBox(width: 12),
+                  //     buildStatCard(
+                  //       "Upcoming",
+                  //       "4",
+                  //       Icons.access_time,
+                  //       Colors.orange,
+                  //       Colors.orange.shade50,
+                  //     ),
+                  //     const SizedBox(width: 12),
+                  //     buildStatCard(
+                  //       "Total",
+                  //       "6",
+                  //       Icons.group,
+                  //       Colors.redAccent,
+                  //       Colors.red.shade50,
+                  //     ),
+                  //   ],
+                  // ),
 
-                  const SizedBox(height: 32),
-                  TotalSpentCard(),
-                  const SizedBox(height: 16),
-                  ExpenseFormCard(),
-                  const SizedBox(height: 16),
-                  ExpenseHistoryCard(),
-                  SizedBox(height: 70),
+                  // const SizedBox(height: 32),
+                  // TotalSpentCard(),
+                  // const SizedBox(height: 16),
+                  // ExpenseFormCard(),
+                  // const SizedBox(height: 16),
+                  // ExpenseHistoryCard(),
+                  // SizedBox(height: 70),
                 ],
               ),
             ),
@@ -160,7 +166,7 @@ Widget buildStatCard(
   );
 }
 
-Widget buildMainProgressCard() {
+Widget buildMainProgressCard({required String percentage}) {
   return Container(
     width: double.infinity,
     padding: const EdgeInsets.all(24),
@@ -177,8 +183,8 @@ Widget buildMainProgressCard() {
     ),
     child: Column(
       children: [
-        const Text(
-          "33%",
+        Text(
+          "$percentage %",
           style: TextStyle(
             fontSize: 48,
             fontWeight: FontWeight.bold,
@@ -193,7 +199,7 @@ Widget buildMainProgressCard() {
         ClipRRect(
           borderRadius: BorderRadius.circular(10),
           child: LinearProgressIndicator(
-            value: 0.33,
+            value: .17,
             minHeight: 10,
             backgroundColor: Colors.white.withOpacity(0.2),
             valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),

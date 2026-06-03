@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:doctor_visit/controller/home_screen_controller/home_screen_controller.dart';
 import 'package:doctor_visit/theme/colors/appcolors.dart';
+import 'package:doctor_visit/view/screens/home_screen/widget/alert_dialog.dart';
 
 import 'package:doctor_visit/view/screens/visit_completion_screen.dart';
 
@@ -13,21 +14,25 @@ import 'package:url_launcher/url_launcher.dart';
 class DoctorCard extends ConsumerWidget {
   final int indexGet;
   final String name;
-  final String specialty;
+  final String address;
   final String phone;
-  final String time;
+  final String location;
+  final bool isDone;
   final String initial;
-  final String isDone;
+  final bool isSelected;
 
   const DoctorCard({
     super.key,
+    this.isSelected = false,
     required this.name,
-    required this.specialty,
+    required this.address,
     required this.phone,
-    required this.time,
+
     required this.initial,
-    required this.isDone,
+
     required this.indexGet,
+    required this.isDone,
+    required this.location,
   });
 
   @override
@@ -41,74 +46,65 @@ class DoctorCard extends ConsumerWidget {
       hoverColor: Colors.transparent,
       focusColor: Colors.transparent,
       onTap: () {
-        final newList = homeState.doctorsList.reversed.toList();
-        homeState.isOn
-            ? PersistentNavBarNavigator.pushNewScreen(
-                context,
-                screen: VisitCompletionScreen(index: indexGet),
-                withNavBar: false, // 🔥 THIS HIDES BOTTOM NAV
-                pageTransitionAnimation: PageTransitionAnimation.cupertino,
-              )
-            : showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    backgroundColor: AppColors.appWhite,
-                    content: SingleChildScrollView(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            "You are currently offline.Start your duty to view and manage visits.",
-                          ),
-                        ],
-                      ),
-                    ),
-                    actions: [
-                      SizedBox(
-                        width: double.infinity,
-                        child: TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop(); // close dialog
-                          },
-                          style: TextButton.styleFrom(
-                            backgroundColor: AppColors.appPrimaryRed,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                          ),
-                          child: Text(
-                            "Ok",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
-                },
+        if (homeState.isOn &&
+            homeState.doctorsListAPI[indexGet].drIsGoing == false) {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return CommonAlertDialog(
+                message: "You are already completed this task",
               );
+            },
+          );
+        }
+        if (homeState.isOn &&
+            (homeState.doctorsListAPI[indexGet].drIsGoing == true ||
+                homeState.doctorsListAPI[indexGet].drIsGoing == null)) {
+          PersistentNavBarNavigator.pushNewScreen(
+            context,
+            screen: VisitCompletionScreen(index: indexGet),
+            withNavBar: false, // 🔥 THIS HIDES BOTTOM NAV
+            pageTransitionAnimation: PageTransitionAnimation.cupertino,
+          );
+        }
+
+        if (homeState.isOn == false) {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return CommonAlertDialog(
+                message:
+                    "You are currently offline.Start your duty to view and manage visits.",
+              );
+            },
+          );
+        }
       },
       child: Container(
         //margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
         decoration: BoxDecoration(
-          color: AppColors.appWhite,
+          color: isSelected == true
+              ? const Color.fromARGB(255, 251, 157, 151)
+              : AppColors.appWhite,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             width: 1,
-            color: AppColors.appGrey.withOpacity(.20),
+            color: isDone == false
+                ? Colors.orange.withOpacity(.20)
+                : Colors.green.withOpacity(.20),
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.04),
+              color: isDone == false
+                  ? Colors.orange.withOpacity(0.2)
+                  : Colors.green.withOpacity(0.2),
               blurRadius: 3,
               offset: const Offset(0, 2),
             ),
             BoxShadow(
-              color: Colors.black.withOpacity(0.08),
+              color: isDone == false
+                  ? Colors.orange.withOpacity(0.2)
+                  : Colors.green.withOpacity(0.2),
               // blurRadius: 16,
               offset: const Offset(0, 4),
             ),
@@ -145,10 +141,7 @@ class DoctorCard extends ConsumerWidget {
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    Text(
-                      specialty,
-                      style: TextStyle(color: Colors.orange[700]),
-                    ),
+                    Text(address, style: TextStyle(color: Colors.orange[700])),
                     const SizedBox(height: 4),
                     Row(
                       children: [
@@ -159,14 +152,6 @@ class DoctorCard extends ConsumerWidget {
                         ),
                         const SizedBox(width: 4),
                         Text(phone, style: const TextStyle(fontSize: 12)),
-                        const SizedBox(width: 5),
-                        const Icon(
-                          Icons.access_time,
-                          size: 14,
-                          color: Colors.grey,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(time, style: const TextStyle(fontSize: 12)),
                       ],
                     ),
 
@@ -179,21 +164,14 @@ class DoctorCard extends ConsumerWidget {
                             vertical: 2,
                           ),
                           decoration: BoxDecoration(
-                            color: isDone == 'Done'
-                                ? Colors.green[50]
-                                : isDone == 'Postponed'
-                                ? Colors.cyan
-                                : Colors.orange[50],
+                            color: isDone ? Colors.green : Colors.orange,
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
-                            isDone,
+                            isDone ? 'Completed' : 'Upcomming',
                             style: TextStyle(
-                              color: isDone == 'Done'
-                                  ? Colors.green
-                                  : isDone == 'Postponed'
-                                  ? Colors.white
-                                  : Colors.orange,
+                              color: AppColors.appWhite,
+
                               fontSize: 10,
                               fontWeight: FontWeight.bold,
                             ),
@@ -205,23 +183,102 @@ class DoctorCard extends ConsumerWidget {
                 ),
               ),
               //Spacer(),
-              Container(
-                decoration: const BoxDecoration(
-                  color: Color(0xFFE53935),
-                  shape: BoxShape.circle,
-                ),
-                child: IconButton(
-                  icon: const Icon(Icons.call, color: Colors.white, size: 20),
-                  onPressed: () async {
-                    final Uri url = Uri(scheme: 'tel', path: '+91$phone');
+              Column(
+                spacing: 10,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      color: location.isNotEmpty
+                          ? AppColors.appBlue
+                          : const Color.fromARGB(255, 168, 212, 247),
 
-                    if (await canLaunchUrl(url)) {
-                      await launchUrl(url); // opens dialer safely
-                    } else {
-                      log('Could not launch dialer');
-                    }
-                  },
-                ),
+                      // border: Border.all(
+                      //   width: 2,
+                      //   color: AppColors.appPrimaryRed,
+                      // ),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.near_me_outlined,
+                        color: AppColors.appWhite,
+                        size: 20,
+                      ),
+                      onPressed: location.isEmpty
+                          ? () {
+                              showDialog(
+                                context: context,
+                                builder: (context) => CommonAlertDialog(
+                                  message:
+                                      "No location information is available for this doctor.",
+                                ),
+                              );
+                            }
+                          : () async {
+                              final Uri url = Uri.parse(
+                                'google.navigation:q=$location',
+                              );
+
+                              if (await canLaunchUrl(url)) {
+                                await launchUrl(
+                                  url,
+                                  mode: LaunchMode.externalApplication,
+                                );
+                              } else {
+                                final Uri fallback = Uri.parse(
+                                  'https://www.google.com/maps/dir/?api=1&destination=$location',
+                                );
+
+                                await launchUrl(
+                                  fallback,
+                                  mode: LaunchMode.externalApplication,
+                                );
+                              }
+                            },
+                    ),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: phone.isNotEmpty
+                          ? AppColors.appPrimaryRed
+                          : const Color.fromARGB(255, 245, 170, 165),
+                      // border: Border.all(
+                      //   width: 2,
+                      //   color: AppColors.appPrimaryRed,
+                      // ),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.phone_in_talk_outlined,
+                        color: AppColors.appWhite,
+                        size: 20,
+                      ),
+                      onPressed: phone.isEmpty
+                          ? () {
+                              showDialog(
+                                context: context,
+                                builder: (context) => CommonAlertDialog(
+                                  message:
+                                      "This doctor's phone number is currently unavailable.",
+                                ),
+                              );
+                            }
+                          : () async {
+                              final Uri url = Uri(
+                                scheme: 'tel',
+                                path: '+91$phone',
+                              );
+
+                              if (await canLaunchUrl(url)) {
+                                await launchUrl(url); // opens dialer safely
+                              } else {
+                                log('Could not launch dialer');
+                              }
+                            },
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

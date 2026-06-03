@@ -1,3 +1,8 @@
+import 'dart:convert';
+import 'dart:developer';
+import 'dart:io';
+
+import 'package:doctor_visit/controller/profile_details_controller/profile_details_controller.dart';
 import 'package:doctor_visit/theme/colors/appcolors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,6 +13,8 @@ class ProfileScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final profileState = ref.watch(profileDetailsProvider);
+
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
         statusBarColor: AppColors.appPrimaryRed,
@@ -87,7 +94,7 @@ class ProfileScreen extends ConsumerWidget {
                             radius: 40,
                             backgroundColor: Colors.white,
                             child: Text(
-                              "A",
+                              profileState.profileDetails.first.name![0],
                               style: TextStyle(
                                 fontSize: 32,
                                 fontWeight: FontWeight.bold,
@@ -96,16 +103,23 @@ class ProfileScreen extends ConsumerWidget {
                             ),
                           ),
                           const SizedBox(height: 10),
-                          const Text(
-                            "Arun Kurian",
+                          Text(
+                            profileState.profileDetails.first.name ?? '',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          const Text(
-                            "Sample Collector - Palarivattom",
+                          Text(
+                            profileState
+                                        .profileDetails
+                                        .first
+                                        .email
+                                        ?.isNotEmpty ==
+                                    true
+                                ? profileState.profileDetails.first.email!
+                                : 'example@gmail.com',
                             style: TextStyle(
                               color: Colors.white70,
                               fontSize: 14,
@@ -127,37 +141,40 @@ class ProfileScreen extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(height: 16),
+
                       Text(
-                        'FIRST NAME',
+                        'DETAILS',
                         style: TextStyle(
                           color: Colors.grey,
                           fontWeight: FontWeight.bold,
                           fontSize: 12,
                         ),
                       ),
-                      buildSettingsItem(Icons.sync, "Arun"),
-                      Text(
-                        'LAST NAME',
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12,
-                        ),
+                      buildSettingsItem(
+                        Icons.receipt_long,
+                        profileState.profileDetails.first.name ?? '',
                       ),
-                      buildSettingsItem(Icons.receipt_long, "Kurian"),
 
                       buildSettingsItem(
                         Icons.mail_outline_outlined,
-                        "arun_kurian@gmail.com",
+                        profileState.profileDetails.first.email?.isNotEmpty ==
+                                true
+                            ? profileState.profileDetails.first.email!
+                            : 'Email address not available.',
                       ),
-                      buildSettingsItem(Icons.phone, "+91 7847839487"),
+                      buildSettingsItem(
+                        Icons.phone,
+                        profileState.profileDetails.first.mobile?.isNotEmpty ==
+                                true
+                            ? profileState.profileDetails.first.mobile!
+                            : 'Mobile Number not available.',
+                      ),
                       buildSettingsItem(
                         Icons.home_outlined,
-                        "Kakkanad,Ernakulam PIN:-682030",
-                      ),
-                      buildSettingsItem(
-                        Icons.location_city_outlined,
-                        "Palarivattom",
+                        profileState.profileDetails.first.address?.isNotEmpty ==
+                                true
+                            ? profileState.profileDetails.first.address!
+                            : 'address not available.',
                       ),
 
                       const SizedBox(height: 24),
@@ -173,87 +190,28 @@ class ProfileScreen extends ConsumerWidget {
   }
 }
 
-//header
-Widget buildProfileHeader() {
-  return Container(
-    padding: const EdgeInsets.fromLTRB(20, 60, 20, 30),
-    decoration: const BoxDecoration(
-      color: Color(0xFF0E8B5C),
-      borderRadius: BorderRadius.vertical(bottom: Radius.circular(40)),
-    ),
-    child: Column(
-      children: [
-        const CircleAvatar(
-          radius: 40,
-          backgroundColor: Colors.white,
-          child: Text(
-            "S",
-            style: TextStyle(
-              fontSize: 32,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF0E8B5C),
-            ),
-          ),
-        ),
-        const SizedBox(height: 16),
-        const Text(
-          "Sumesh K.",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const Text(
-          "Sample Collector - Bengaluru",
-          style: TextStyle(color: Colors.white70, fontSize: 14),
-        ),
-        const SizedBox(height: 30),
-        // Stats Row
-        Container(
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: const Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              StatItem(label: "Today", value: "24"),
-              VerticalDivider(color: Colors.white24, thickness: 1),
-              StatItem(label: "This month", value: "312"),
-              VerticalDivider(color: Colors.white24, thickness: 1),
-              StatItem(label: "Rating", value: "4.9"),
-            ],
-          ),
-        ),
-      ],
-    ),
-  );
-}
+//profile image
+Uint8List? decodeImage(String? base64String) {
+  try {
+    if (base64String == null || base64String.trim().isEmpty) {
+      return null;
+    }
 
-class StatItem extends StatelessWidget {
-  final String label, value;
-  const StatItem({super.key, required this.label, required this.value});
+    String cleaned = base64String.trim();
 
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(
-          value,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        Text(
-          label,
-          style: const TextStyle(color: Colors.white70, fontSize: 12),
-        ),
-      ],
-    );
+    if (cleaned.contains(',')) {
+      cleaned = cleaned.split(',').last;
+    }
+
+    cleaned = cleaned
+        .replaceAll('\n', '')
+        .replaceAll('\r', '')
+        .replaceAll(' ', '');
+
+    return base64Decode(cleaned);
+  } catch (e) {
+    debugPrint("Decode Error: $e");
+    return null;
   }
 }
 

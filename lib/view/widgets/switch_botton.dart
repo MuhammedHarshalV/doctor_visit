@@ -7,14 +7,15 @@ import 'package:doctor_visit/theme/colors/appcolors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:intl/intl.dart';
 
 class CustomSwitchButton extends ConsumerWidget {
   const CustomSwitchButton({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(homeScreenProvider);
-    final notifier = ref.read(homeScreenProvider.notifier);
+    final homeState = ref.watch(homeScreenProvider);
+    final homeController = ref.read(homeScreenProvider.notifier);
 
     return GestureDetector(
       onTap: () async {
@@ -34,44 +35,52 @@ class CustomSwitchButton extends ConsumerWidget {
           log("Internet OFF");
         }
 
-        if (state.isOn == false && isConnected == true) {
+        if (homeState.isOn == false && isConnected == true) {
           try {
-            log(state.isOn.toString());
-            notifier.setIsOn(true);
+            log(homeState.isOn.toString());
+            homeController.setIsOn(true);
             Position position = await getCurrentLocation();
-            DateTime currentTime = DateTime.now();
+            String currentTime = DateTime.now().toIso8601String();
+            String currentDate = DateFormat(
+              'yyyy-MM-dd',
+            ).format(DateTime.now());
             String mapUrl =
                 "https://www.google.com/maps?q=${position.latitude},${position.longitude}";
 
             log("Time: $currentTime");
+            log("Date: $currentDate");
             log("Lat: ${position.latitude}");
             log("Lng: ${position.longitude}");
             log(mapUrl);
-
-            if (context.mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    "Location sent at ${currentTime.hour}: ${currentTime.minute}  $mapUrl",
-                    style: TextStyle(
-                      color: AppColors.appWhite,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  backgroundColor: Colors.green,
-                  behavior: SnackBarBehavior.floating,
-                  margin: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).size.height - 120,
-                    left: 16,
-                    right: 16,
-                  ),
-                ),
-              );
-            }
-            // 👉 Example: send to API / show / store
+            homeController.startAndOffDuty(
+              date: currentDate,
+              starttime: currentTime,
+              startLocation: mapUrl,
+            );
+            // if (context.mounted) {
+            //   ScaffoldMessenger.of(context).showSnackBar(
+            //     SnackBar(
+            //       content: Text(
+            //         "Location sent at ${currentTime.hour}: ${currentTime.minute}  $mapUrl",
+            //         style: TextStyle(
+            //           color: AppColors.appWhite,
+            //           fontWeight: FontWeight.bold,
+            //         ),
+            //       ),
+            //       backgroundColor: Colors.green,
+            //       behavior: SnackBarBehavior.floating,
+            //       margin: EdgeInsets.only(
+            //         bottom: MediaQuery.of(context).size.height - 120,
+            //         left: 16,
+            //         right: 16,
+            //       ),
+            //     ),
+            //   );
+            // }
+            //  Example: send to API / show / store
           } catch (e) {
             log("harshal==================${e.toString()}");
-            notifier.setIsOn(false);
+            homeController.setIsOn(false);
             if (context.mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
@@ -93,7 +102,7 @@ class CustomSwitchButton extends ConsumerWidget {
               );
             }
           }
-        } else if (state.isOn == false && isConnected == false) {
+        } else if (homeState.isOn == false && isConnected == false) {
           if (context.mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -115,44 +124,32 @@ class CustomSwitchButton extends ConsumerWidget {
               ),
             );
           }
-        } else if (state.isOn == true && isConnected == true) {
+        } else if (homeState.isOn == true && isConnected == true) {
           try {
-            log(state.isOn.toString());
-            notifier.setIsOn(false);
+            log(homeState.isOn.toString());
+            homeController.setIsOn(false);
             Position position = await getCurrentLocation();
-            DateTime currentTime = DateTime.now();
+            String currentTime = DateTime.now().toIso8601String();
+            String currentDate = DateFormat(
+              'yyyy-MM-dd',
+            ).format(DateTime.now());
             String mapUrl =
                 "https://www.google.com/maps?q=${position.latitude},${position.longitude}";
 
             log("Time: $currentTime");
+            log("date: $currentDate");
+
             log("Lat: ${position.latitude}");
             log("Lng: ${position.longitude}");
             log(mapUrl);
-
-            if (context.mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    "Location sent at ${currentTime.hour}: ${currentTime.minute}  $mapUrl",
-                    style: TextStyle(
-                      color: AppColors.appBlack,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  backgroundColor: AppColors.appWhite,
-                  behavior: SnackBarBehavior.floating,
-                  margin: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).size.height - 120,
-                    left: 16,
-                    right: 16,
-                  ),
-                ),
-              );
-            }
-            // 👉 Example: send to API / show / store
+            homeController.startAndOffDuty(
+              date: currentDate,
+              endtime: currentTime,
+              endLocation: mapUrl,
+            );
           } catch (e) {
             log("harshal==================${e.toString()}");
-            notifier.setIsOn(true);
+            homeController.setIsOn(true);
             if (context.mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
@@ -199,7 +196,7 @@ class CustomSwitchButton extends ConsumerWidget {
         height: 30,
         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
         decoration: BoxDecoration(
-          color: state.isOn == true
+          color: homeState.isOn == true
               ? const Color(0xFF4CAF50)
               : Colors.grey.shade400,
           borderRadius: BorderRadius.circular(30),
@@ -209,13 +206,13 @@ class CustomSwitchButton extends ConsumerWidget {
           children: [
             // Text
             Align(
-              alignment: state.isOn == true
+              alignment: homeState.isOn == true
                   ? Alignment.centerLeft
                   : Alignment.centerRight,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Text(
-                  state.isOn == true ? "On" : "Off",
+                  homeState.isOn == true ? "On" : "Off",
                   style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -228,7 +225,7 @@ class CustomSwitchButton extends ConsumerWidget {
             AnimatedAlign(
               duration: const Duration(milliseconds: 300),
               curve: Curves.easeInOut,
-              alignment: state.isOn == true
+              alignment: homeState.isOn == true
                   ? Alignment.centerRight
                   : Alignment.centerLeft,
               child: Container(
@@ -239,9 +236,9 @@ class CustomSwitchButton extends ConsumerWidget {
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
-                  state.isOn == true ? Icons.check : Icons.close,
+                  homeState.isOn == true ? Icons.check : Icons.close,
                   size: 16,
-                  color: state.isOn == true ? Colors.green : Colors.red,
+                  color: homeState.isOn == true ? Colors.green : Colors.red,
                 ),
               ),
             ),

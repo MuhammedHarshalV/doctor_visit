@@ -1,5 +1,6 @@
 import 'package:doctor_visit/controller/home_screen_controller/home_screen_controller.dart';
 import 'package:doctor_visit/theme/colors/appcolors.dart';
+import 'package:doctor_visit/view/screens/home_screen/widget/doctor_list_shimmer.dart';
 import 'package:doctor_visit/view/widgets/common_appbar.dart';
 import 'package:doctor_visit/view/screens/home_screen/widget/doctor_visits_card.dart';
 import 'package:flutter/material.dart';
@@ -29,80 +30,107 @@ class HomeScreen extends ConsumerWidget {
           ),
 
           body: Padding(
-            padding: const EdgeInsets.all(10),
-            child: SingleChildScrollView(
-              child: Column(
-                spacing: 5,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            "Today Visits",
-                            style: TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            child: RefreshIndicator(
+              color: AppColors.appPrimaryRed, // spinner color
+              backgroundColor: AppColors.appLightRed, // circle background
+              strokeWidth: 2,
+              onRefresh: () async {
+                await homeScreenRead.getDoctorsVisit();
+              },
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "Today Visits",
+                              style: TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                          Text(
-                            "${homeScreenWatch.doctorsList.length} doctors scheduled today",
-                            style: TextStyle(
-                              color: AppColors.appGrey,
-                              fontSize: 14,
+                            Text(
+                              "${homeScreenWatch.doctorsListAPI.length} doctors scheduled today",
+                              style: TextStyle(
+                                color: AppColors.appGrey,
+                                fontSize: 14,
+                              ),
                             ),
+                          ],
+                        ),
+                        Container(
+                          height: 40,
+                          width: 70,
+                          decoration: BoxDecoration(
+                            color: AppColors.appPrimaryRed,
+                            borderRadius: BorderRadius.circular(15),
                           ),
-                        ],
-                      ),
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          vertical: 8,
-                          horizontal: 20,
+                          child: homeScreenWatch.isLoading
+                              ? Center(
+                                  child: SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: CircularProgressIndicator(
+                                      color: AppColors.appWhite,
+                                      strokeWidth: 1,
+                                    ),
+                                  ),
+                                )
+                              : Center(
+                                  child: Text(
+                                    "${homeScreenWatch.doctorsListAPI.length}",
+                                    style: const TextStyle(color: Colors.white),
+                                  ),
+                                ),
                         ),
-                        decoration: BoxDecoration(
-                          color: AppColors.appPrimaryRed, // healthRed
-                          shape: BoxShape.rectangle,
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: Text(
-                          "${homeScreenWatch.doctorsList.length}",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ],
-                  ),
-                  if (homeScreenWatch.doctorsList.isEmpty)
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height / 2,
-                      child: Center(
-                        child: Text(
-                          'No doctors have been assigned to you yet.',
-                        ),
-                      ),
+                      ],
                     ),
-                  ListView.separated(
-                    physics: NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: homeScreenWatch.doctorsList.length,
 
-                    itemBuilder: (context, index) {
-                      return DoctorCard(
-                        indexGet: index,
-                        name: homeScreenWatch.doctorsList[index].name,
-                        specialty:
-                            homeScreenWatch.doctorsList[index].speciality,
-                        phone: homeScreenWatch.doctorsList[index].phoneNumber,
-                        time: homeScreenWatch.doctorsList[index].timing,
-                        initial: homeScreenWatch.doctorsList[index].name[0],
-                        isDone: homeScreenWatch.doctorsList[index].status,
-                      );
-                    },
-                    separatorBuilder: (context, index) => SizedBox(height: 5),
-                  ),
-                  SizedBox(height: 70),
-                ],
+                    if (homeScreenWatch.doctorsListAPI.isEmpty &&
+                        homeScreenWatch.isLoading == false)
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height / 2,
+                        child: const Center(
+                          child: Text(
+                            'No doctors have been assigned to you yet.',
+                          ),
+                        ),
+                      ),
+                    if (homeScreenWatch.isLoading) DoctorListShimmer(),
+                    if (homeScreenWatch.isLoading == false)
+                      ListView.separated(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: homeScreenWatch.doctorsListAPI.length,
+                        itemBuilder: (context, index) {
+                          final doctor = homeScreenWatch.doctorsListAPI[index];
+                          return DoctorCard(
+                            indexGet: index,
+                            name: doctor.drName ?? '',
+                            address: doctor.drAddress ?? '',
+                            phone: (doctor.drPhone?.length ?? 0) >= 10
+                                ? doctor.drPhone!.substring(0, 10)
+                                : doctor.drPhone?.trim() ?? '',
+                            location: doctor.drLocation ?? '',
+                            initial: doctor.drName?.isNotEmpty == true
+                                ? doctor.drName![0]
+                                : 'A',
+                            isDone: doctor.drIsGoing == false ? true : false,
+                            isSelected: doctor.drIsGoing == true ? true : false,
+                          );
+                        },
+                        separatorBuilder: (_, __) => const SizedBox(height: 5),
+                      ),
+
+                    const SizedBox(height: 70),
+                  ],
+                ),
               ),
             ),
           ),

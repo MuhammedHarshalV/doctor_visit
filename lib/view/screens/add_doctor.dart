@@ -172,14 +172,14 @@ class _AddDoctorScreenState extends ConsumerState<AddDoctorScreen> {
                               if (_formKey.currentState!.validate()) {
                                 // Only update state when form is valid
 
-                                await homeScreenRead.saveToHive(
-                                  name: doctorNameController.text,
-                                  phoneNumber: doctorPhoneController.text,
-                                  speciality: doctorSpecialityController.text,
-                                  timing: '01 PM',
-                                  status: 'Upcoming',
-                                  isStartGoing: 'No',
-                                );
+                                // await homeScreenRead.saveToHive(
+                                //   name: doctorNameController.text,
+                                //   phoneNumber: doctorPhoneController.text,
+                                //   speciality: doctorSpecialityController.text,
+                                //   timing: '01 PM',
+                                //   status: 'Upcoming',
+                                //   isStartGoing: 'No',
+                                // );
 
                                 log(
                                   "Add doctor Details :name =${doctorNameController.text}, phone =${doctorPhoneController.text},speciality =${doctorSpecialityController.text},clinic name =${doctorClinicController.text} ",
