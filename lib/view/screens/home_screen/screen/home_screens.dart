@@ -58,7 +58,7 @@ class HomeScreen extends ConsumerWidget {
                             Text(
                               "${homeScreenWatch.doctorsListAPI.length} doctors scheduled today",
                               style: TextStyle(
-                                color: AppColors.appGrey,
+                                color: Colors.grey,
                                 fontSize: 14,
                               ),
                             ),
@@ -125,7 +125,7 @@ class HomeScreen extends ConsumerWidget {
                             isSelected: doctor.drIsGoing == true ? true : false,
                           );
                         },
-                        separatorBuilder: (_, __) => const SizedBox(height: 5),
+                        separatorBuilder: (_, _) => const SizedBox(height: 5),
                       ),
 
                     const SizedBox(height: 70),

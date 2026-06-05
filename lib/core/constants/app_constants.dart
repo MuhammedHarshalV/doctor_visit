@@ -4,4 +4,5 @@ class AppConstants {
   static String yearID = '';
   static String mstKey = '';
   static String detKey = '';
+  static String date = '';
 }

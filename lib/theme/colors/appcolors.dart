@@ -7,12 +7,13 @@ class AppColors {
   static Color appTextFieldRed = Color(0xFFFFEBEE);
   static Color appGreyText = Color(0xFF827E7E);
   static Color appLightRed = Color(0xFFFFEBEE);
+  static Color appYellow = Color.fromARGB(255, 239, 239, 238);
 
   static Color appLightGrey = Colors.grey.shade200;
 
   static Color appCloseGrey = Colors.grey.shade100;
   static Color appBottomCircleBlack = Colors.grey.shade800;
-  static Color appGrey = Colors.grey.shade600;
+  static Color appGrey = const Color.fromARGB(255, 211, 208, 208);
   static Color appDarkGrey = const Color.fromARGB(255, 59, 59, 59);
   static Color appPink = Color(0xFFD91A5B);
   static Color appPurple = Colors.purple;

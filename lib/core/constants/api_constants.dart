@@ -6,4 +6,6 @@ class ApiConstants {
   static String workStartCompletevisit = 'SaveUpdate';
   static String isGoing = 'IsGoing';
   static String progressPercentage = 'Dash';
+  static String expenseHistory = 'ExpenseGet';
+  static String expenseSaveorEdit = 'ExpenseSave';
 }

@@ -1,6 +1,6 @@
 import 'package:doctor_visit/controller/profile_details_controller/profile_details_controller.dart';
 import 'package:doctor_visit/theme/colors/appcolors.dart';
-import 'package:doctor_visit/view/screens/profile_screen.dart';
+import 'package:doctor_visit/view/screens/profile_screen/profile_screen.dart';
 import 'package:doctor_visit/view/widgets/switch_botton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -15,7 +15,7 @@ class CommonAppBar extends ConsumerWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // You can access providers here if needed
-    final profilestate = ref.watch(profileDetailsProvider);
+    ref.watch(profileDetailsProvider);
 
     return AppBar(
       backgroundColor: AppColors.appPrimaryRed,
@@ -32,6 +32,7 @@ class CommonAppBar extends ConsumerWidget implements PreferredSizeWidget {
                 subtitle,
                 style: TextStyle(
                   fontSize: 14,
+                  // ignore: deprecated_member_use
                   color: AppColors.appWhite.withOpacity(0.9),
                   fontWeight: FontWeight.w400,
                 ),
@@ -63,11 +64,7 @@ class CommonAppBar extends ConsumerWidget implements PreferredSizeWidget {
             focusColor: Colors.transparent,
 
             onTap: () async {
-              if (profilestate.profileDetails.isEmpty) {
-       await         ref
-                    .read(profileDetailsProvider.notifier)
-                    .getProProfileDetails();
-              }
+             
               PersistentNavBarNavigator.pushNewScreen(
                 context,
                 screen: const ProfileScreen(),
@@ -76,6 +73,7 @@ class CommonAppBar extends ConsumerWidget implements PreferredSizeWidget {
               );
             },
             child: CircleAvatar(
+              // ignore: deprecated_member_use
               backgroundColor: AppColors.appWhite.withOpacity(0.2),
               child: Icon(Icons.person, color: AppColors.appWhite),
             ),

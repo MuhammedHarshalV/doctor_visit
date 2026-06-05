@@ -87,6 +87,7 @@ class LoginController extends StateNotifier<LoginState> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? mstKey = prefs.getString('mst_key');
     final String? detKey = prefs.getString('det_key');
+    final String? date = prefs.getString('Today_date');
 
     if (mstKey != null && mstKey.isNotEmpty) {
       AppConstants.mstKey = mstKey;
@@ -94,9 +95,13 @@ class LoginController extends StateNotifier<LoginState> {
     if (detKey != null && detKey.isNotEmpty) {
       AppConstants.detKey = detKey;
     }
+    if (date != null && date.isNotEmpty) {
+      AppConstants.date = date;
+    }
 
     log('Stored mstkey : $mstKey');
     log('Stored detKey : $detKey');
+    log('Stored date : $date');
   }
 }
 

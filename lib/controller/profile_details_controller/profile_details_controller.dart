@@ -10,7 +10,9 @@ import 'package:doctor_visit/model/profile/pro_profile_details_response_model.da
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ProfileDetailsController extends StateNotifier<ProfileDetailsState> {
-  ProfileDetailsController() : super(ProfileDetailsState());
+  ProfileDetailsController() : super(ProfileDetailsState()) {
+    if (state.profileDetails.isEmpty) getProProfileDetails();
+  }
   Future<void> getProProfileDetails() async {
     try {
       state = state.copyWith(isLoading: true);

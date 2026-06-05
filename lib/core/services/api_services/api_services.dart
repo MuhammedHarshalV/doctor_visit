@@ -95,7 +95,7 @@ class PostApiServices {
   static Future<dynamic> callApi({
     BuildContext? context,
     required String url,
-    Map<String, dynamic>? body,
+    dynamic body,
     Map<String, dynamic>? queryParams,
     String? token,
   }) async {

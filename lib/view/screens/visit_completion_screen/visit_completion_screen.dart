@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:doctor_visit/controller/bottom_nav_screen/bottom_nav_controller.dart';
+
 import 'package:doctor_visit/controller/doctor_visit_controller/doctor_visit_controller.dart';
 import 'package:doctor_visit/controller/home_screen_controller/home_screen_controller.dart';
 import 'package:doctor_visit/core/constants/app_constants.dart';
@@ -97,19 +97,20 @@ class VisitCompletionScreen extends ConsumerWidget {
                       log("Lat: ${position.latitude}");
                       log("Lng: ${position.longitude}");
                       log(mapUrl);
-                      await doctorVisitController.isGoingLocationSend(
-                        isStart: true,
-                        base64Image: null,
-                        doctorID: doctorID,
-                        date: currentDate,
-                        startLocation: mapUrl,
-                        startTime: currentTime,
-                        endLocation: null,
-                        endTime: null,
-                        feedback: null,
-                        detKey: null,
-                        workstatus: null,
-                      );
+                      await doctorVisitController
+                          .isGoingAndCompletionLocationSend(
+                            isStart: true,
+                            base64Image: null,
+                            doctorID: doctorID,
+                            date: currentDate,
+                            startLocation: mapUrl,
+                            startTime: currentTime,
+                            endLocation: null,
+                            endTime: null,
+                            feedback: null,
+                            detKey: null,
+                            workstatus: null,
+                          );
                       if (doctorVisitState.response.isEmpty) {
                         await homeScreenController.getDoctorsVisit();
                         doctorVisitController.updateResponse('');
@@ -215,7 +216,7 @@ class VisitCompletionScreen extends ConsumerWidget {
           ),
 
           body: Padding(
-            padding: const EdgeInsets.all(10),
+            padding: EdgeInsets.all(10),
             child: Column(
               children: [
                 /// 🔴 COLOR PICKER
@@ -224,31 +225,6 @@ class VisitCompletionScreen extends ConsumerWidget {
                 Expanded(
                   child: ListView(
                     children: [
-                      // CommonTitleText(title: "Location *"),
-                      // TextField(
-                      //   decoration: InputDecoration(
-                      //     hintText: 'Send Your Current Location',
-                      //     prefixIcon: Icon(
-                      //       Icons.location_on_outlined,
-                      //       color: const Color(0xFFE53935),
-                      //       size: 20,
-                      //     ),
-                      //     filled: true,
-                      //     fillColor: const Color(
-                      //       0xFFFFEBEE,
-                      //     ), // Soft red background
-                      //     border: OutlineInputBorder(
-                      //       borderRadius: BorderRadius.circular(12),
-                      //       borderSide: BorderSide.none,
-                      //     ),
-                      //     contentPadding: const EdgeInsets.symmetric(
-                      //       vertical: 16,
-                      //     ),
-                      //   ),
-                      // ),
-
-                      // const SizedBox(height: 10),
-
                       /// 🤳 SELFIE
                       CommonTitleText(title: "Selfie *"),
                       GestureDetector(
@@ -410,37 +386,37 @@ class VisitCompletionScreen extends ConsumerWidget {
                                               "Enter the Reason...",
                                             ),
                                           ),
-                                          CommonTitleText(
-                                            title: "Select Time *",
-                                          ),
-                                          GestureDetector(
-                                            onTap: () async {
-                                              final time = await showTimePicker(
-                                                context: context,
-                                                initialTime: TimeOfDay.now(),
-                                              );
-                                              if (time != null) {
-                                                visitController
-                                                    .setPostponedTime(time);
-                                              }
-                                            },
-                                            child: Container(
-                                              padding: const EdgeInsets.all(14),
-                                              width: double.infinity,
-                                              decoration: BoxDecoration(
-                                                color:
-                                                    AppColors.appTextFieldRed,
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                              ),
-                                              child: Text(
-                                                visitState.postponedTime == null
-                                                    ? "Select time"
-                                                    : visitState.postponedTime!
-                                                          .format(context),
-                                              ),
-                                            ),
-                                          ),
+                                          // CommonTitleText(
+                                          //   title: "Select Time *",
+                                          // ),
+                                          // GestureDetector(
+                                          //   onTap: () async {
+                                          //     final time = await showTimePicker(
+                                          //       context: context,
+                                          //       initialTime: TimeOfDay.now(),
+                                          //     );
+                                          //     if (time != null) {
+                                          //       visitController
+                                          //           .setPostponedTime(time);
+                                          //     }
+                                          //   },
+                                          //   child: Container(
+                                          //     padding: const EdgeInsets.all(14),
+                                          //     width: double.infinity,
+                                          //     decoration: BoxDecoration(
+                                          //       color:
+                                          //           AppColors.appTextFieldRed,
+                                          //       borderRadius:
+                                          //           BorderRadius.circular(10),
+                                          //     ),
+                                          //     child: Text(
+                                          //       visitState.postponedTime == null
+                                          //           ? "Select time"
+                                          //           : visitState.postponedTime!
+                                          //                 .format(context),
+                                          //     ),
+                                          //   ),
+                                          // ),
                                         ],
                                       ),
                                     ),
@@ -448,20 +424,117 @@ class VisitCompletionScreen extends ConsumerWidget {
                                       SizedBox(
                                         width: double.infinity,
                                         child: TextButton(
-                                          onPressed: () {
-                                            // homeScreenController.updateDoctor(
-                                            //   index,
-                                            //   'Postponed',
-                                            //   visitState.postponedTime!.format(
-                                            //     context,
-                                            //   ),
-                                            //   false,
-                                            // );
-                                            Navigator.of(context).pop();
-                                            if (Navigator.canPop(context)) {
-                                              Navigator.pop(
-                                                context,
-                                              ); // close page safely
+                                          onPressed: () async {
+                                            if (visitState
+                                                .feedbackController
+                                                .text
+                                                .isEmpty) {
+                                              showDialog(
+                                                context: context,
+                                                builder: (context) =>
+                                                    CommonAlertDialog(
+                                                      message:
+                                                          'Please mention Reason for postponed.',
+                                                    ),
+                                              );
+                                            } else {
+                                              bool isConnected =
+                                                  await checkInternetConnection();
+                                              log(
+                                                "1========${isConnected.toString()}",
+                                              );
+
+                                              if (isConnected) {
+                                                log("Internet ON");
+                                              } else {
+                                                log(
+                                                  "2========${isConnected.toString()}",
+                                                );
+                                                log("Internet OFF");
+                                              }
+
+                                              if (isConnected == true) {
+                                                try {
+                                                  final String doctorID =
+                                                      homeScreenState
+                                                          .doctorsListAPI[index]
+                                                          .drId
+                                                          .toString();
+
+                                                  String currentDate =
+                                                      DateFormat(
+                                                        'yyyy-MM-dd',
+                                                      ).format(DateTime.now());
+
+                                                  log("Date: $currentDate");
+
+                                                  visitController
+                                                      .isGoingAndCompletionLocationSend(
+                                                        isCompleted: true,
+                                                        doctorID: doctorID,
+                                                        date: currentDate,
+                                                        startLocation: null,
+                                                        startTime: null,
+                                                        endLocation: null,
+                                                        endTime: null,
+                                                        feedback: visitState
+                                                            .feedbackController
+                                                            .text,
+                                                        detKey:
+                                                            AppConstants.detKey,
+                                                        workstatus: '2',
+                                                        base64Image: null,
+                                                      );
+
+                                                  await homeScreenController
+                                                      .getDoctorsVisit();
+                                                  visitController
+                                                      .updateResponse('');
+                                                  visitState.feedbackController
+                                                      .clear();
+
+                                                  // ignore: use_build_context_synchronously
+                                                  Navigator.pop(context);
+                                                  // ignore: use_build_context_synchronously
+                                                  Navigator.pop(context);
+                                                } catch (e) {
+                                                  log(
+                                                    "harshal==================${e.toString()}",
+                                                  );
+
+                                                  if (context.mounted) {
+                                                    ScaffoldMessenger.of(
+                                                      context,
+                                                    ).showSnackBar(
+                                                      SnackBar(
+                                                        content: Text(
+                                                          e.toString(),
+                                                          style: TextStyle(
+                                                            color: AppColors
+                                                                .appWhite,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        ),
+                                                        backgroundColor:
+                                                            Colors.blue,
+                                                        behavior:
+                                                            SnackBarBehavior
+                                                                .floating,
+                                                        margin: EdgeInsets.only(
+                                                          bottom:
+                                                              MediaQuery.of(
+                                                                context,
+                                                              ).size.height -
+                                                              120,
+                                                          left: 16,
+                                                          right: 16,
+                                                        ),
+                                                      ),
+                                                    );
+                                                  }
+                                                }
+                                              }
                                             }
                                           },
                                           style: TextButton.styleFrom(
@@ -472,14 +545,23 @@ class VisitCompletionScreen extends ConsumerWidget {
                                                   BorderRadius.circular(6),
                                             ),
                                           ),
-                                          child: Text(
-                                            "Submit",
-                                            style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white,
-                                            ),
-                                          ),
+                                          child: visitState.isLoading == true
+                                              ? Text(
+                                                  "Loading",
+                                                  style: TextStyle(
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white,
+                                                  ),
+                                                )
+                                              : Text(
+                                                  "Submit",
+                                                  style: TextStyle(
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
                                         ),
                                       ),
                                     ],
@@ -489,7 +571,7 @@ class VisitCompletionScreen extends ConsumerWidget {
                             },
                           );
                         },
-                        child: const Text(
+                        child: Text(
                           "Postponed",
                           style: TextStyle(
                             fontSize: 18,
@@ -547,36 +629,81 @@ class VisitCompletionScreen extends ConsumerWidget {
                                     log("Lat: ${position.latitude}");
                                     log("Lng: ${position.longitude}");
                                     log(mapUrl);
-                                    doctorVisitController.isGoingLocationSend(
-                                      isCompleted: true,
-                                      doctorID: doctorID,
-                                      date: currentDate,
-                                      startLocation: mapUrl,
-                                      startTime:
-                                          doctorVisitState.startTime != null
-                                          ? formatTimeOfDayToApi(
-                                              doctorVisitState.startTime!,
-                                            )
-                                          : null,
-                                      endLocation: mapUrl,
-                                      endTime: doctorVisitState.endTime != null
-                                          ? formatTimeOfDayToApi(
-                                              doctorVisitState.endTime!,
-                                            )
-                                          : null,
-                                      feedback: doctorVisitState
-                                          .feedbackController
-                                          .text,
-                                      detKey: AppConstants.detKey,
-                                      workstatus: '1',
-                                      base64Image: doctorVisitState.fileImage,
-                                    );
+                                    if (doctorVisitState.startTime == null ||
+                                        doctorVisitState.endTime == null) {
+                                      if (doctorVisitState.endTime == null &&
+                                          doctorVisitState.startTime == null) {
+                                        showDialog(
+                                          // ignore: use_build_context_synchronously
+                                          context: context,
+                                          builder: (context) => CommonAlertDialog(
+                                            message:
+                                                'Please fill in both the start time and end time.',
+                                          ),
+                                        );
+                                      }
+                                      if (doctorVisitState.startTime == null &&
+                                          doctorVisitState.endTime != null) {
+                                        showDialog(
+                                          // ignore: use_build_context_synchronously
+                                          context: context,
+                                          builder: (context) =>
+                                              CommonAlertDialog(
+                                                message:
+                                                    'Please fill Start time.',
+                                              ),
+                                        );
+                                      }
+                                      if (doctorVisitState.endTime == null &&
+                                          doctorVisitState.startTime != null) {
+                                        showDialog(
+                                          // ignore: use_build_context_synchronously
+                                          context: context,
+                                          builder: (context) =>
+                                              CommonAlertDialog(
+                                                message:
+                                                    'Please fill End time.',
+                                              ),
+                                        );
+                                      }
+                                    } else {
+                                      doctorVisitController
+                                          .isGoingAndCompletionLocationSend(
+                                            isCompleted: true,
+                                            doctorID: doctorID,
+                                            date: currentDate,
+                                            startLocation: mapUrl,
+                                            startTime:
+                                                doctorVisitState.startTime !=
+                                                    null
+                                                ? formatTimeOfDayToApi(
+                                                    doctorVisitState.startTime!,
+                                                  )
+                                                : null,
+                                            endLocation: mapUrl,
+                                            endTime:
+                                                doctorVisitState.endTime != null
+                                                ? formatTimeOfDayToApi(
+                                                    doctorVisitState.endTime!,
+                                                  )
+                                                : null,
+                                            feedback: doctorVisitState
+                                                .feedbackController
+                                                .text,
+                                            detKey: AppConstants.detKey,
+                                            workstatus: '1',
+                                            base64Image:
+                                                doctorVisitState.fileImage,
+                                          );
 
-                                    await homeScreenController
-                                        .getDoctorsVisit();
-                                    doctorVisitController.updateResponse('');
-                                    // ignore: use_build_context_synchronously
-                                    Navigator.pop(context);
+                                      await homeScreenController
+                                          .getDoctorsVisit();
+                                      doctorVisitController.updateResponse('');
+                                      doctorVisitState.feedbackController
+                                          .clear();
+                                      // ignore: use_build_context_synchronously
+                                      Navigator.pop(context);
+                                    }
                                   } catch (e) {
                                     log(
                                       "harshal==================${e.toString()}",
@@ -697,6 +824,7 @@ class VisitCompletionScreen extends ConsumerWidget {
                       source: ImageSource.camera,
                       imageQuality: 80,
                     );
+                    // ignore: use_build_context_synchronously
                     Navigator.pop(context, image);
                   },
                 ),
@@ -708,6 +836,7 @@ class VisitCompletionScreen extends ConsumerWidget {
                       source: ImageSource.gallery,
                       imageQuality: 80,
                     );
+                    // ignore: use_build_context_synchronously
                     Navigator.pop(context, image);
                   },
                 ),

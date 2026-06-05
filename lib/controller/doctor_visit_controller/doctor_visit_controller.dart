@@ -4,10 +4,12 @@ import 'dart:typed_data';
 import 'package:doctor_visit/apis/work_completion_api/pro_isGoing.dart';
 import 'package:doctor_visit/apis/work_completion_api/work_start_going_api.dart';
 import 'package:doctor_visit/controller/doctor_visit_controller/doctor_visit_state.dart';
+import 'package:doctor_visit/core/constants/app_constants.dart';
 import 'package:doctor_visit/model/work_completion_and_start_duty/isGoing_response_model.dart';
 import 'package:doctor_visit/model/work_completion_and_start_duty/work_completion_and_start_duty_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class VisitController extends StateNotifier<DoctorVisitCompletion> {
   VisitController()
@@ -20,7 +22,7 @@ class VisitController extends StateNotifier<DoctorVisitCompletion> {
     log('========$response');
   }
 
-  Future<void> isGoingLocationSend({
+  Future<void> isGoingAndCompletionLocationSend({
     bool? isStart = false,
     bool? isCompleted = false,
     required String doctorID,
@@ -52,7 +54,14 @@ class VisitController extends StateNotifier<DoctorVisitCompletion> {
             base64Image: base64Image,
           );
       if (response.status == true) {
+        final SharedPreferences prefs = await SharedPreferences.getInstance();
         state = state.copyWith(response: response.message);
+        await prefs.setString(
+          'det_key',
+          response.data?.proDetKey?.toString() ?? '',
+        );
+        AppConstants.detKey = response.data?.proDetKey?.toString() ?? '';
+        log('stored det_key :${AppConstants.detKey}');
       }
       log('==============$response');
     } catch (e) {

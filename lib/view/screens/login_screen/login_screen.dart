@@ -1,6 +1,5 @@
 import 'package:doctor_visit/controller/login_controller/login_controller.dart';
 import 'package:doctor_visit/theme/colors/appcolors.dart';
-import 'package:doctor_visit/view/bottom_nav_screen/bottom_nav_screen.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -156,8 +155,6 @@ class _PinCodeFieldState extends State<PinCodeField> {
       width: 60,
       height: 60,
       child: TextFormField(
-        obscureText: true,
-        obscuringCharacter: "∗",
         controller: controllers[index],
         focusNode: focusNodes[index],
         keyboardType: TextInputType.number,

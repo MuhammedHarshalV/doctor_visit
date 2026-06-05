@@ -9,6 +9,7 @@ import 'package:doctor_visit/model/doctos_assign_get/doctors_assign_response_mod
 import 'package:doctor_visit/model/work_completion_and_start_duty/work_completion_and_start_duty_response_model.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -57,6 +58,8 @@ class HomeScreenNotifier extends StateNotifier<HomeScreenState> {
     String? endLocation,
   }) async {
     try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      String currentDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
       final WorkCompletionAndStartDutyResponseModel? response =
           await PostWorkStartApi.postWorkStartApi(
             date: date,
@@ -70,7 +73,6 @@ class HomeScreenNotifier extends StateNotifier<HomeScreenState> {
       }
       if (response.status == true) {
         state = state.copyWith(workRetatedData: response.data);
-        final SharedPreferences prefs = await SharedPreferences.getInstance();
 
         if (AppConstants.mstKey.isEmpty) {
           await prefs.setString(
@@ -81,14 +83,33 @@ class HomeScreenNotifier extends StateNotifier<HomeScreenState> {
             'det_key',
             response.data?.proDetKey?.toString() ?? '',
           );
+          await prefs.setString('Today_date', currentDate);
           AppConstants.mstKey = response.data?.proMstKey?.toString() ?? '';
           AppConstants.detKey = response.data?.proDetKey?.toString() ?? '';
           log('mstkey :${AppConstants.mstKey}');
           log('detkey :${AppConstants.detKey}');
+          log('date : ${AppConstants.date}');
         }
 
         log('Stored mstkey : ${AppConstants.mstKey}');
         log('Stored detKey : ${AppConstants.detKey}');
+        log('date : ${AppConstants.date}');
+      } else if (AppConstants.date != currentDate) {
+        await prefs.setString(
+          'mst_key',
+          response.data?.proMstKey?.toString() ?? '',
+        );
+        await prefs.setString(
+          'det_key',
+          response.data?.proDetKey?.toString() ?? '',
+        );
+        await prefs.setString('Today_date', currentDate);
+        AppConstants.mstKey = response.data?.proMstKey?.toString() ?? '';
+        AppConstants.detKey = response.data?.proDetKey?.toString() ?? '';
+        AppConstants.date = currentDate;
+        log('mstkey :${AppConstants.mstKey}');
+        log('detkey :${AppConstants.detKey}');
+        log('date : ${AppConstants.date}');
       }
       log('work update details : $response');
     } catch (e) {

@@ -1,4 +1,4 @@
-import 'package:doctor_visit/view/screens/login_screen.dart';
+import 'package:doctor_visit/view/screens/login_screen/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

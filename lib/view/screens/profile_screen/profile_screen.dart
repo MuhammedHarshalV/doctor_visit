@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
-import 'dart:io';
 
 import 'package:doctor_visit/controller/profile_details_controller/profile_details_controller.dart';
 import 'package:doctor_visit/theme/colors/appcolors.dart';
@@ -40,6 +38,7 @@ class ProfileScreen extends ConsumerWidget {
                       Navigator.pop(context);
                     },
                     child: CircleAvatar(
+                      // ignore: deprecated_member_use
                       backgroundColor: AppColors.appWhite.withOpacity(0.2),
                       child: Icon(
                         Icons.arrow_back_ios_new,

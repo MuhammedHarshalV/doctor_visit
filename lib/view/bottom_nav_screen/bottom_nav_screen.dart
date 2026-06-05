@@ -1,9 +1,10 @@
 import 'package:doctor_visit/controller/bottom_nav_screen/bottom_nav_controller.dart';
+import 'package:doctor_visit/controller/expense_controller/expense_controller.dart';
 
 import 'package:doctor_visit/theme/colors/appcolors.dart';
-import 'package:doctor_visit/view/screens/add_doctor.dart';
+import 'package:doctor_visit/view/screens/add_doctor_screen/add_doctor.dart';
 import 'package:doctor_visit/view/screens/home_screen/screen/home_screens.dart';
-import 'package:doctor_visit/view/screens/progress_screen.dart';
+import 'package:doctor_visit/view/screens/progress_screen/screen/progress_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -11,7 +12,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 
 class BottomNavScreen extends ConsumerWidget {
-  const BottomNavScreen({Key? key}) : super(key: key);
+  const BottomNavScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -65,6 +66,13 @@ class BottomNavScreen extends ConsumerWidget {
               //     pageTransitionAnimation: PageTransitionAnimation.cupertino,
               //   );
               // } else {
+              if (bottomNavState.currentIndex == 2 && index != 2) {
+                // ref.invalidate(dayExpenseProvider);
+                // ref.read(dayExpenseProvider.notifier).iniatialCall();
+              } else {
+                ref.invalidate(dayExpenseProvider);
+                ref.read(dayExpenseProvider.notifier).iniatialCall();
+              }
               bottomNavNotifier.setIndex(index);
               // }
             },

@@ -40,8 +40,8 @@ class _AddDoctorScreenState extends ConsumerState<AddDoctorScreen> {
   Widget build(BuildContext context) {
     final addDoctorScreenWatch = ref.watch(addDoctorProvider);
     final addDoctorScreenRead = ref.read(addDoctorProvider.notifier);
-    final homeScreenWatch = ref.watch(homeScreenProvider);
-    final homeScreenRead = ref.read(homeScreenProvider.notifier);
+    ref.watch(homeScreenProvider);
+    ref.read(homeScreenProvider.notifier);
     final bottomNavNotifier = ref.read(bottomNavProvider.notifier);
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
