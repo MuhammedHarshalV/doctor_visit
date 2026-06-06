@@ -157,7 +157,30 @@ class _AddDoctorScreenState extends ConsumerState<AddDoctorScreen> {
                       maxLines: 4,
                       maxLength: 1000,
                       decoration: _inputDecoration(""),
+                      onTapOutside: (_) {
+                        FocusManager.instance.primaryFocus?.unfocus();
+                      },
                     ),
+                    TextField(
+                      decoration: InputDecoration(
+                        hintText: 'Title',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+
+                    DropdownButton<int>(
+                      value: 1,
+                      items: List.generate(
+                        10,
+                        (index) => DropdownMenuItem(
+                          value: index + 1,
+                          child: Text('${index + 1}'),
+                        ),
+                      ),
+                      onChanged: (value) {},
+                    ),
+
                     BottomAppBar(
                       color: Colors.transparent,
                       elevation: 0,
@@ -358,6 +381,69 @@ class TopText extends StatelessWidget {
         color: AppColors.appPrimaryRed,
         fontWeight: FontWeight.bold,
       ),
+    );
+  }
+}
+
+class DynamicTextFieldScreen extends StatefulWidget {
+  const DynamicTextFieldScreen({super.key});
+
+  @override
+  State<DynamicTextFieldScreen> createState() => _DynamicTextFieldScreenState();
+}
+
+class _DynamicTextFieldScreenState extends State<DynamicTextFieldScreen> {
+  int selectedCount = 1;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            TextField(
+              decoration: InputDecoration(
+                hintText: 'Title',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(width: 10),
+
+            DropdownButton<int>(
+              value: selectedCount,
+              items: List.generate(
+                10,
+                (index) => DropdownMenuItem(
+                  value: index + 1,
+                  child: Text('${index + 1}'),
+                ),
+              ),
+              onChanged: (value) {
+                setState(() {
+                  selectedCount = value!;
+                });
+              },
+            ),
+          ],
+        ),
+
+        const SizedBox(height: 20),
+
+        ListView.builder(
+          itemCount: selectedCount,
+          itemBuilder: (context, index) {
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: TextField(
+                decoration: InputDecoration(
+                  labelText: 'TextField ${index + 1}',
+                  border: const OutlineInputBorder(),
+                ),
+              ),
+            );
+          },
+        ),
+      ],
     );
   }
 }

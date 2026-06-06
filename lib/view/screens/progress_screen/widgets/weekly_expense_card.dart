@@ -25,8 +25,8 @@ class WeeklyExpenseCard extends ConsumerWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: AppColors.appTextFieldRed,
-              borderRadius: BorderRadius.circular(20),
+              color: AppColors.appPrimaryRed,
+              borderRadius: BorderRadius.circular(10),
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -41,7 +41,7 @@ class WeeklyExpenseCard extends ConsumerWidget {
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.appPrimaryRed,
+                    color: AppColors.appWhite,
                   ),
                 ),
               ],

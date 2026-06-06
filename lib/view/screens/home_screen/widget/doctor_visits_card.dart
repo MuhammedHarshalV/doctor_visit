@@ -17,7 +17,7 @@ class DoctorCard extends ConsumerWidget {
   final String address;
   final String phone;
   final String location;
-  final bool isDone;
+  final int? isDone;
   final String initial;
   final bool isSelected;
 
@@ -58,12 +58,11 @@ class DoctorCard extends ConsumerWidget {
           );
         }
         if (homeState.isOn &&
-            (homeState.doctorsListAPI[indexGet].drIsGoing == true ||
-                homeState.doctorsListAPI[indexGet].drIsGoing == null)) {
+            (homeState.doctorsListAPI[indexGet].visitStatus == null)) {
           PersistentNavBarNavigator.pushNewScreen(
             context,
             screen: VisitCompletionScreen(index: indexGet),
-            withNavBar: false, // 🔥 THIS HIDES BOTTOM NAV
+            withNavBar: false, // THIS HIDES BOTTOM NAV
             pageTransitionAnimation: PageTransitionAnimation.cupertino,
           );
         }
@@ -89,22 +88,34 @@ class DoctorCard extends ConsumerWidget {
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             width: 1,
-            color: isDone == false
+            color: isDone == null
+                // ignore: deprecated_member_use
                 ? Colors.orange.withOpacity(.20)
-                : Colors.green.withOpacity(.20),
+                : isDone == 1
+                // ignore: deprecated_member_use
+                ? Colors.green.withOpacity(.20)
+                : Colors.blue.shade300,
           ),
           boxShadow: [
             BoxShadow(
-              color: isDone == false
-                  ? Colors.orange.withOpacity(0.2)
-                  : Colors.green.withOpacity(0.2),
+              color: isDone == null
+                  // ignore: deprecated_member_use
+                  ? Colors.orange.withOpacity(.20)
+                  : isDone == 1
+                  // ignore: deprecated_member_use
+                  ? Colors.green.withOpacity(.20)
+                  : Colors.blue.shade300,
               blurRadius: 3,
               offset: const Offset(0, 2),
             ),
             BoxShadow(
-              color: isDone == false
-                  ? Colors.orange.withOpacity(0.2)
-                  : Colors.green.withOpacity(0.2),
+              color: isDone == null
+                  // ignore: deprecated_member_use
+                  ? Colors.orange.withOpacity(.20)
+                  : isDone == 1
+                  // ignore: deprecated_member_use
+                  ? Colors.green.withOpacity(.20)
+                  : Colors.blue.shade300,
               // blurRadius: 16,
               offset: const Offset(0, 4),
             ),
@@ -164,11 +175,19 @@ class DoctorCard extends ConsumerWidget {
                             vertical: 2,
                           ),
                           decoration: BoxDecoration(
-                            color: isDone ? Colors.green : Colors.orange,
+                            color: isDone == null
+                                ? Colors.orange
+                                : isDone == 1
+                                ? Colors.green
+                                : Colors.blue.shade300,
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
-                            isDone ? 'Completed' : 'Upcomming',
+                            isDone == null
+                                ? 'Upcoming'
+                                : isDone == 1
+                                ? 'Completed'
+                                : 'Postponed',
                             style: TextStyle(
                               color: AppColors.appWhite,
 
@@ -200,9 +219,9 @@ class DoctorCard extends ConsumerWidget {
                     ),
                     child: IconButton(
                       icon: Icon(
-                        Icons.near_me_outlined,
+                        Icons.location_on,
                         color: AppColors.appWhite,
-                        size: 20,
+                        size: 25,
                       ),
                       onPressed: location.isEmpty
                           ? () {
@@ -240,8 +259,8 @@ class DoctorCard extends ConsumerWidget {
                   Container(
                     decoration: BoxDecoration(
                       color: phone.isNotEmpty
-                          ? AppColors.appPrimaryRed
-                          : const Color.fromARGB(255, 245, 170, 165),
+                          ? AppColors.appGreen
+                          : const Color.fromARGB(255, 172, 245, 165),
                       // border: Border.all(
                       //   width: 2,
                       //   color: AppColors.appPrimaryRed,

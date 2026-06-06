@@ -93,7 +93,7 @@ class ExpenseFormCard extends ConsumerWidget {
             CommonTitleText(title: 'Bill (optional)'),
             GestureDetector(
               onTap: () {
-                // TODO: open camera
+                // camera
               },
               child: Container(
                 height: 170,
@@ -119,6 +119,9 @@ class ExpenseFormCard extends ConsumerWidget {
             SizedBox(height: 20),
             CommonTitleText(title: 'Description (optional)'),
             TextFormField(
+              onTapOutside: (_) {
+                FocusManager.instance.primaryFocus?.unfocus();
+              },
               controller: progressState.descriptionController,
               maxLines: 4,
               maxLength: 1000,

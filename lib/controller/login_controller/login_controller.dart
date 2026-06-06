@@ -53,6 +53,7 @@ class LoginController extends StateNotifier<LoginState> {
         return;
       }
       if (response.message == 'Invalid pin.') {
+        // ignore: use_build_context_synchronously
         AppMessage.show(context, "Invalid pin.");
         return;
       } else {
@@ -66,6 +67,7 @@ class LoginController extends StateNotifier<LoginState> {
           AppConstants.yearID = response.yrId.toString();
           mstKeyAndDetKeyChecking();
           Navigator.pushAndRemoveUntil(
+            // ignore: use_build_context_synchronously
             context,
             MaterialPageRoute(builder: (context) => BottomNavScreen()),
             (route) => false,
@@ -76,6 +78,7 @@ class LoginController extends StateNotifier<LoginState> {
     } catch (e) {
       log("Controller error : $e");
 
+      // ignore: use_build_context_synchronously
       AppMessage.show(context, e.toString());
     } finally {
       state = state.copyWith(isLoading: false);

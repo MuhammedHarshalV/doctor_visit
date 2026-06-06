@@ -1,5 +1,7 @@
+import 'package:doctor_visit/controller/add_doctor_controller/add_doctor_controller.dart';
 import 'package:doctor_visit/controller/bottom_nav_screen/bottom_nav_controller.dart';
 import 'package:doctor_visit/controller/expense_controller/expense_controller.dart';
+import 'package:doctor_visit/controller/home_screen_controller/home_screen_controller.dart';
 
 import 'package:doctor_visit/theme/colors/appcolors.dart';
 import 'package:doctor_visit/view/screens/add_doctor_screen/add_doctor.dart';
@@ -29,6 +31,7 @@ class BottomNavScreen extends ConsumerWidget {
       child: SafeArea(
         child: PopScope(
           canPop: false,
+          // ignore: deprecated_member_use
           onPopInvoked: (didPop) async {
             if (bottomNavState.currentIndex == 0) {
               // 🔥 Exit app
@@ -55,24 +58,38 @@ class BottomNavScreen extends ConsumerWidget {
             //hideNavigationBarWhenKeyboardShows: true,
             stateManagement: true,
             onItemSelected: (index) {
-              // if (index == 1) {
-              //   bottomNavNotifier.setIndex(0);
+              if (index == 1) {
+                bottomNavNotifier.setIndex(0);
 
-              //   controller.jumpToTab(0);
-              //   PersistentNavBarNavigator.pushNewScreen(
-              //     context,
-              //     screen: AddDoctorScreen(),
-              //     withNavBar: false, // 🔥 hide bottom nav
-              //     pageTransitionAnimation: PageTransitionAnimation.cupertino,
-              //   );
-              // } else {
-              if (bottomNavState.currentIndex == 2 && index != 2) {
-                // ref.invalidate(dayExpenseProvider);
-                // ref.read(dayExpenseProvider.notifier).iniatialCall();
-              } else {
-                ref.invalidate(dayExpenseProvider);
-                ref.read(dayExpenseProvider.notifier).iniatialCall();
+                controller.jumpToTab(0);
               }
+              final currentIndex = bottomNavState.currentIndex;
+
+              // Dispose the screen we are leaving
+              switch (currentIndex) {
+                case 0:
+                  if (index != 0) {
+                    ref.invalidate(dayExpenseProvider);
+                    ref.invalidate(addDoctorProvider);
+                  }
+                  break;
+
+                case 1:
+                  if (index != 1) {
+                    ref.invalidate(dayExpenseProvider);
+                    ref.invalidate(homeScreenProvider);
+                  }
+                  break;
+
+                case 2:
+                  if (index != 2) {
+                    ref.invalidate(homeScreenProvider);
+                    ref.invalidate(addDoctorProvider);
+                  }
+                  break;
+              }
+              // Change tab
+
               bottomNavNotifier.setIndex(index);
               // }
             },
@@ -81,6 +98,7 @@ class BottomNavScreen extends ConsumerWidget {
               border: Border.all(color: AppColors.appWhite, width: .5),
               colorBehindNavBar: Theme.of(
                 context,
+                // ignore: deprecated_member_use
               ).scaffoldBackgroundColor.withOpacity(0.5),
             ),
           ),

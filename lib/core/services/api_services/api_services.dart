@@ -50,8 +50,10 @@ class GetApiServices {
       if (response.statusCode! >= 200 && response.statusCode! < 300) {
         return response.data;
       } else {
-        if (context != null)
+        if (context != null) {
+          // ignore: use_build_context_synchronously
           AppMessage.show(context, "Server Error : ${response.statusCode}");
+        }
         return null;
       }
     } on DioException catch (e) {
@@ -59,20 +61,27 @@ class GetApiServices {
 
       if (e.type == DioExceptionType.connectionTimeout ||
           e.type == DioExceptionType.receiveTimeout) {
+        // ignore: use_build_context_synchronously
         if (context != null) AppMessage.show(context, "Connection timed out");
       } else if (e.type == DioExceptionType.connectionError) {
+        // ignore: use_build_context_synchronously
         if (context != null) AppMessage.show(context, "No Internet Connection");
       } else if (e.response != null) {
-        if (context != null)
+        if (context != null) {
+          // ignore: use_build_context_synchronously
           AppMessage.show(context, "Server Error : ${e.response?.statusCode}");
+        }
       } else {
-        if (context != null)
+        if (context != null) {
+          // ignore: use_build_context_synchronously
           AppMessage.show(context, e.message ?? "Unknown Error");
+        }
       }
 
       return null;
     } catch (e) {
       log("UNKNOWN ERROR : $e");
+      // ignore: use_build_context_synchronously
       if (context != null) AppMessage.show(context, e.toString());
       return null;
     }
@@ -124,8 +133,10 @@ class PostApiServices {
       if (response.statusCode! >= 200 && response.statusCode! < 300) {
         return response.data;
       } else {
-        if (context != null)
+        if (context != null) {
+          // ignore: use_build_context_synchronously
           AppMessage.show(context, "Server Error : ${response.statusCode}");
+        }
         return null;
       }
     } on DioException catch (e) {
@@ -133,20 +144,27 @@ class PostApiServices {
 
       if (e.type == DioExceptionType.connectionTimeout ||
           e.type == DioExceptionType.receiveTimeout) {
+        // ignore: use_build_context_synchronously
         if (context != null) AppMessage.show(context, "Connection timed out");
       } else if (e.type == DioExceptionType.connectionError) {
+        // ignore: use_build_context_synchronously
         if (context != null) AppMessage.show(context, "No Internet Connection");
       } else if (e.response != null) {
-        if (context != null)
+        if (context != null) {
+          // ignore: use_build_context_synchronously
           AppMessage.show(context, "Server Error : ${e.response?.statusCode}");
+        }
       } else {
-        if (context != null)
+        if (context != null) {
+          // ignore: use_build_context_synchronously
           AppMessage.show(context, e.message ?? "Unknown Error");
+        }
       }
 
       return null;
     } catch (e) {
       log("UNKNOWN ERROR : $e");
+      // ignore: use_build_context_synchronously
       if (context != null) AppMessage.show(context, e.toString());
       return null;
     }

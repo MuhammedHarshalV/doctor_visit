@@ -22,6 +22,12 @@ class HomeScreenNotifier extends StateNotifier<HomeScreenState> {
     await getDoctorsVisit();
   }
 
+  @override
+  void dispose() {
+    log('Home controller Dispose.');
+    super.dispose();
+  }
+
   //get doctors visit list api
 
   Future<void> getDoctorsVisit() async {
@@ -86,14 +92,15 @@ class HomeScreenNotifier extends StateNotifier<HomeScreenState> {
           await prefs.setString('Today_date', currentDate);
           AppConstants.mstKey = response.data?.proMstKey?.toString() ?? '';
           AppConstants.detKey = response.data?.proDetKey?.toString() ?? '';
+          AppConstants.date = currentDate;
+          log('date : ${AppConstants.date}');
           log('mstkey :${AppConstants.mstKey}');
           log('detkey :${AppConstants.detKey}');
-          log('date : ${AppConstants.date}');
         }
 
         log('Stored mstkey : ${AppConstants.mstKey}');
         log('Stored detKey : ${AppConstants.detKey}');
-        log('date : ${AppConstants.date}');
+        log('stored date : ${AppConstants.date}');
       } else if (AppConstants.date != currentDate) {
         await prefs.setString(
           'mst_key',
@@ -256,6 +263,8 @@ class HomeScreenNotifier extends StateNotifier<HomeScreenState> {
 
 // Provider for home screen
 final homeScreenProvider =
-    StateNotifierProvider<HomeScreenNotifier, HomeScreenState>((ref) {
+    StateNotifierProvider.autoDispose<HomeScreenNotifier, HomeScreenState>((
+      ref,
+    ) {
       return HomeScreenNotifier();
     });

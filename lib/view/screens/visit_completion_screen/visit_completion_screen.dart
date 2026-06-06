@@ -39,187 +39,195 @@ class VisitCompletionScreen extends ConsumerWidget {
       child: SafeArea(
         child: Scaffold(
           backgroundColor: AppColors.appWhite,
-          appBar: AppBar(
-            backgroundColor: AppColors.appWhite,
-            leading: Container(
-              margin: const EdgeInsets.only(left: 10),
-              decoration: BoxDecoration(
-                color: AppColors.appPrimaryRed,
-                shape: BoxShape.circle, // or BoxShape.rectangle
-              ),
-              child: IconButton(
-                icon: Icon(
-                  Icons.arrow_back_ios_new_rounded,
-                  color: AppColors.appWhite,
-                ),
-                onPressed: () {
-                  homeScreenController.getDoctorsVisit();
-                  Navigator.pop(context);
-                },
-              ),
-            ),
-            actions: [
-              InkWell(
-                onTap: () async {
-                  bool isConnected = await checkInternetConnection();
-                  log("1========${isConnected.toString()}");
-
-                  if (isConnected) {
-                    log("Internet ON");
-                  } else {
-                    log("2========${isConnected.toString()}");
-                    log("Internet OFF");
-                  }
-                  bool isAnyStarted = homeScreenState.doctorsListAPI.any(
-                    (element) => element.drIsGoing == true,
-                  );
-
-                  if (homeScreenState.doctorsListAPI[index].drIsGoing == null &&
-                      isConnected == true &&
-                      isAnyStarted == false) {
-                    try {
-                      final String doctorID = homeScreenState
-                          .doctorsListAPI[index]
-                          .drId
-                          .toString();
-                      doctorVisitController.isGoingStart(doctorID: doctorID);
-
-                      Position position = await getCurrentLocation();
-                      String currentTime = DateTime.now().toIso8601String();
-                      String currentDate = DateFormat(
-                        'yyyy-MM-dd',
-                      ).format(DateTime.now());
-                      String mapUrl =
-                          "https://www.google.com/maps?q=${position.latitude},${position.longitude}";
-
-                      log("Time: $currentTime");
-                      log("Date: $currentDate");
-                      log("Lat: ${position.latitude}");
-                      log("Lng: ${position.longitude}");
-                      log(mapUrl);
-                      await doctorVisitController
-                          .isGoingAndCompletionLocationSend(
-                            isStart: true,
-                            base64Image: null,
-                            doctorID: doctorID,
-                            date: currentDate,
-                            startLocation: mapUrl,
-                            startTime: currentTime,
-                            endLocation: null,
-                            endTime: null,
-                            feedback: null,
-                            detKey: null,
-                            workstatus: null,
-                          );
-                      if (doctorVisitState.response.isEmpty) {
-                        await homeScreenController.getDoctorsVisit();
-                        doctorVisitController.updateResponse('');
-                        doctorVisitController.setStartTime(null);
-                      }
-                    } catch (e) {
-                      log("harshal==================${e.toString()}");
-
-                      if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              e.toString(),
-                              style: TextStyle(
-                                color: AppColors.appWhite,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            backgroundColor: Colors.blue,
-                            behavior: SnackBarBehavior.floating,
-                            margin: EdgeInsets.only(
-                              bottom: MediaQuery.of(context).size.height - 120,
-                              left: 16,
-                              right: 16,
-                            ),
-                          ),
-                        );
-                      }
-                    }
-                  } else if (homeScreenState.doctorsListAPI[index].drIsGoing ==
-                          null &&
-                      isConnected == false) {
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          // padding: EdgeInsets.all(10),
-                          content: Text(
-                            "No internet connection. Please try again when the network is available.",
-                            style: TextStyle(
-                              color: AppColors.appBlack,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          backgroundColor: AppColors.appWhite,
-                          behavior: SnackBarBehavior.floating,
-                          margin: EdgeInsets.only(
-                            bottom: MediaQuery.of(context).size.height - 120,
-                            left: 16,
-                            right: 16,
-                          ),
-                        ),
-                      );
-                    }
-                  } else if (homeScreenState.doctorsListAPI[index].drIsGoing ==
-                          null &&
-                      isConnected == true &&
-                      isAnyStarted == true) {
-                    if (context.mounted) {
-                      showDialog(
-                        context: context,
-                        builder: (context) => CommonAlertDialog(
-                          message:
-                              "You already have an active visit in progress. Please complete the current visit before starting a new one.",
-                        ),
-                      );
-                    }
-                  }
-                  // update via Riverpod
-                },
-                child: Container(
-                  height: 50,
-                  width: 100,
-                  decoration: BoxDecoration(
-                    color: AppColors.appGreen,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: doctorVisitState.isLoading == true
-                      ? SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: Center(
-                            child: CircularProgressIndicator(
-                              color: AppColors.appWhite,
-                              strokeWidth: 1,
-                            ),
-                          ),
-                        )
-                      : Center(
-                          child: Text(
-                            'Start Going',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.appWhite,
-                            ),
-                          ),
-                        ),
-                ),
-              ),
-              SizedBox(width: 5),
-
-              SizedBox(width: 5),
-            ],
-          ),
 
           body: Padding(
             padding: EdgeInsets.all(10),
             child: Column(
               children: [
-                /// 🔴 COLOR PICKER
+                Row(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(left: 10),
+                      decoration: BoxDecoration(
+                        color: AppColors.appPrimaryRed,
+                        shape: BoxShape.circle, // or BoxShape.rectangle
+                      ),
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.arrow_back_ios_new_rounded,
+                          color: AppColors.appWhite,
+                        ),
+                        onPressed: () {
+                          homeScreenController.getDoctorsVisit();
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ),
+                    Spacer(),
+                    InkWell(
+                      onTap: () async {
+                        bool isConnected = await checkInternetConnection();
+                        log("1========${isConnected.toString()}");
+
+                        if (isConnected) {
+                          log("Internet ON");
+                        } else {
+                          log("2========${isConnected.toString()}");
+                          log("Internet OFF");
+                        }
+                        bool isAnyStarted = homeScreenState.doctorsListAPI.any(
+                          (element) => element.drIsGoing == true,
+                        );
+
+                        if (homeScreenState.doctorsListAPI[index].drIsGoing ==
+                                null &&
+                            isConnected == true &&
+                            isAnyStarted == false) {
+                          try {
+                            final String doctorID = homeScreenState
+                                .doctorsListAPI[index]
+                                .drId
+                                .toString();
+                            doctorVisitController.isGoingStart(
+                              doctorID: doctorID,
+                            );
+
+                            Position position = await getCurrentLocation();
+                            String currentTime = DateTime.now()
+                                .toIso8601String();
+                            String currentDate = DateFormat(
+                              'yyyy-MM-dd',
+                            ).format(DateTime.now());
+                            String mapUrl =
+                                "https://www.google.com/maps?q=${position.latitude},${position.longitude}";
+
+                            log("Time: $currentTime");
+                            log("Date: $currentDate");
+                            log("Lat: ${position.latitude}");
+                            log("Lng: ${position.longitude}");
+                            log(mapUrl);
+                            await doctorVisitController
+                                .isGoingAndCompletionLocationSend(
+                                  isStart: true,
+                                  base64Image: null,
+                                  doctorID: doctorID,
+                                  date: currentDate,
+                                  startLocation: mapUrl,
+                                  startTime: currentTime,
+                                  endLocation: null,
+                                  endTime: null,
+                                  feedback: null,
+                                  detKey: null,
+                                  workstatus: null,
+                                );
+                            if (doctorVisitState.response.isEmpty) {
+                              await homeScreenController.getDoctorsVisit();
+                              doctorVisitController.updateResponse('');
+                              doctorVisitController.setStartTime(null);
+                            }
+                          } catch (e) {
+                            log("harshal==================${e.toString()}");
+
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    e.toString(),
+                                    style: TextStyle(
+                                      color: AppColors.appWhite,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  backgroundColor: Colors.blue,
+                                  behavior: SnackBarBehavior.floating,
+                                  margin: EdgeInsets.only(
+                                    bottom:
+                                        MediaQuery.of(context).size.height -
+                                        120,
+                                    left: 16,
+                                    right: 16,
+                                  ),
+                                ),
+                              );
+                            }
+                          }
+                        } else if (homeScreenState
+                                    .doctorsListAPI[index]
+                                    .drIsGoing ==
+                                null &&
+                            isConnected == false) {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                // padding: EdgeInsets.all(10),
+                                content: Text(
+                                  "No internet connection. Please try again when the network is available.",
+                                  style: TextStyle(
+                                    color: AppColors.appBlack,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                backgroundColor: AppColors.appWhite,
+                                behavior: SnackBarBehavior.floating,
+                                margin: EdgeInsets.only(
+                                  bottom:
+                                      MediaQuery.of(context).size.height - 120,
+                                  left: 16,
+                                  right: 16,
+                                ),
+                              ),
+                            );
+                          }
+                        } else if (homeScreenState
+                                    .doctorsListAPI[index]
+                                    .drIsGoing ==
+                                null &&
+                            isConnected == true &&
+                            isAnyStarted == true) {
+                          if (context.mounted) {
+                            showDialog(
+                              context: context,
+                              builder: (context) => CommonAlertDialog(
+                                message:
+                                    "You already have an active visit in progress. Please complete the current visit before starting a new one.",
+                              ),
+                            );
+                          }
+                        }
+                        // update via Riverpod
+                      },
+                      child: Container(
+                        height: 40,
+                        width: 100,
+                        decoration: BoxDecoration(
+                          color: AppColors.appGreen,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: doctorVisitState.isLoading == true
+                            ? SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: Center(
+                                  child: CircularProgressIndicator(
+                                    color: AppColors.appWhite,
+                                    strokeWidth: 1,
+                                  ),
+                                ),
+                              )
+                            : Center(
+                                child: Text(
+                                  'Start Going',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.appWhite,
+                                  ),
+                                ),
+                              ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 10),
 
                 /// 📍 LOCATION
                 Expanded(
@@ -455,11 +463,9 @@ class VisitCompletionScreen extends ConsumerWidget {
 
                                               if (isConnected == true) {
                                                 try {
-                                                  final String doctorID =
+                                                  final doctorID =
                                                       homeScreenState
-                                                          .doctorsListAPI[index]
-                                                          .drId
-                                                          .toString();
+                                                          .doctorsListAPI[index];
 
                                                   String currentDate =
                                                       DateFormat(
@@ -471,7 +477,8 @@ class VisitCompletionScreen extends ConsumerWidget {
                                                   visitController
                                                       .isGoingAndCompletionLocationSend(
                                                         isCompleted: true,
-                                                        doctorID: doctorID,
+                                                        doctorID: doctorID.drId
+                                                            .toString(),
                                                         date: currentDate,
                                                         startLocation: null,
                                                         startTime: null,
@@ -481,7 +488,12 @@ class VisitCompletionScreen extends ConsumerWidget {
                                                             .feedbackController
                                                             .text,
                                                         detKey:
-                                                            AppConstants.detKey,
+                                                            doctorID.drIsGoing ==
+                                                                true
+                                                            ? AppConstants
+                                                                  .detKey
+                                                            : null,
+                                                        // AppConstants.detKey,
                                                         workstatus: '2',
                                                         base64Image: null,
                                                       );
@@ -695,7 +707,7 @@ class VisitCompletionScreen extends ConsumerWidget {
                                             base64Image:
                                                 doctorVisitState.fileImage,
                                           );
-
+                                      //
                                       await homeScreenController
                                           .getDoctorsVisit();
                                       doctorVisitController.updateResponse('');
@@ -745,7 +757,7 @@ class VisitCompletionScreen extends ConsumerWidget {
                                 width: 20,
                                 child: CircularProgressIndicator(
                                   color: AppColors.appWhite,
-                                  strokeWidth: .8,
+                                  strokeWidth: 2,
                                 ),
                               )
                             : Center(

@@ -48,7 +48,9 @@ class TypeTextFormField extends StatelessWidget {
           }
           return null;
         },
-
+        onTapOutside: (_) {
+          FocusManager.instance.primaryFocus?.unfocus();
+        },
         decoration: InputDecoration(
           prefixIcon: preIcon,
           suffixIcon: isSuffix

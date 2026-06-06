@@ -91,7 +91,7 @@ class HomeScreen extends ConsumerWidget {
                         ),
                       ],
                     ),
-
+                    SizedBox(height: 10),
                     if (homeScreenWatch.doctorsListAPI.isEmpty &&
                         homeScreenWatch.isLoading == false)
                       SizedBox(
@@ -121,11 +121,15 @@ class HomeScreen extends ConsumerWidget {
                             initial: doctor.drName?.isNotEmpty == true
                                 ? doctor.drName![0]
                                 : 'A',
-                            isDone: doctor.drIsGoing == false ? true : false,
+                            isDone: doctor.visitStatus == null
+                                ? null
+                                : doctor.visitStatus == 1
+                                ? 1
+                                : 2,
                             isSelected: doctor.drIsGoing == true ? true : false,
                           );
                         },
-                        separatorBuilder: (_, _) => const SizedBox(height: 5),
+                        separatorBuilder: (_, _) => const SizedBox(height: 8),
                       ),
 
                     const SizedBox(height: 70),

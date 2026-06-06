@@ -34,27 +34,31 @@ class ExpenseController extends StateNotifier<ExpenseState> {
 
   //progress_api
   Future<void> getProgressPercentage() async {
-    final ProgressPercentageResponseModel response =
+    final ProgressPercentageResponseModel? response =
         await GetProgressPercentage.getProgressPercentage();
-    state = state.copyWith(progressPeercentage: [response]);
-    if (state.progressPeercentage.isNotEmpty) {
-      int value = state.progressPeercentage.first.percentage!.round();
-      num progressValue = value / 100;
-      state = state.copyWith(progressValue: progressValue);
+    if (response != null) {
+      state = state.copyWith(progressPeercentage: [response]);
+      if (state.progressPeercentage.isNotEmpty) {
+        int value = state.progressPeercentage.first.percentage!.round();
+        num progressValue = value / 100;
+        state = state.copyWith(progressValue: progressValue);
+      }
+      log('response from controller: ${response.toString()}');
     }
-    log('response from controller: ${response.toString()}');
   }
 
   //today expense api
   Future<void> todayExpenseHistory() async {
-    final TodayExpenseResponseModel response =
+    final TodayExpenseResponseModel? response =
         await TodayExpenseGetApi.todayExpenseGetApi();
-    state = state.copyWith(
-      todayExpenseList: response.expenseList?.first.expenses ?? [],
-    );
-    state = state.copyWith(totalExpense: response.totalExpense);
+    if (response?.expenseList?.isNotEmpty == true) {
+      state = state.copyWith(
+        todayExpenseList: response?.expenseList!.first.expenses ?? [],
+      );
+      state = state.copyWith(totalExpense: response?.totalExpense);
 
-    log('today expense list from controller: ${response.toString()}');
+      log('today expense list from controller: ${response.toString()}');
+    }
   }
 
   //edit expense api
@@ -189,6 +193,6 @@ class ExpenseController extends StateNotifier<ExpenseState> {
 }
 
 final dayExpenseProvider =
-    StateNotifierProvider<ExpenseController, ExpenseState>(
+    StateNotifierProvider.autoDispose<ExpenseController, ExpenseState>(
       (ref) => ExpenseController(),
     );

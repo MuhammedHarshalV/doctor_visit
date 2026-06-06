@@ -31,13 +31,12 @@ class CommonTextField extends StatelessWidget {
         const SizedBox(height: 8),
         TextField(
           controller: controller,
+          onTapOutside: (_) {
+            FocusManager.instance.primaryFocus?.unfocus();
+          },
           decoration: InputDecoration(
             hintText: hint,
-            prefixIcon: Icon(
-              icon,
-              color: const Color(0xFFE53935),
-              size: 20,
-            ),
+            prefixIcon: Icon(icon, color: const Color(0xFFE53935), size: 20),
             filled: true,
             fillColor: const Color(0xFFFFEBEE),
             border: OutlineInputBorder(

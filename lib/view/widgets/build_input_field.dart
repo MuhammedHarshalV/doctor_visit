@@ -38,6 +38,9 @@ class CustomInputField extends StatelessWidget {
           inputFormatters: isNumber
               ? [FilteringTextInputFormatter.digitsOnly]
               : null,
+          onTapOutside: (_) {
+            FocusManager.instance.primaryFocus?.unfocus();
+          },
           decoration: InputDecoration(
             hintText: hint,
             prefixIcon: Icon(icon, color: AppColors.appPrimaryRed, size: 20),
