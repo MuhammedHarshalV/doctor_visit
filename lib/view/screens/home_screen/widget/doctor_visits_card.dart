@@ -37,7 +37,7 @@ class DoctorCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // 👉 Example: you can watch providers here if needed
+    //  Example: you can watch providers here if needed
     final homeState = ref.watch(homeScreenProvider);
 
     return InkWell(
@@ -47,7 +47,7 @@ class DoctorCard extends ConsumerWidget {
       focusColor: Colors.transparent,
       onTap: () {
         if (homeState.isOn &&
-            homeState.doctorsListAPI[indexGet].drIsGoing == false) {
+            homeState.doctorsListAPI[indexGet].visitStatus != null) {
           showDialog(
             context: context,
             builder: (BuildContext context) {

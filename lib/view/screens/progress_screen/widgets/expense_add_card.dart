@@ -1,14 +1,19 @@
+import 'dart:developer';
+import 'dart:typed_data';
+
 import 'package:doctor_visit/controller/expense_controller/expense_controller.dart';
 import 'package:doctor_visit/core/constants/app_constants.dart';
 import 'package:doctor_visit/view/screens/home_screen/widget/alert_dialog.dart';
 import 'package:doctor_visit/view/screens/progress_screen/widgets/category_widget.dart';
 import 'package:doctor_visit/view/widgets/build_input_field.dart';
+import 'package:doctor_visit/view/widgets/image_helper.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:doctor_visit/theme/colors/appcolors.dart';
 import 'package:doctor_visit/view/widgets/common_title_text.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 class ExpenseFormCard extends ConsumerWidget {
@@ -92,8 +97,32 @@ class ExpenseFormCard extends ConsumerWidget {
             ),
             CommonTitleText(title: 'Bill (optional)'),
             GestureDetector(
-              onTap: () {
-                // camera
+              onTap: () async {
+                final XFile? image = await ImageHelper.pickImage(
+                  isSelfie: false,
+                  context: context,
+                );
+                if (image == null) return;
+
+                //  Step 2 — Convert to base64
+                final String? base64String = await ImageHelper.imageToBase64(
+                  image.path,
+                );
+                if (base64String == null) return;
+
+                //  Step 3 — Convert to bytes for display
+                final Uint8List? bytes = ImageHelper.base64ToBytes(
+                  base64String,
+                );
+                if (bytes == null) return;
+
+                //  Step 4 — Save to controller
+                progressController.updateImage(bytes, image.path);
+
+                log(
+                  "Image ready. Base64 KB: ${(base64String.length / 1024).toStringAsFixed(1)}",
+                );
+                progressController.base64ToApiUpdate(base64String);
               },
               child: Container(
                 height: 170,
@@ -101,16 +130,24 @@ class ExpenseFormCard extends ConsumerWidget {
                 decoration: BoxDecoration(
                   color: AppColors.appTextFieldRed,
                   borderRadius: BorderRadius.circular(12),
+                  image: progressState.base64Image.isNotEmpty
+                      ? DecorationImage(
+                          image: MemoryImage(progressState.base64Image),
+                          fit: BoxFit.cover,
+                        )
+                      : null,
                 ),
-                child: const Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.camera_alt_outlined, size: 30),
-                      SizedBox(height: 5),
-                      Text("Tap to capture Bill"),
-                    ],
-                  ),
+                child: Center(
+                  child: progressState.base64Image.isNotEmpty
+                      ? null
+                      : Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.camera_alt_outlined, size: 30),
+                            SizedBox(height: 5),
+                            Text("Tap to capture Bill"),
+                          ],
+                        ),
                 ),
               ),
             ),
@@ -135,7 +172,7 @@ class ExpenseFormCard extends ConsumerWidget {
               width: double.infinity,
               height: 55,
               child: ElevatedButton.icon(
-                onPressed: () {
+                onPressed: () async {
                   if (progressState.amountController.text.isEmpty) {
                     showDialog(
                       context: context,
@@ -143,7 +180,8 @@ class ExpenseFormCard extends ConsumerWidget {
                           CommonAlertDialog(message: 'Amount Cannot be Empty'),
                     );
                   } else {
-                    progressController.editExpense(
+                    await progressController.editExpense(
+                      expenseBill: progressState.base64toApi,
                       context: context,
                       employeeID: AppConstants.employeeID,
                       yearId: AppConstants.yearID,

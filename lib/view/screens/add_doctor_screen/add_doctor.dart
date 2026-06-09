@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:doctor_visit/controller/add_doctor_controller/add_doctor_controller.dart';
 import 'package:doctor_visit/controller/bottom_nav_screen/bottom_nav_controller.dart';
-import 'package:doctor_visit/controller/home_screen_controller/home_screen_controller.dart';
 import 'package:doctor_visit/theme/colors/appcolors.dart';
 
 import 'package:doctor_visit/view/widgets/common_appbar.dart';
@@ -11,37 +10,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AddDoctorScreen extends ConsumerStatefulWidget {
+class AddDoctorScreen extends ConsumerWidget {
   const AddDoctorScreen({super.key});
 
   @override
-  ConsumerState<AddDoctorScreen> createState() => _AddDoctorScreenState();
-}
-
-class _AddDoctorScreenState extends ConsumerState<AddDoctorScreen> {
-  final _formKey = GlobalKey<FormState>();
-
-  final TextEditingController doctorNameController = TextEditingController();
-  final TextEditingController doctorPhoneController = TextEditingController();
-  final TextEditingController doctorSpecialityController =
-      TextEditingController();
-  final TextEditingController doctorClinicController = TextEditingController();
-  final TextEditingController doctorDiscussionController =
-      TextEditingController();
-
-  @override
-  void dispose() {
-    doctorNameController.dispose();
-
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final addDoctorScreenWatch = ref.watch(addDoctorProvider);
     final addDoctorScreenRead = ref.read(addDoctorProvider.notifier);
-    ref.watch(homeScreenProvider);
-    ref.read(homeScreenProvider.notifier);
+
     final bottomNavNotifier = ref.read(bottomNavProvider.notifier);
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
@@ -61,7 +37,7 @@ class _AddDoctorScreenState extends ConsumerState<AddDoctorScreen> {
           body: Padding(
             padding: const EdgeInsets.only(left: 10, right: 10),
             child: Form(
-              key: _formKey,
+              key: addDoctorScreenWatch.formKey,
               autovalidateMode: addDoctorScreenWatch.isSubmitted
                   ? AutovalidateMode.onUserInteraction
                   : AutovalidateMode.disabled,
@@ -85,8 +61,9 @@ class _AddDoctorScreenState extends ConsumerState<AddDoctorScreen> {
                     TopText(heading: 'Doctor Name *'),
                     SizedBox(height: 7),
                     TypeTextFormField(
+                      validationType: ValidationType.name,
                       hintText: 'Doctor Name',
-                      textController: doctorNameController,
+                      textController: addDoctorScreenWatch.doctorNameController,
                       preIcon: Icon(
                         Icons.person_2_outlined,
                         color: AppColors.appPrimaryRed,
@@ -102,8 +79,10 @@ class _AddDoctorScreenState extends ConsumerState<AddDoctorScreen> {
                     TopText(heading: 'Phone Number *'),
                     SizedBox(height: 7),
                     TypeTextFormField(
+                      validationType: ValidationType.phone,
                       hintText: 'Phone Number',
-                      textController: doctorPhoneController,
+                      textController:
+                          addDoctorScreenWatch.doctorPhoneController,
                       preIcon: Icon(
                         Icons.phone,
                         color: AppColors.appPrimaryRed,
@@ -124,61 +103,317 @@ class _AddDoctorScreenState extends ConsumerState<AddDoctorScreen> {
                     // ),
                     TopText(heading: 'Speciality *'),
                     SizedBox(height: 7),
-                    TypeTextFormField(
-                      hintText: 'Speciality',
-                      textController: doctorSpecialityController,
-                      preIcon: Icon(
-                        Icons.medical_information_outlined,
-                        color: AppColors.appPrimaryRed,
-                      ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TypeTextFormField(
+                            validationType: ValidationType.name,
+                            hintText: 'Speciality',
+                            textController:
+                                addDoctorScreenWatch.doctorSpecialityController,
+                            preIcon: Icon(
+                              Icons.medical_information_outlined,
+                              color: AppColors.appPrimaryRed,
+                            ),
+                            onChanged: (p0) {
+                              final item = addDoctorScreenWatch.specialityList
+                                  .cast()
+                                  .where(
+                                    (e) =>
+                                        (e.desc ?? '').trim().toLowerCase() ==
+                                        p0.trim().toLowerCase(),
+                                  );
+
+                              if (item.isNotEmpty) {
+                                addDoctorScreenRead.updateStateClass(
+                                  specialityId: item.first.key,
+                                );
+
+                                log('speciality id assign ${item.first.key}');
+                              } else {
+                                addDoctorScreenRead.updateStateClass(
+                                  specialityId: 0,
+                                );
+
+                                log('speciality id assign 0');
+                              }
+                            },
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        GestureDetector(
+                          onTapDown: (details) {
+                            showMore(
+                              context: context,
+                              tapPosition: details.globalPosition,
+                              items: addDoctorScreenWatch.specialityList,
+                              onSelected: (key, desc) {
+                                addDoctorScreenWatch
+                                        .doctorSpecialityController
+                                        .text =
+                                    desc;
+
+                                addDoctorScreenRead.updateStateClass(
+                                  specialityId: key,
+                                );
+                              },
+                            ); // directly pass it
+                          },
+                          child: Container(
+                            height: 60, // same height as TextField
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            decoration: BoxDecoration(
+                              color: const Color(
+                                0xFFFFEBEE,
+                              ), // light red background
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Row(
+                              children: [
+                                Text('Select'),
+                                SizedBox(width: 5),
+                                Icon(Icons.arrow_drop_down),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 5),
+
+                    TopText(heading: 'Area *'),
+                    SizedBox(height: 7),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TypeTextFormField(
+                            validationType: ValidationType.name,
+                            onChanged: (p0) {
+                              final item = addDoctorScreenWatch.areaList
+                                  .cast()
+                                  .where(
+                                    (e) =>
+                                        (e.desc ?? '').trim().toLowerCase() ==
+                                        p0.trim().toLowerCase(),
+                                  );
+
+                              if (item.isNotEmpty) {
+                                addDoctorScreenRead.updateStateClass(
+                                  areaId: item.first.key,
+                                );
+
+                                log('area id id assign ${item.first.key}');
+                              } else {
+                                addDoctorScreenRead.updateStateClass(
+                                  specialityId: 0,
+                                );
+
+                                log('area id id assign 0');
+                              }
+                            },
+                            hintText: addDoctorScreenWatch.areaId == 0
+                                ? 'Area'
+                                : '',
+                            textController:
+                                addDoctorScreenWatch.areaIdController,
+                            preIcon: Icon(
+                              Icons.area_chart_outlined,
+                              color: AppColors.appPrimaryRed,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        GestureDetector(
+                          onTapDown: (details) {
+                            showMore(
+                              context: context,
+                              tapPosition: details.globalPosition,
+                              items: addDoctorScreenWatch.areaList,
+                              onSelected: (key, desc) {
+                                addDoctorScreenWatch.areaIdController.text =
+                                    desc;
+                                addDoctorScreenRead.updateStateClass(
+                                  areaId: key,
+                                );
+                              },
+                            ); // directly pass it
+                          },
+                          child: Container(
+                            height: 60, // same height as TextField
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            decoration: BoxDecoration(
+                              color: const Color(
+                                0xFFFFEBEE,
+                              ), // light red background
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Row(
+                              children: [
+                                Text('Select'),
+                                SizedBox(width: 5),
+                                Icon(Icons.arrow_drop_down),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                     SizedBox(height: 5),
 
                     TopText(heading: 'Clinic Name *'),
                     SizedBox(height: 7),
-                    TypeTextFormField(
-                      hintText: 'Clinic Name',
-                      textController: doctorClinicController,
-                      preIcon: Icon(
-                        Icons.medical_services_outlined,
-                        color: AppColors.appPrimaryRed,
-                      ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TypeTextFormField(
+                            onChanged: (p0) {
+                              final item = addDoctorScreenWatch.clinicList
+                                  .cast()
+                                  .where(
+                                    (e) =>
+                                        (e.ahMstPName ?? '')
+                                            .trim()
+                                            .toLowerCase() ==
+                                        p0.trim().toLowerCase(),
+                                  );
+
+                              if (item.isNotEmpty) {
+                                addDoctorScreenRead.updateStateClass(
+                                  clinicId: item.first.ahMstKey,
+                                );
+
+                                log(
+                                  'clinic id id assign ${item.first.ahMstKey}',
+                                );
+                              } else {
+                                addDoctorScreenRead.updateStateClass(
+                                  clinicId: 0,
+                                );
+
+                                log('clinic id id assign 0');
+                              }
+                            },
+                            validationType: ValidationType.name,
+                            hintText: 'Clinic Name',
+                            textController:
+                                addDoctorScreenWatch.doctorClinicController,
+
+                            preIcon: Icon(
+                              Icons.medical_services_outlined,
+                              color: AppColors.appPrimaryRed,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        GestureDetector(
+                          onTapDown: (details) {
+                            showMore(
+                              isClinic: true,
+                              context: context,
+                              tapPosition: details.globalPosition,
+                              items: addDoctorScreenWatch.clinicList,
+                              onSelected: (ahMstKey, ahMstPName) {
+                                addDoctorScreenWatch
+                                        .doctorClinicController
+                                        .text =
+                                    ahMstPName;
+                                addDoctorScreenRead.updateStateClass(
+                                  clinicId: ahMstKey,
+                                );
+                              },
+                            ); // directly pass it
+                          },
+                          child: Container(
+                            height: 60, // same height as TextField
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            decoration: BoxDecoration(
+                              color: const Color(
+                                0xFFFFEBEE,
+                              ), // light red background
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Row(
+                              children: [
+                                Text('Select'),
+                                SizedBox(width: 5),
+                                Icon(Icons.arrow_drop_down),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                     // buildInputField(
                     //   label: "Clinic Name *",
                     //   hint: "e.g. Health Center",
                     //   icon: Icons.medical_services_outlined,
                     // ),
+                    SizedBox(height: 10),
+                    TopText(heading: 'Incentive'), SizedBox(height: 7),
+                    Container(
+                      height: 60,
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFFEBEE),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButtonFormField<String>(
+                          value: addDoctorScreenWatch.isIncentive,
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: const Color(0xFFFFEBEE),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide.none,
+                            ),
+                          ),
+                          dropdownColor: Colors.white, // dropdown background
+
+                          borderRadius: BorderRadius.circular(
+                            15,
+                          ), // popup border radius
+                          // Always display this text
+                          selectedItemBuilder: (context) {
+                            return ['Yes', 'No'].map((e) {
+                              return Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  addDoctorScreenWatch.isIncentive,
+                                  style: TextStyle(
+                                    color: AppColors.appBlack,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              );
+                            }).toList();
+                          },
+
+                          items: const [
+                            DropdownMenuItem(value: 'Yes', child: Text('Yes')),
+                            DropdownMenuItem(value: 'No', child: Text('No')),
+                          ],
+
+                          onChanged: (value) {
+                            addDoctorScreenRead.updateStateClass(
+                              isIncentive: value,
+                            );
+                          },
+                        ),
+                      ),
+                    ),
                     SizedBox(height: 5),
 
                     _sectionTitle("Discussion"),
                     TextFormField(
-                      controller: doctorDiscussionController,
+                      controller:
+                          addDoctorScreenWatch.doctorDiscussionController,
                       maxLines: 4,
                       maxLength: 1000,
                       decoration: _inputDecoration(""),
                       onTapOutside: (_) {
                         FocusManager.instance.primaryFocus?.unfocus();
                       },
-                    ),
-                    TextField(
-                      decoration: InputDecoration(
-                        hintText: 'Title',
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-
-                    DropdownButton<int>(
-                      value: 1,
-                      items: List.generate(
-                        10,
-                        (index) => DropdownMenuItem(
-                          value: index + 1,
-                          child: Text('${index + 1}'),
-                        ),
-                      ),
-                      onChanged: (value) {},
                     ),
 
                     BottomAppBar(
@@ -190,46 +425,62 @@ class _AddDoctorScreenState extends ConsumerState<AddDoctorScreen> {
                           height: 55,
                           child: ElevatedButton.icon(
                             onPressed: () async {
-                              addDoctorScreenRead.setIsSubmitted(true);
-
-                              if (_formKey.currentState!.validate()) {
-                                // Only update state when form is valid
-
-                                // await homeScreenRead.saveToHive(
-                                //   name: doctorNameController.text,
-                                //   phoneNumber: doctorPhoneController.text,
-                                //   speciality: doctorSpecialityController.text,
-                                //   timing: '01 PM',
-                                //   status: 'Upcoming',
-                                //   isStartGoing: 'No',
-                                // );
+                              if (addDoctorScreenWatch.formKey.currentState!
+                                  .validate()) {
+                                await addDoctorScreenRead.addDoctorSave(
+                                  context: context,
+                                  doctocName: addDoctorScreenWatch
+                                      .doctorNameController
+                                      .text,
+                                  doctorPhone: addDoctorScreenWatch
+                                      .doctorPhoneController
+                                      .text,
+                                  specialId: addDoctorScreenWatch.specialityId,
+                                  specialityName: addDoctorScreenWatch
+                                      .doctorSpecialityController
+                                      .text,
+                                  clinicId: addDoctorScreenWatch.clinicId,
+                                  clinicName: addDoctorScreenWatch
+                                      .doctorClinicController
+                                      .text,
+                                  discription: addDoctorScreenWatch
+                                      .doctorDiscussionController
+                                      .text,
+                                  isIncentive:
+                                      addDoctorScreenWatch.isIncentive == 'No'
+                                      ? false
+                                      : true,
+                                  areaId: addDoctorScreenWatch.areaId,
+                                );
 
                                 log(
-                                  "Add doctor Details :name =${doctorNameController.text}, phone =${doctorPhoneController.text},speciality =${doctorSpecialityController.text},clinic name =${doctorClinicController.text} ",
+                                  "Add doctor Details :name =${addDoctorScreenWatch.doctorNameController.text}, phone =${addDoctorScreenWatch.doctorPhoneController.text},speciality =${addDoctorScreenWatch.doctorSpecialityController.text},clinic name =${addDoctorScreenWatch.doctorClinicController.text} ",
                                 );
-                                addDoctorScreenRead.setIsSubmitted(false);
+
                                 bottomNavNotifier.setIndex(0);
-                                doctorNameController.clear();
-                                doctorPhoneController.clear();
-                                doctorSpecialityController.clear();
-                                doctorClinicController.clear();
-                                doctorDiscussionController.clear();
                               } else {
                                 log("Show errors ");
                               }
                             },
-                            icon: const Icon(
-                              Icons.check_circle,
-                              color: Colors.white,
-                            ),
-                            label: const Text(
-                              "Save Doctor",
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
+
+                            label: addDoctorScreenWatch.isSubmitted == true
+                                ? SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: Center(
+                                      child: CircularProgressIndicator(
+                                        color: AppColors.appWhite,
+                                      ),
+                                    ),
+                                  )
+                                : Text(
+                                    "Save Doctor",
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
                             style: ElevatedButton.styleFrom(
                               // foregroundColor: Colors.amber,
                               backgroundColor: const Color(0xFFE53935),
@@ -242,55 +493,6 @@ class _AddDoctorScreenState extends ConsumerState<AddDoctorScreen> {
                       ),
                     ),
                     SizedBox(height: 70),
-                    // SizedBox(
-                    //   width: double.infinity,
-                    //   height: 55,
-                    //   child: ElevatedButton.icon(
-                    //     onPressed: () async {
-                    //       addDoctorScreenRead.setIsSubmitted(true);
-
-                    //       if (_formKey.currentState!.validate()) {
-                    //         // Only update state when form is valid
-                    //         await homeScreenRead.saveToHive(
-                    //           name: doctorNameController.text,
-                    //           phoneNumber: doctorPhoneController.text,
-                    //           speciality: doctorSpecialityController.text,
-                    //           timing: '01 PM',
-                    //           status: 'Upcoming',
-                    //         );
-
-                    //         log(
-                    //           "Add doctor Details :name =${doctorNameController.text}, phone =${doctorPhoneController.text},speciality =${doctorSpecialityController.text},clinic name =${doctorClinicController.text} ",
-                    //         );
-                    //         addDoctorScreenRead.setIsSubmitted(false);
-                    //         bottomNavNotifier.setIndex(0);
-                    //         doctorNameController.clear();
-                    //         doctorPhoneController.clear();
-                    //         doctorSpecialityController.clear();
-                    //         doctorClinicController.clear();
-                    //         doctorDiscussionController.clear();
-                    //       } else {
-                    //         log("Show errors ");
-                    //       }
-                    //     },
-                    //     icon: const Icon(Icons.check_circle, color: Colors.white),
-                    //     label: const Text(
-                    //       "Save Doctor",
-                    //       style: TextStyle(
-                    //         fontSize: 18,
-                    //         fontWeight: FontWeight.bold,
-                    //         color: Colors.white,
-                    //       ),
-                    //     ),
-                    //     style: ElevatedButton.styleFrom(
-                    //       backgroundColor: const Color(0xFFE53935),
-                    //       shape: RoundedRectangleBorder(
-                    //         borderRadius: BorderRadius.circular(15),
-                    //       ),
-                    //       elevation: 2,
-                    //     ),
-                    //   ),
-                    // ),
                   ],
                 ),
               ),
@@ -299,6 +501,45 @@ class _AddDoctorScreenState extends ConsumerState<AddDoctorScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> showMore({
+    bool? isClinic = false,
+    required BuildContext context,
+    required Offset tapPosition,
+    required List<dynamic> items,
+    required Function(int key, String desc) onSelected,
+  }) async {
+    final selected = await showMenu<int>(
+      context: context,
+      position: RelativeRect.fromLTRB(tapPosition.dx, tapPosition.dy, 0, 0),
+      items: items.map((item) {
+        return PopupMenuItem<int>(
+          value: isClinic == true ? item.ahMstKey : item.key,
+          child: isClinic == true
+              ? Text(item.ahMstPName ?? '')
+              : Text(item.desc ?? ''),
+        );
+      }).toList(),
+    );
+
+    if (selected != null) {
+      if (isClinic == true) {
+        final selectedItem = items.firstWhere((e) => e.ahMstKey == selected);
+
+        onSelected(selectedItem.ahMstKey ?? 0, selectedItem.ahMstPName ?? '');
+
+        log('Selected Key: ${selectedItem.ahMstKey}');
+        log('Selected Desc: ${selectedItem.ahMstPName}');
+      } else {
+        final selectedItem = items.firstWhere((e) => e.key == selected);
+
+        onSelected(selectedItem.key ?? 0, selectedItem.desc ?? '');
+
+        log('Selected Key: ${selectedItem.key}');
+        log('Selected Desc: ${selectedItem.desc}');
+      }
+    }
   }
 
   Widget _sectionTitle(String title) {

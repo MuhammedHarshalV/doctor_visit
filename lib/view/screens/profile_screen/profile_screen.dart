@@ -103,7 +103,12 @@ class ProfileScreen extends ConsumerWidget {
                           ),
                           const SizedBox(height: 10),
                           Text(
-                            profileState.profileDetails.first.name ?? '',
+                            (profileState.profileDetails.first.name
+                                        ?.trim()
+                                        .isNotEmpty ??
+                                    false)
+                                ? profileState.profileDetails.first.name!
+                                : 'Name not available',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 22,
@@ -111,12 +116,10 @@ class ProfileScreen extends ConsumerWidget {
                             ),
                           ),
                           Text(
-                            profileState
-                                        .profileDetails
-                                        .first
-                                        .email
-                                        ?.isNotEmpty ==
-                                    true
+                            (profileState.profileDetails.first.email
+                                        ?.trim()
+                                        .isNotEmpty ??
+                                    false)
                                 ? profileState.profileDetails.first.email!
                                 : 'example@gmail.com',
                             style: TextStyle(
@@ -151,27 +154,38 @@ class ProfileScreen extends ConsumerWidget {
                       ),
                       buildSettingsItem(
                         Icons.receipt_long,
-                        profileState.profileDetails.first.name ?? '',
+                        (profileState.profileDetails.first.name
+                                    ?.trim()
+                                    .isNotEmpty ??
+                                false)
+                            ? profileState.profileDetails.first.name!
+                            : 'Name not available',
                       ),
 
                       buildSettingsItem(
                         Icons.mail_outline_outlined,
-                        profileState.profileDetails.first.email?.isNotEmpty ==
-                                true
+                        (profileState.profileDetails.first.email
+                                    ?.trim()
+                                    .isNotEmpty ??
+                                false)
                             ? profileState.profileDetails.first.email!
                             : 'Email address not available.',
                       ),
                       buildSettingsItem(
                         Icons.phone,
-                        profileState.profileDetails.first.mobile?.isNotEmpty ==
-                                true
+                        (profileState.profileDetails.first.mobile
+                                    ?.trim()
+                                    .isNotEmpty ??
+                                false)
                             ? profileState.profileDetails.first.mobile!
                             : 'Mobile Number not available.',
                       ),
                       buildSettingsItem(
                         Icons.home_outlined,
-                        profileState.profileDetails.first.address?.isNotEmpty ==
-                                true
+                        (profileState.profileDetails.first.address
+                                    ?.trim()
+                                    .isNotEmpty ??
+                                false)
                             ? profileState.profileDetails.first.address!
                             : 'address not available.',
                       ),

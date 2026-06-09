@@ -10,6 +10,7 @@ import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginController extends StateNotifier<LoginState> {
@@ -65,7 +66,7 @@ class LoginController extends StateNotifier<LoginState> {
 
         if (response.success == true) {
           AppConstants.yearID = response.yrId.toString();
-          mstKeyAndDetKeyChecking();
+          await mstKeyAndDetKeyChecking();
           Navigator.pushAndRemoveUntil(
             // ignore: use_build_context_synchronously
             context,
@@ -87,6 +88,7 @@ class LoginController extends StateNotifier<LoginState> {
 
   //mstKey checking
   Future<void> mstKeyAndDetKeyChecking() async {
+    String currentDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? mstKey = prefs.getString('mst_key');
     final String? detKey = prefs.getString('det_key');
@@ -105,6 +107,15 @@ class LoginController extends StateNotifier<LoginState> {
     log('Stored mstkey : $mstKey');
     log('Stored detKey : $detKey');
     log('Stored date : $date');
+    if (AppConstants.date != currentDate) {
+      await prefs.setString('mst_key', '');
+
+      AppConstants.mstKey = '';
+
+      log('mstkey :${AppConstants.mstKey}');
+      log('detkey :${AppConstants.detKey}');
+      log('date : ${AppConstants.date}');
+    }
   }
 }
 

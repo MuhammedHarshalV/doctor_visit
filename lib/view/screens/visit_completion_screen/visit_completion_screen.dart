@@ -11,6 +11,7 @@ import 'package:doctor_visit/services/location_services/location_services.dart';
 import 'package:doctor_visit/theme/colors/appcolors.dart';
 import 'package:doctor_visit/view/screens/home_screen/widget/alert_dialog.dart';
 import 'package:doctor_visit/view/widgets/common_title_text.dart';
+import 'package:doctor_visit/view/widgets/image_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -79,8 +80,12 @@ class VisitCompletionScreen extends ConsumerWidget {
                           (element) => element.drIsGoing == true,
                         );
 
-                        if (homeScreenState.doctorsListAPI[index].drIsGoing ==
-                                null &&
+                        if ((homeScreenState.doctorsListAPI[index].drIsGoing ==
+                                    null ||
+                                homeScreenState
+                                        .doctorsListAPI[index]
+                                        .drIsGoing ==
+                                    false) &&
                             isConnected == true &&
                             isAnyStarted == false) {
                           try {
@@ -151,10 +156,14 @@ class VisitCompletionScreen extends ConsumerWidget {
                               );
                             }
                           }
-                        } else if (homeScreenState
-                                    .doctorsListAPI[index]
-                                    .drIsGoing ==
-                                null &&
+                        } else if ((homeScreenState
+                                        .doctorsListAPI[index]
+                                        .drIsGoing ==
+                                    null ||
+                                homeScreenState
+                                        .doctorsListAPI[index]
+                                        .drIsGoing ==
+                                    false) &&
                             isConnected == false) {
                           if (context.mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
@@ -178,10 +187,14 @@ class VisitCompletionScreen extends ConsumerWidget {
                               ),
                             );
                           }
-                        } else if (homeScreenState
-                                    .doctorsListAPI[index]
-                                    .drIsGoing ==
-                                null &&
+                        } else if ((homeScreenState
+                                        .doctorsListAPI[index]
+                                        .drIsGoing ==
+                                    null ||
+                                homeScreenState
+                                        .doctorsListAPI[index]
+                                        .drIsGoing ==
+                                    false) &&
                             isConnected == true &&
                             isAnyStarted == true) {
                           if (context.mounted) {
@@ -229,27 +242,40 @@ class VisitCompletionScreen extends ConsumerWidget {
                 ),
                 SizedBox(height: 10),
 
-                /// 📍 LOCATION
+                ///  LOCATION
                 Expanded(
                   child: ListView(
                     children: [
-                      /// 🤳 SELFIE
+                      ///  SELFIE
                       CommonTitleText(title: "Selfie *"),
                       GestureDetector(
                         onTap: () async {
-                          final image = await pickImage(
+                          //  Step 1 — Pick image
+                          final XFile? image = await ImageHelper.pickImage(
                             isSelfie: true,
                             context: context,
                           );
-                          if (image != null) {
-                            final String base = await imageToBase64(image.path);
-                            log('image : ${image.path.toString()}');
-                            final bytes = base64Decode(base);
-                            doctorVisitController.updateImage(
-                              bytes,
-                              image.path,
-                            );
-                          }
+                          if (image == null) return;
+
+                          //  Step 2 — Convert to base64
+                          final String? base64String =
+                              await ImageHelper.imageToBase64(image.path);
+                          if (base64String == null) return;
+
+                          //  Step 3 — Convert to bytes for display
+                          final Uint8List? bytes = ImageHelper.base64ToBytes(
+                            base64String,
+                          );
+                          if (bytes == null) return;
+
+                          //  Step 4 — Save to controller
+                          doctorVisitController.updateImage(bytes, image.path);
+
+                          log(
+                            "Image ready. Base64 KB: ${(base64String.length / 1024).toStringAsFixed(1)}",
+                          );
+                          doctorVisitController.base64ToApiUpdate(base64String);
+                          // log('harshal image : $base64String');
                         },
                         child: Container(
                           height: 170,
@@ -262,6 +288,7 @@ class VisitCompletionScreen extends ConsumerWidget {
                                     image: MemoryImage(
                                       doctorVisitState.base64Image,
                                     ),
+                                    fit: BoxFit.cover,
                                   )
                                 : null,
                           ),
@@ -282,7 +309,7 @@ class VisitCompletionScreen extends ConsumerWidget {
 
                       const SizedBox(height: 10),
 
-                      /// ⏰ TIME PICKER
+                      /// TIME PICKER
                       CommonTitleText(title: "Start Time *"),
                       GestureDetector(
                         onTap: () async {
@@ -641,45 +668,30 @@ class VisitCompletionScreen extends ConsumerWidget {
                                     log("Lat: ${position.latitude}");
                                     log("Lng: ${position.longitude}");
                                     log(mapUrl);
-                                    if (doctorVisitState.startTime == null ||
-                                        doctorVisitState.endTime == null) {
-                                      if (doctorVisitState.endTime == null &&
-                                          doctorVisitState.startTime == null) {
-                                        showDialog(
-                                          // ignore: use_build_context_synchronously
-                                          context: context,
-                                          builder: (context) => CommonAlertDialog(
-                                            message:
-                                                'Please fill in both the start time and end time.',
-                                          ),
-                                        );
-                                      }
-                                      if (doctorVisitState.startTime == null &&
-                                          doctorVisitState.endTime != null) {
-                                        showDialog(
-                                          // ignore: use_build_context_synchronously
-                                          context: context,
-                                          builder: (context) =>
-                                              CommonAlertDialog(
-                                                message:
-                                                    'Please fill Start time.',
-                                              ),
-                                        );
-                                      }
-                                      if (doctorVisitState.endTime == null &&
-                                          doctorVisitState.startTime != null) {
-                                        showDialog(
-                                          // ignore: use_build_context_synchronously
-                                          context: context,
-                                          builder: (context) =>
-                                              CommonAlertDialog(
-                                                message:
-                                                    'Please fill End time.',
-                                              ),
-                                        );
-                                      }
+                                    final missingFields = <String>[];
+
+                                    if (doctorVisitState.startTime == null) {
+                                      missingFields.add('Start time');
+                                    }
+                                    if (doctorVisitState.endTime == null) {
+                                      missingFields.add('End time');
+                                    }
+                                    if (doctorVisitState.base64Image.isEmpty) {
+                                      missingFields.add('Selfie');
+                                    }
+                                    if (missingFields.isNotEmpty) {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) => CommonAlertDialog(
+                                          message:
+                                              'Please provide: ${missingFields.join(', ')}',
+                                        ),
+                                      );
+
+                                      // All fields are available
+                                      // Call API here
                                     } else {
-                                      doctorVisitController
+                                      await doctorVisitController
                                           .isGoingAndCompletionLocationSend(
                                             isCompleted: true,
                                             doctorID: doctorID,
@@ -705,16 +717,15 @@ class VisitCompletionScreen extends ConsumerWidget {
                                             detKey: AppConstants.detKey,
                                             workstatus: '1',
                                             base64Image:
-                                                doctorVisitState.fileImage,
+                                                doctorVisitState.base64toApi,
                                           );
-                                      //
+                                      // ignore: use_build_context_synchronously
+                                      Navigator.pop(context);
                                       await homeScreenController
                                           .getDoctorsVisit();
                                       doctorVisitController.updateResponse('');
                                       doctorVisitState.feedbackController
                                           .clear();
-                                      // ignore: use_build_context_synchronously
-                                      Navigator.pop(context);
                                     }
                                   } catch (e) {
                                     log(
@@ -782,6 +793,8 @@ class VisitCompletionScreen extends ConsumerWidget {
     );
   }
 
+  //bytes image
+
   String formatTimeOfDayToApi(TimeOfDay time) {
     final now = DateTime.now();
 
@@ -794,70 +807,6 @@ class VisitCompletionScreen extends ConsumerWidget {
     );
 
     return dateTime.toIso8601String();
-  }
-
-  //image to base 64
-  Future<String> imageToBase64(String imagePath) async {
-    File imageFile = File(imagePath);
-
-    List<int> imageBytes = await imageFile.readAsBytes();
-
-    return base64Encode(imageBytes);
-  }
-
-  //image picker
-  Future<XFile?> pickImage({
-    required bool isSelfie,
-    required BuildContext context,
-  }) async {
-    final ImagePicker picker = ImagePicker();
-
-    if (isSelfie) {
-      // Open only front camera
-      return await picker.pickImage(
-        preferredCameraDevice: CameraDevice.front,
-        source: ImageSource.camera,
-
-        imageQuality: 80,
-      );
-    } else {
-      // Show options: Camera / Gallery
-      return await showModalBottomSheet<XFile?>(
-        context: context,
-        builder: (context) {
-          return SafeArea(
-            child: Wrap(
-              children: [
-                ListTile(
-                  leading: const Icon(Icons.camera_alt),
-                  title: const Text('Camera'),
-                  onTap: () async {
-                    final image = await picker.pickImage(
-                      source: ImageSource.camera,
-                      imageQuality: 80,
-                    );
-                    // ignore: use_build_context_synchronously
-                    Navigator.pop(context, image);
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.photo_library),
-                  title: const Text('Gallery'),
-                  onTap: () async {
-                    final image = await picker.pickImage(
-                      source: ImageSource.gallery,
-                      imageQuality: 80,
-                    );
-                    // ignore: use_build_context_synchronously
-                    Navigator.pop(context, image);
-                  },
-                ),
-              ],
-            ),
-          );
-        },
-      );
-    }
   }
 
   Future<bool> checkInternetConnection() async {

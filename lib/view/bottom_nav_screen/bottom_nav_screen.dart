@@ -132,7 +132,7 @@ class BottomNavScreen extends ConsumerWidget {
       PersistentBottomNavBarItem(
         icon: Icon(Icons.bar_chart),
         inactiveIcon: Icon(Icons.leaderboard_outlined),
-        title: 'Progess',
+        title: 'Progress',
         textStyle: TextStyle(fontWeight: FontWeight.w500),
         activeColorPrimary: AppColors.appPrimaryRed,
         inactiveColorPrimary: AppColors.appDarkGrey,

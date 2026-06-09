@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:typed_data';
 
 import 'package:doctor_visit/apis/expenses/edit_today_expense_api.dart';
 import 'package:doctor_visit/apis/expenses/progress_percentage_api.dart';
@@ -45,6 +46,14 @@ class ExpenseController extends StateNotifier<ExpenseState> {
       }
       log('response from controller: ${response.toString()}');
     }
+  }
+
+  void updateImage(Uint8List? image, String? fileImage) {
+    state = state.copyWith(base64Image: image);
+  }
+
+  void base64ToApiUpdate(String imageString) {
+    state = state.copyWith(base64toApi: imageString);
   }
 
   //today expense api
@@ -99,6 +108,8 @@ class ExpenseController extends StateNotifier<ExpenseState> {
         }
 
         Navigator.pop(context);
+      } else {
+        state = state.copyWith(base64toApi: '', base64Image: Uint8List(0));
       }
     } catch (e) {
       log(e.toString());

@@ -62,6 +62,12 @@ class VisitController extends StateNotifier<DoctorVisitCompletion> {
         );
         AppConstants.detKey = response.data?.proDetKey?.toString() ?? '';
         log('stored det_key :${AppConstants.detKey}');
+        state = state.copyWith(
+          base64toApi: '',
+          startTime: null,
+          endTime: null,
+          base64Image: Uint8List(0),
+        );
       }
       log('==============$response');
     } catch (e) {
@@ -77,7 +83,11 @@ class VisitController extends StateNotifier<DoctorVisitCompletion> {
   }
 
   void updateImage(Uint8List? image, String? fileImage) {
-    state = state.copyWith(base64Image: image, fileImage: fileImage);
+    state = state.copyWith(base64Image: image);
+  }
+
+  void base64ToApiUpdate(String imageString) {
+    state = state.copyWith(base64toApi: imageString);
   }
 
   void updateResponse(String response) {

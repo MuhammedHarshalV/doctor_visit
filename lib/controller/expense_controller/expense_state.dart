@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:doctor_visit/model/day_expense_model.dart';
 import 'package:doctor_visit/model/progress_percentage/progress_percentage_response_model.dart';
 import 'package:doctor_visit/model/progress_percentage/today_expense_history_response_model.dart';
@@ -8,9 +10,10 @@ import 'package:flutter/material.dart';
 class ExpenseState {
   final bool isEditLoading;
   final num totalExpense;
+  final Uint8List base64Image;
   final int weeklyListIndex;
   num? weekEotalExpense;
-
+  final String base64toApi;
   final bool isExpanded;
   final bool isExpandedHistory;
   final num progressValue;
@@ -26,6 +29,8 @@ class ExpenseState {
   final List<DayExpenseModel> expenseList;
 
   ExpenseState({
+    this.base64toApi = '',
+    Uint8List? base64Image,
     this.weekEotalExpense = 0,
     this.weeklyListIndex = 0,
     this.isEditLoading = false,
@@ -44,11 +49,13 @@ class ExpenseState {
     this.category = 1,
     required this.amountController,
     required this.descriptionController,
-  });
+  }) : base64Image = base64Image ?? Uint8List(0);
 
   ExpenseState copyWith({
+    String? base64toApi,
     TextEditingController? amountController,
     TextEditingController? descriptionController,
+    Uint8List? base64Image,
     int? weeklyListIndex,
     bool? isEditLoading,
     num? progressValue,
@@ -75,7 +82,7 @@ class ExpenseState {
       amountController: amountController ?? this.amountController,
       progressValue: progressValue ?? this.progressValue,
       totalExpense: totalExpense ?? this.totalExpense,
-
+      base64Image: base64Image ?? this.base64Image,
       isExpanded: isExpanded ?? this.isExpanded,
       weeklyExpenseHistory: weeklyExpenseHistory ?? this.weeklyExpenseHistory,
       expenseList: expenseList ?? this.expenseList,
@@ -83,6 +90,7 @@ class ExpenseState {
       category: category ?? this.category,
       isExpandedHistory: isExpandedHistory ?? this.isExpandedHistory,
       progressPeercentage: progressPeercentage ?? this.progressPeercentage,
+      base64toApi: base64toApi ?? this.base64toApi,
     );
   }
 }
