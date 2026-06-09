@@ -511,6 +511,7 @@ class AddDoctorScreen extends ConsumerWidget {
     required Function(int key, String desc) onSelected,
   }) async {
     final selected = await showMenu<int>(
+      color: Colors.white,
       context: context,
       position: RelativeRect.fromLTRB(tapPosition.dx, tapPosition.dy, 0, 0),
       items: items.map((item) {
@@ -574,41 +575,6 @@ class AddDoctorScreen extends ConsumerWidget {
   }
 }
 
-Widget buildInputField({
-  required String label,
-  required String hint,
-  required IconData icon,
-}) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        label,
-        style: TextStyle(
-          color: AppColors.appPrimaryRed,
-          fontWeight: FontWeight.bold,
-          fontSize: 14,
-        ),
-      ),
-      const SizedBox(height: 8),
-      TextField(
-        decoration: InputDecoration(
-          hintText: hint,
-          prefixIcon: Icon(icon, color: const Color(0xFFE53935), size: 20),
-          filled: true,
-          fillColor: const Color(0xFFFFEBEE), // Soft red background
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide.none,
-          ),
-          contentPadding: const EdgeInsets.symmetric(vertical: 16),
-        ),
-      ),
-      const SizedBox(height: 20),
-    ],
-  );
-}
-
 class TopText extends StatelessWidget {
   final String heading;
 
@@ -622,69 +588,6 @@ class TopText extends StatelessWidget {
         color: AppColors.appPrimaryRed,
         fontWeight: FontWeight.bold,
       ),
-    );
-  }
-}
-
-class DynamicTextFieldScreen extends StatefulWidget {
-  const DynamicTextFieldScreen({super.key});
-
-  @override
-  State<DynamicTextFieldScreen> createState() => _DynamicTextFieldScreenState();
-}
-
-class _DynamicTextFieldScreenState extends State<DynamicTextFieldScreen> {
-  int selectedCount = 1;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          children: [
-            TextField(
-              decoration: InputDecoration(
-                hintText: 'Title',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(width: 10),
-
-            DropdownButton<int>(
-              value: selectedCount,
-              items: List.generate(
-                10,
-                (index) => DropdownMenuItem(
-                  value: index + 1,
-                  child: Text('${index + 1}'),
-                ),
-              ),
-              onChanged: (value) {
-                setState(() {
-                  selectedCount = value!;
-                });
-              },
-            ),
-          ],
-        ),
-
-        const SizedBox(height: 20),
-
-        ListView.builder(
-          itemCount: selectedCount,
-          itemBuilder: (context, index) {
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: TextField(
-                decoration: InputDecoration(
-                  labelText: 'TextField ${index + 1}',
-                  border: const OutlineInputBorder(),
-                ),
-              ),
-            );
-          },
-        ),
-      ],
     );
   }
 }

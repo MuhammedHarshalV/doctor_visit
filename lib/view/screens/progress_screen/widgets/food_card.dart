@@ -128,28 +128,28 @@ class FoodCard extends StatelessWidget {
                     ),
                   ),
 
-                if (!isWeekly)
-                  Container(
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFFFEBEE),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    height: 50,
-                    width: 50,
-                    child: Image.network(
-                      imageUrl,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return const Center(
-                          child: Icon(
-                            Icons.image_not_supported_outlined,
-                            size: 30,
-                            color: Colors.grey,
-                          ),
-                        );
-                      },
-                    ),
-                  ),
+                // if (!isWeekly)
+                //   Container(
+                //     decoration: BoxDecoration(
+                //       color: const Color(0xFFFFEBEE),
+                //       borderRadius: BorderRadius.circular(10),
+                //     ),
+                //     height: 50,
+                //     width: 50,
+                //     child: Image.network(
+                //       imageUrl,
+                //       fit: BoxFit.cover,
+                //       errorBuilder: (context, error, stackTrace) {
+                //         return const Center(
+                //           child: Icon(
+                //             Icons.image_not_supported_outlined,
+                //             size: 30,
+                //             color: Colors.grey,
+                //           ),
+                //         );
+                //       },
+                //     ),
+                //   ),
               ],
             ),
 
@@ -238,6 +238,3 @@ class FoodCard extends StatelessWidget {
     );
   }
 }
-
-
-
