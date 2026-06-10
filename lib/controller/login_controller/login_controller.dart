@@ -4,12 +4,13 @@ import 'package:doctor_visit/apis/login/login_api_service.dart';
 import 'package:doctor_visit/controller/login_controller/login_state.dart';
 import 'package:doctor_visit/core/api_errors/api_errors.dart';
 import 'package:doctor_visit/core/constants/app_constants.dart';
+import 'package:doctor_visit/core/routes/app_route_names.dart';
 import 'package:doctor_visit/model/login/login_response_model.dart';
-import 'package:doctor_visit/view/bottom_nav_screen/bottom_nav_screen.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -67,12 +68,8 @@ class LoginController extends StateNotifier<LoginState> {
         if (response.success == true) {
           AppConstants.yearID = response.yrId.toString();
           await mstKeyAndDetKeyChecking();
-          Navigator.pushAndRemoveUntil(
-            // ignore: use_build_context_synchronously
-            context,
-            MaterialPageRoute(builder: (context) => BottomNavScreen()),
-            (route) => false,
-          );
+          // ignore: use_build_context_synchronously
+          context.goNamed(AppRouteNames.bottomNavScreen.name);
         }
       }
       log("controller response $response");

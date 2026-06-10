@@ -1,5 +1,5 @@
 import 'package:doctor_visit/controller/profile_details_controller/profile_details_controller.dart';
-import 'package:doctor_visit/theme/colors/appcolors.dart';
+import 'package:doctor_visit/core/theme/colors/appcolors.dart';
 import 'package:doctor_visit/view/screens/profile_screen/profile_screen.dart';
 import 'package:doctor_visit/view/widgets/switch_botton.dart';
 import 'package:flutter/material.dart';

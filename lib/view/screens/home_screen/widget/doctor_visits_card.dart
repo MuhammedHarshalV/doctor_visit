@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:doctor_visit/controller/home_screen_controller/home_screen_controller.dart';
-import 'package:doctor_visit/theme/colors/appcolors.dart';
+import 'package:doctor_visit/core/theme/colors/appcolors.dart';
 import 'package:doctor_visit/view/screens/home_screen/widget/alert_dialog.dart';
 
 import 'package:doctor_visit/view/screens/visit_completion_screen/visit_completion_screen.dart';

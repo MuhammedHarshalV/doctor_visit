@@ -42,9 +42,6 @@ class ImageHelper {
     final ImagePicker picker = ImagePicker();
 
     if (isSelfie) {
-      // static Future<XFile?> pickSelfie() async {
-      //   try {
-      //     final ImagePicker picker = ImagePicker();
       return await picker.pickImage(
         source: ImageSource.camera,
         preferredCameraDevice: CameraDevice.front,
@@ -52,18 +49,6 @@ class ImageHelper {
         maxWidth: 400,
         maxHeight: 400,
       );
-      //   } catch (e) {
-      //     log(" pickSelfie Error: $e");
-      //     return null;
-      //   }
-      // }
-      // Open only front camera
-      // return await picker.pickImage(
-      //   preferredCameraDevice: CameraDevice.front,
-      //   source: ImageSource.camera,
-
-      //   imageQuality: 80,
-      // );
     } else {
       // Show options: Camera / Gallery
       return await showModalBottomSheet<XFile?>(
@@ -109,20 +94,4 @@ class ImageHelper {
       );
     }
   }
-
-  // static Future<XFile?> pickSelfie() async {
-  //   try {
-  //     final ImagePicker picker = ImagePicker();
-  //     return await picker.pickImage(
-  //       source: ImageSource.camera,
-  //       preferredCameraDevice: CameraDevice.front,
-  //       imageQuality: 10,
-  //       maxWidth: 400,
-  //       maxHeight: 400,
-  //     );
-  //   } catch (e) {
-  //     log(" pickSelfie Error: $e");
-  //     return null;
-  //   }
-  // }
 }

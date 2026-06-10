@@ -101,21 +101,16 @@ class HomeScreenNotifier extends StateNotifier<HomeScreenState> {
         log('Stored mstkey : ${AppConstants.mstKey}');
         log('Stored detKey : ${AppConstants.detKey}');
         log('stored date : ${AppConstants.date}');
-      } 
+      }
       log('work update details : $response');
     } catch (e) {
       log("Controller error : $e");
     }
   }
 
-
   void setIsOn(bool isOn) {
     state = state.copyWith(isOn: isOn);
   }
-
-  //   void setIsGoing(bool isGoing) {
-  //     state = state.copyWith(isGoing: isGoing);
-  //   }
 }
 
 // Provider for home screen

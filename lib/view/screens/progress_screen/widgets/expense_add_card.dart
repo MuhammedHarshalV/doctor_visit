@@ -6,12 +6,12 @@ import 'package:doctor_visit/core/constants/app_constants.dart';
 import 'package:doctor_visit/view/screens/home_screen/widget/alert_dialog.dart';
 import 'package:doctor_visit/view/screens/progress_screen/widgets/category_widget.dart';
 import 'package:doctor_visit/view/widgets/build_input_field.dart';
-import 'package:doctor_visit/view/widgets/image_helper.dart';
+import 'package:doctor_visit/core/services/image_to_base64_helper/image_helper.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:doctor_visit/theme/colors/appcolors.dart';
+import 'package:doctor_visit/core/theme/colors/appcolors.dart';
 import 'package:doctor_visit/view/widgets/common_title_text.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';

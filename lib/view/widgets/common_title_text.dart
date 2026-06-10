@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:doctor_visit/theme/colors/appcolors.dart';
+import 'package:doctor_visit/core/theme/colors/appcolors.dart';
 
 class CommonTitleText extends StatelessWidget {
   final String title;

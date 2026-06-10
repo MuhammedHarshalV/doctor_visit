@@ -1,10 +1,11 @@
 import 'dart:convert';
 
 import 'package:doctor_visit/controller/profile_details_controller/profile_details_controller.dart';
-import 'package:doctor_visit/theme/colors/appcolors.dart';
+import 'package:doctor_visit/core/theme/colors/appcolors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -35,7 +36,7 @@ class ProfileScreen extends ConsumerWidget {
                     hoverColor: Colors.transparent,
                     focusColor: Colors.transparent,
                     onTap: () {
-                      Navigator.pop(context);
+                      context.pop();
                     },
                     child: CircleAvatar(
                       // ignore: deprecated_member_use

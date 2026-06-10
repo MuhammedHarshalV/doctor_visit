@@ -1,22 +1,21 @@
-import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 
 import 'package:doctor_visit/controller/doctor_visit_controller/doctor_visit_controller.dart';
 import 'package:doctor_visit/controller/home_screen_controller/home_screen_controller.dart';
 import 'package:doctor_visit/core/constants/app_constants.dart';
-import 'package:doctor_visit/services/location_services/location_services.dart';
-import 'package:doctor_visit/theme/colors/appcolors.dart';
+import 'package:doctor_visit/core/services/location_services/location_services.dart';
+import 'package:doctor_visit/core/theme/colors/appcolors.dart';
 import 'package:doctor_visit/view/screens/home_screen/widget/alert_dialog.dart';
 import 'package:doctor_visit/view/widgets/common_title_text.dart';
-import 'package:doctor_visit/view/widgets/image_helper.dart';
+import 'package:doctor_visit/core/services/image_to_base64_helper/image_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
@@ -60,7 +59,7 @@ class VisitCompletionScreen extends ConsumerWidget {
                         ),
                         onPressed: () {
                           homeScreenController.getDoctorsVisit();
-                          Navigator.pop(context);
+                          context.pop();
                         },
                       ),
                     ),
@@ -533,9 +532,9 @@ class VisitCompletionScreen extends ConsumerWidget {
                                                       .clear();
 
                                                   // ignore: use_build_context_synchronously
-                                                  Navigator.pop(context);
+                                                  context.pop();
                                                   // ignore: use_build_context_synchronously
-                                                  Navigator.pop(context);
+                                                  context.pop();
                                                 } catch (e) {
                                                   log(
                                                     "harshal==================${e.toString()}",
@@ -681,6 +680,7 @@ class VisitCompletionScreen extends ConsumerWidget {
                                     }
                                     if (missingFields.isNotEmpty) {
                                       showDialog(
+                                        // ignore: use_build_context_synchronously
                                         context: context,
                                         builder: (context) => CommonAlertDialog(
                                           message:
@@ -720,7 +720,7 @@ class VisitCompletionScreen extends ConsumerWidget {
                                                 doctorVisitState.base64toApi,
                                           );
                                       // ignore: use_build_context_synchronously
-                                      Navigator.pop(context);
+                                      context.pop();
                                       await homeScreenController
                                           .getDoctorsVisit();
                                       doctorVisitController.updateResponse('');

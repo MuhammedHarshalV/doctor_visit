@@ -1,4 +1,4 @@
-import 'package:doctor_visit/theme/colors/appcolors.dart';
+import 'package:doctor_visit/core/theme/colors/appcolors.dart';
 import 'package:flutter/material.dart';
 
 class CommonTextField extends StatelessWidget {

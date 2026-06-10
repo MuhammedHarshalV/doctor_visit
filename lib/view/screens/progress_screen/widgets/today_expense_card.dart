@@ -1,5 +1,5 @@
 import 'package:doctor_visit/controller/expense_controller/expense_controller.dart';
-import 'package:doctor_visit/theme/colors/appcolors.dart';
+import 'package:doctor_visit/core/theme/colors/appcolors.dart';
 import 'package:doctor_visit/view/screens/progress_screen/widgets/category_widget.dart';
 import 'package:doctor_visit/view/screens/progress_screen/widgets/food_card.dart';
 import 'package:doctor_visit/view/widgets/common_title_text.dart';

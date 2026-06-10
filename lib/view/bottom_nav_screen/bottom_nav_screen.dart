@@ -3,7 +3,7 @@ import 'package:doctor_visit/controller/bottom_nav_screen/bottom_nav_controller.
 import 'package:doctor_visit/controller/expense_controller/expense_controller.dart';
 import 'package:doctor_visit/controller/home_screen_controller/home_screen_controller.dart';
 
-import 'package:doctor_visit/theme/colors/appcolors.dart';
+import 'package:doctor_visit/core/theme/colors/appcolors.dart';
 import 'package:doctor_visit/view/screens/add_doctor_screen/add_doctor.dart';
 import 'package:doctor_visit/view/screens/home_screen/screen/home_screens.dart';
 import 'package:doctor_visit/view/screens/progress_screen/screen/progress_screen.dart';
@@ -34,10 +34,10 @@ class BottomNavScreen extends ConsumerWidget {
           // ignore: deprecated_member_use
           onPopInvoked: (didPop) async {
             if (bottomNavState.currentIndex == 0) {
-              // 🔥 Exit app
+              //  Exit app
               SystemNavigator.pop();
             } else {
-              // 🔥 Go to Home tab
+              //  Go to Home tab
               controller.jumpToTab(0);
               bottomNavNotifier.setIndex(0);
             }

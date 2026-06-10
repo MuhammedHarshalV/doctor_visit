@@ -1,5 +1,5 @@
 import 'package:doctor_visit/controller/login_controller/login_controller.dart';
-import 'package:doctor_visit/theme/colors/appcolors.dart';
+import 'package:doctor_visit/core/theme/colors/appcolors.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -45,11 +45,7 @@ class LoginScreen extends ConsumerWidget {
                           height: 200,
                           // fit: BoxFit.fill,
                         ),
-                        // CommonTextField(
-                        //   label: 'Enter Your Pin',
-                        //   hint: "Pin",
-                        //   icon: Icons.pin,
-                        // ),
+                       
                         PinCodeField(pinController: loginState.pincontroller),
                         SizedBox(
                           height: 50,
@@ -57,10 +53,7 @@ class LoginScreen extends ConsumerWidget {
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.red,
-                              // padding: const EdgeInsets.symmetric(
-                              //   vertical: 10,
-                              //   horizontal: 20,
-                              // ),
+                             
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),
@@ -72,13 +65,7 @@ class LoginScreen extends ConsumerWidget {
                                 context: context,
                               );
 
-                              // Navigator.pushAndRemoveUntil(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //     builder: (context) => BottomNavScreen(),
-                              //   ),
-                              //   (route) => false,
-                              // );
+                              
                             },
                             child: loginState.isLoading
                                 ? Center(

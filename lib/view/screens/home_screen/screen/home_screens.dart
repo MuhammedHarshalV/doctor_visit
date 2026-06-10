@@ -1,5 +1,5 @@
 import 'package:doctor_visit/controller/home_screen_controller/home_screen_controller.dart';
-import 'package:doctor_visit/theme/colors/appcolors.dart';
+import 'package:doctor_visit/core/theme/colors/appcolors.dart';
 import 'package:doctor_visit/view/screens/home_screen/widget/doctor_list_shimmer.dart';
 import 'package:doctor_visit/view/widgets/common_appbar.dart';
 import 'package:doctor_visit/view/screens/home_screen/widget/doctor_visits_card.dart';

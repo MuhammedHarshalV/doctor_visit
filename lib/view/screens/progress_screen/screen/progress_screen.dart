@@ -1,5 +1,5 @@
 import 'package:doctor_visit/controller/expense_controller/expense_controller.dart';
-import 'package:doctor_visit/theme/colors/appcolors.dart';
+import 'package:doctor_visit/core/theme/colors/appcolors.dart';
 import 'package:doctor_visit/view/screens/progress_screen/widgets/main_progress_card.dart';
 import 'package:doctor_visit/view/screens/progress_screen/widgets/row_stat_card.dart';
 import 'package:doctor_visit/view/widgets/common_appbar.dart';

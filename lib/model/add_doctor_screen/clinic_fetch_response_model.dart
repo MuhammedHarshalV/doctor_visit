@@ -57,6 +57,7 @@ class Clinic {
   };
 }
 
+// ignore: constant_identifier_names
 enum AhMstType { HOSP }
 
 final ahMstTypeValues = EnumValues({"Hosp": AhMstType.HOSP});

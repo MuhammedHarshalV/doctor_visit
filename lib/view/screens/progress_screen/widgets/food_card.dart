@@ -2,7 +2,7 @@
 // food_card.dart — Redesigned
 // ============================================================
 import 'package:flutter/material.dart';
-import 'package:doctor_visit/theme/colors/appcolors.dart';
+import 'package:doctor_visit/core/theme/colors/appcolors.dart';
 
 class FoodCard extends StatelessWidget {
   final bool isWeekly;

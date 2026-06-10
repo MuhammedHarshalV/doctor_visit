@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:doctor_visit/controller/add_doctor_controller/add_doctor_controller.dart';
 import 'package:doctor_visit/controller/bottom_nav_screen/bottom_nav_controller.dart';
-import 'package:doctor_visit/theme/colors/appcolors.dart';
+import 'package:doctor_visit/core/theme/colors/appcolors.dart';
 
 import 'package:doctor_visit/view/widgets/common_appbar.dart';
 import 'package:doctor_visit/view/widgets/text_field_container.dart';
@@ -70,12 +70,7 @@ class AddDoctorScreen extends ConsumerWidget {
                       ),
                     ),
                     SizedBox(height: 5),
-                    // Input Fields
-                    // buildInputField(
-                    //   label: "Doctor Name *",
-                    //   hint: "e.g. Anjali Mehta",
-                    //   icon: Icons.person_outline,
-                    // ),
+
                     TopText(heading: 'Phone Number *'),
                     SizedBox(height: 7),
                     TypeTextFormField(
@@ -91,16 +86,6 @@ class AddDoctorScreen extends ConsumerWidget {
                     ),
                     SizedBox(height: 5),
 
-                    // buildInputField(
-                    //   label: "Phone Number *",
-                    //   hint: "+91 90000 00000",
-                    //   icon: Icons.phone_outlined,
-                    // ),
-                    // buildInputField(
-                    //   label: "Speciality",
-                    //   hint: "e.g. Cardiologist",
-                    //   icon: Icons.medical_services_outlined,
-                    // ),
                     TopText(heading: 'Speciality *'),
                     SizedBox(height: 7),
                     Row(
@@ -168,13 +153,7 @@ class AddDoctorScreen extends ConsumerWidget {
                               ), // light red background
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            child: Row(
-                              children: [
-                                Text('Select'),
-                                SizedBox(width: 5),
-                                Icon(Icons.arrow_drop_down),
-                              ],
-                            ),
+                            child: Row(children: [Icon(Icons.arrow_drop_down)]),
                           ),
                         ),
                       ],
@@ -247,13 +226,7 @@ class AddDoctorScreen extends ConsumerWidget {
                               ), // light red background
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            child: Row(
-                              children: [
-                                Text('Select'),
-                                SizedBox(width: 5),
-                                Icon(Icons.arrow_drop_down),
-                              ],
-                            ),
+                            child: Row(children: [Icon(Icons.arrow_drop_down)]),
                           ),
                         ),
                       ],
@@ -332,24 +305,15 @@ class AddDoctorScreen extends ConsumerWidget {
                               ), // light red background
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            child: Row(
-                              children: [
-                                Text('Select'),
-                                SizedBox(width: 5),
-                                Icon(Icons.arrow_drop_down),
-                              ],
-                            ),
+                            child: Row(children: [Icon(Icons.arrow_drop_down)]),
                           ),
                         ),
                       ],
                     ),
-                    // buildInputField(
-                    //   label: "Clinic Name *",
-                    //   hint: "e.g. Health Center",
-                    //   icon: Icons.medical_services_outlined,
-                    // ),
+
                     SizedBox(height: 10),
-                    TopText(heading: 'Incentive'), SizedBox(height: 7),
+                    TopText(heading: 'Incentive'),
+                    SizedBox(height: 7),
                     Container(
                       height: 60,
                       padding: const EdgeInsets.symmetric(horizontal: 12),

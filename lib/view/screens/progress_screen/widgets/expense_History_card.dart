@@ -1,6 +1,6 @@
 // ignore: file_names
 import 'package:doctor_visit/controller/expense_controller/expense_controller.dart';
-import 'package:doctor_visit/theme/colors/appcolors.dart';
+import 'package:doctor_visit/core/theme/colors/appcolors.dart';
 import 'package:doctor_visit/view/screens/progress_screen/widgets/food_card.dart';
 import 'package:doctor_visit/view/screens/progress_screen/widgets/weekly_expense_card.dart';
 

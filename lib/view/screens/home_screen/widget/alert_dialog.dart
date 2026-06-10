@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:doctor_visit/theme/colors/appcolors.dart';
+import 'package:doctor_visit/core/theme/colors/appcolors.dart';
+import 'package:go_router/go_router.dart';
 
 class CommonAlertDialog extends StatelessWidget {
   final String message;
@@ -20,7 +21,7 @@ class CommonAlertDialog extends StatelessWidget {
         SizedBox(
           width: double.infinity,
           child: TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => context.pop(),
             style: TextButton.styleFrom(
               backgroundColor: AppColors.appPrimaryRed,
               shape: RoundedRectangleBorder(

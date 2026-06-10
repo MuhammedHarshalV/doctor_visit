@@ -14,6 +14,7 @@ import 'package:doctor_visit/model/progress_percentage/weekly_expense_response_m
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class ExpenseController extends StateNotifier<ExpenseState> {
   ExpenseController()
@@ -107,7 +108,7 @@ class ExpenseController extends StateNotifier<ExpenseState> {
           return;
         }
 
-        Navigator.pop(context);
+        context.pop();
       } else {
         state = state.copyWith(base64toApi: '', base64Image: Uint8List(0));
       }
