@@ -16,8 +16,13 @@ class AddDoctorsState {
   final TextEditingController doctorDiscussionController;
   final TextEditingController areaIdController;
   final List<Datum> areaList;
+  final List<Datum> finalAreaList;
+
   final List<Datum> specialityList;
+  final List<Datum> finalSpecialityList;
+
   final List<Clinic> clinicList;
+  final List<Clinic> finalClinicList;
 
   AddDoctorsState({
     required this.formKey,
@@ -25,8 +30,11 @@ class AddDoctorsState {
     this.specialityId = 0,
     this.clinicId = 0,
     this.areaList = const [],
+    this.finalAreaList = const [],
+    this.finalSpecialityList = const [],
     this.specialityList = const [],
     this.clinicList = const [],
+    this.finalClinicList = const [],
 
     this.isIncentive = 'No',
     this.isSubmitted = false,
@@ -45,8 +53,11 @@ class AddDoctorsState {
     int? specialityId,
     bool? isSubmitted,
     List<Datum>? areaList,
+    List<Datum>? finalAreaList,
+    List<Datum>? finalSpecialityList,
     List<Datum>? specialityList,
     List<Clinic>? clinicList,
+    List<Clinic>? finalClinicList,
 
     TextEditingController? doctorNameController,
     TextEditingController? doctorPhoneController,
@@ -60,6 +71,7 @@ class AddDoctorsState {
       areaIdController: areaIdController ?? this.areaIdController,
       isIncentive: isIncentive ?? this.isIncentive,
       clinicId: clinicId ?? this.clinicId,
+      finalAreaList: finalAreaList ?? this.finalAreaList,
       specialityList: specialityList ?? this.specialityList,
       specialityId: specialityId ?? this.specialityId,
       areaId: areaId ?? this.areaId,
@@ -76,6 +88,8 @@ class AddDoctorsState {
           doctorClinicController ?? this.doctorClinicController,
       doctorDiscussionController:
           doctorDiscussionController ?? this.doctorDiscussionController,
+      finalSpecialityList: finalSpecialityList ?? this.finalSpecialityList,
+      finalClinicList: finalClinicList ?? this.finalClinicList,
     );
   }
 }

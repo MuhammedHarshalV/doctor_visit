@@ -27,21 +27,22 @@ class NetworkService {
             ),
           ),
         );
+      
       } else {
         scaffoldMessengerKey.currentState?.hideCurrentSnackBar();
 
-        scaffoldMessengerKey.currentState?.showSnackBar(
-          SnackBar(
-            content: const Text(
-              'Internet Connected',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            duration: const Duration(seconds: 2),
-            backgroundColor: Colors.green,
-            behavior: SnackBarBehavior.floating,
-            margin: const EdgeInsets.only(left: 10, right: 10, bottom: 70),
-          ),
-        );
+        // scaffoldMessengerKey.currentState?.showSnackBar(
+        //   SnackBar(
+        //     content: const Text(
+        //       'Internet Connected',
+        //       style: TextStyle(fontWeight: FontWeight.bold),
+        //     ),
+        //     duration: const Duration(seconds: 2),
+        //     backgroundColor: Colors.green,
+        //     behavior: SnackBarBehavior.floating,
+        //     margin: const EdgeInsets.only(left: 10, right: 10, bottom: 70),
+        //   ),
+        // );
       }
     });
   }

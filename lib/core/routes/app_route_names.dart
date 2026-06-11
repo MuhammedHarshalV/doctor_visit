@@ -1,4 +1,6 @@
 enum AppRouteNames {
+  splashScreen(route: '/', name: 'splashScreen'),
+  baseUrlScreen(route: '/baseUrlScreen', name: 'baseUrlScreen'),
   homeScreen(route: '/homeScreen', name: 'homeScreen'),
   addDoctorScreen(route: '/addDoctorScreen', name: 'addDoctorScreen'),
   visitCompletionScreen(

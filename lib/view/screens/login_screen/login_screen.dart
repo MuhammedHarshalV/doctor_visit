@@ -1,5 +1,6 @@
 import 'package:doctor_visit/controller/login_controller/login_controller.dart';
 import 'package:doctor_visit/core/theme/colors/appcolors.dart';
+import 'package:doctor_visit/view/screens/home_screen/widget/alert_dialog.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -45,7 +46,7 @@ class LoginScreen extends ConsumerWidget {
                           height: 200,
                           // fit: BoxFit.fill,
                         ),
-                       
+
                         PinCodeField(pinController: loginState.pincontroller),
                         SizedBox(
                           height: 50,
@@ -53,19 +54,26 @@ class LoginScreen extends ConsumerWidget {
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.red,
-                             
+
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),
                             ),
                             onPressed: () {
                               // submit logic
-                              loginController.loginApiCalling(
-                                pin: loginState.pincontroller.text,
-                                context: context,
-                              );
-
-                              
+                              if (loginState.pincontroller.text.length > 3) {
+                                loginController.loginApiCalling(
+                                  pin: loginState.pincontroller.text,
+                                  context: context,
+                                );
+                              } else {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => CommonAlertDialog(
+                                    message: "Please fill PIN",
+                                  ),
+                                );
+                              }
                             },
                             child: loginState.isLoading
                                 ? Center(

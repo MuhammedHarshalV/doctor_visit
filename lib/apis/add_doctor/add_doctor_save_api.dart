@@ -12,10 +12,11 @@ class AddDoctorSaveApi {
     required String? specialityName,
     required int? clinicId,
     required String? clinicName,
-
+    required String? areaName,
     required String? discription,
     required bool? isIncentive,
     required int? areaId,
+    required int? proId,
   }) async {
     try {
       final Map<String, dynamic> body = {};
@@ -47,6 +48,12 @@ class AddDoctorSaveApi {
       }
       if (areaId != null) {
         body["TempDr_AreaId"] = areaId;
+      }
+      if (areaName != null) {
+        body["TempDr_AreaName"] = areaName;
+      }
+      if (proId != null) {
+        body["TempDr_ProId"] = proId;
       }
 
       final response = await PostApiServices.callApi(

@@ -91,72 +91,94 @@ class AddDoctorScreen extends ConsumerWidget {
                     Row(
                       children: [
                         Expanded(
-                          child: TypeTextFormField(
-                            validationType: ValidationType.name,
-                            hintText: 'Speciality',
-                            textController:
-                                addDoctorScreenWatch.doctorSpecialityController,
-                            preIcon: Icon(
-                              Icons.medical_information_outlined,
-                              color: AppColors.appPrimaryRed,
-                            ),
-                            onChanged: (p0) {
-                              final item = addDoctorScreenWatch.specialityList
-                                  .cast()
-                                  .where(
-                                    (e) =>
-                                        (e.desc ?? '').trim().toLowerCase() ==
-                                        p0.trim().toLowerCase(),
-                                  );
-
-                              if (item.isNotEmpty) {
-                                addDoctorScreenRead.updateStateClass(
-                                  specialityId: item.first.key,
+                          child: Focus(
+                            onFocusChange: (hasFocus) {
+                              if (!hasFocus) {
+                                Future.delayed(
+                                  const Duration(milliseconds: 400),
+                                  () {
+                                    addDoctorScreenRead
+                                        .clearFilteredspecialityList();
+                                  },
                                 );
-
-                                log('speciality id assign ${item.first.key}');
-                              } else {
-                                addDoctorScreenRead.updateStateClass(
-                                  specialityId: 0,
-                                );
-
-                                log('speciality id assign 0');
                               }
                             },
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        GestureDetector(
-                          onTapDown: (details) {
-                            showMore(
-                              context: context,
-                              tapPosition: details.globalPosition,
-                              items: addDoctorScreenWatch.specialityList,
-                              onSelected: (key, desc) {
-                                addDoctorScreenWatch
-                                        .doctorSpecialityController
-                                        .text =
-                                    desc;
+                            child: TypeTextFormField(
+                              validationType: ValidationType.name,
+                              hintText: 'Speciality',
+                              textController: addDoctorScreenWatch
+                                  .doctorSpecialityController,
+                              preIcon: Icon(
+                                Icons.medical_information_outlined,
+                                color: AppColors.appPrimaryRed,
+                              ),
+                              onChanged: (p0) {
+                                addDoctorScreenRead.filterSpeciality(p0);
+                                final item = addDoctorScreenWatch.specialityList
+                                    .cast()
+                                    .where(
+                                      (e) =>
+                                          (e.desc ?? '').trim().toLowerCase() ==
+                                          p0.trim().toLowerCase(),
+                                    );
 
-                                addDoctorScreenRead.updateStateClass(
-                                  specialityId: key,
-                                );
+                                if (item.isNotEmpty) {
+                                  addDoctorScreenRead.updateStateClass(
+                                    specialityId: item.first.key,
+                                  );
+
+                                  log('speciality id assign ${item.first.key}');
+                                } else {
+                                  addDoctorScreenRead.updateStateClass(
+                                    specialityId: 0,
+                                  );
+
+                                  log('speciality id assign 0');
+                                }
                               },
-                            ); // directly pass it
-                          },
-                          child: Container(
-                            height: 60, // same height as TextField
-                            padding: const EdgeInsets.symmetric(horizontal: 12),
-                            decoration: BoxDecoration(
-                              color: const Color(
-                                0xFFFFEBEE,
-                              ), // light red background
-                              borderRadius: BorderRadius.circular(12),
                             ),
-                            child: Row(children: [Icon(Icons.arrow_drop_down)]),
                           ),
                         ),
                       ],
+                    ),
+                    Consumer(
+                      builder: (context, ref, child) {
+                        final state = ref.watch(addDoctorProvider);
+                        final controller = ref.read(addDoctorProvider.notifier);
+
+                        return Container(
+                          color: AppColors.appGrey,
+                          constraints: const BoxConstraints(maxHeight: 200),
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: state.finalSpecialityList.length,
+                            itemBuilder: (context, index) {
+                              final item = state.finalSpecialityList[index];
+
+                              return ListTile(
+                                title: Text(item.desc ?? ''),
+                                onTap: () {
+                                  log(
+                                    "Before: ${state.doctorSpecialityController.text}",
+                                  );
+
+                                  state.doctorSpecialityController.text =
+                                      item.desc ?? '';
+
+                                  log(
+                                    "After: ${state.doctorSpecialityController.text}",
+                                  );
+                                  controller.updateStateClass(
+                                    specialityId: item.key,
+                                  );
+                                  controller.clearFilteredspecialityList();
+                                  FocusScope.of(context).unfocus();
+                                },
+                              );
+                            },
+                          ),
+                        );
+                      },
                     ),
                     SizedBox(height: 5),
 
@@ -165,71 +187,106 @@ class AddDoctorScreen extends ConsumerWidget {
                     Row(
                       children: [
                         Expanded(
-                          child: TypeTextFormField(
-                            validationType: ValidationType.name,
-                            onChanged: (p0) {
-                              final item = addDoctorScreenWatch.areaList
-                                  .cast()
-                                  .where(
-                                    (e) =>
-                                        (e.desc ?? '').trim().toLowerCase() ==
-                                        p0.trim().toLowerCase(),
-                                  );
-
-                              if (item.isNotEmpty) {
-                                addDoctorScreenRead.updateStateClass(
-                                  areaId: item.first.key,
+                          child: Focus(
+                            onFocusChange: (hasFocus) {
+                              if (!hasFocus) {
+                                Future.delayed(
+                                  const Duration(milliseconds: 400),
+                                  () {
+                                    addDoctorScreenRead.clearFilteredAreaList();
+                                  },
                                 );
-
-                                log('area id id assign ${item.first.key}');
-                              } else {
-                                addDoctorScreenRead.updateStateClass(
-                                  specialityId: 0,
-                                );
-
-                                log('area id id assign 0');
                               }
                             },
-                            hintText: addDoctorScreenWatch.areaId == 0
-                                ? 'Area'
-                                : '',
-                            textController:
-                                addDoctorScreenWatch.areaIdController,
-                            preIcon: Icon(
-                              Icons.area_chart_outlined,
-                              color: AppColors.appPrimaryRed,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        GestureDetector(
-                          onTapDown: (details) {
-                            showMore(
-                              context: context,
-                              tapPosition: details.globalPosition,
-                              items: addDoctorScreenWatch.areaList,
-                              onSelected: (key, desc) {
-                                addDoctorScreenWatch.areaIdController.text =
-                                    desc;
-                                addDoctorScreenRead.updateStateClass(
-                                  areaId: key,
-                                );
+                            child: TypeTextFormField(
+                              validationType: ValidationType.name,
+                              textController:
+                                  addDoctorScreenWatch.areaIdController,
+                              onChanged: (p0) {
+                                addDoctorScreenRead.filterArea(p0);
+                                String normalize() {
+                                  return p0.trim().toLowerCase().replaceAll(
+                                    RegExp(r'\s+'),
+                                    ' ',
+                                  );
+                                }
+
+                                final item = addDoctorScreenWatch.areaList
+                                    .cast()
+                                    .where(
+                                      (e) =>
+                                          (e.desc ?? '').trim().toLowerCase() ==
+                                          normalize(),
+                                    );
+                                if (p0.isEmpty) {
+                                  addDoctorScreenRead.clearFilteredAreaList();
+                                }
+                                if (item.isNotEmpty) {
+                                  addDoctorScreenRead.updateStateClass(
+                                    areaId: item.first.key,
+                                  );
+
+                                  log('area id id assign ${item.first.key}');
+                                } else {
+                                  addDoctorScreenRead.updateStateClass(
+                                    areaId: 0,
+                                  );
+
+                                  log('area id id assign 0');
+                                }
                               },
-                            ); // directly pass it
-                          },
-                          child: Container(
-                            height: 60, // same height as TextField
-                            padding: const EdgeInsets.symmetric(horizontal: 12),
-                            decoration: BoxDecoration(
-                              color: const Color(
-                                0xFFFFEBEE,
-                              ), // light red background
-                              borderRadius: BorderRadius.circular(12),
+                              hintText: addDoctorScreenWatch.areaId == 0
+                                  ? 'Area'
+                                  : '',
+
+                              preIcon: Icon(
+                                Icons.area_chart_outlined,
+                                color: AppColors.appPrimaryRed,
+                              ),
                             ),
-                            child: Row(children: [Icon(Icons.arrow_drop_down)]),
                           ),
                         ),
                       ],
+                    ),
+                    Consumer(
+                      builder: (context, ref, child) {
+                        final state = ref.watch(addDoctorProvider);
+                        final controller = ref.read(addDoctorProvider.notifier);
+                        // if (!clinicFocusNode.hasFocus ||
+                        //     state.finalClinicList.isEmpty) {
+                        //   return const SizedBox.shrink();
+                        // }
+                        return Container(
+                          color: AppColors.appGrey,
+                          constraints: const BoxConstraints(maxHeight: 200),
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: state.finalAreaList.length,
+                            itemBuilder: (context, index) {
+                              final item = state.finalAreaList[index];
+
+                              return ListTile(
+                                title: Text(item.desc ?? ''),
+                                onTap: () {
+                                  state.areaIdController.text = item.desc ?? '';
+
+                                  controller.updateStateClass(areaId: item.key);
+
+                                  log('Selected area id 5: ${item.key}');
+                                  Future.microtask(() {
+                                    log(
+                                      'Updated area id 6: ${ref.read(addDoctorProvider).areaId}',
+                                    );
+                                  });
+                                  log('assign area id 4 :${state.areaId}');
+                                  controller.clearFilteredAreaList();
+                                  FocusScope.of(context).unfocus();
+                                },
+                              );
+                            },
+                          ),
+                        );
+                      },
                     ),
                     SizedBox(height: 5),
 
@@ -238,79 +295,114 @@ class AddDoctorScreen extends ConsumerWidget {
                     Row(
                       children: [
                         Expanded(
-                          child: TypeTextFormField(
-                            onChanged: (p0) {
-                              final item = addDoctorScreenWatch.clinicList
-                                  .cast()
-                                  .where(
-                                    (e) =>
-                                        (e.ahMstPName ?? '')
-                                            .trim()
-                                            .toLowerCase() ==
-                                        p0.trim().toLowerCase(),
-                                  );
-
-                              if (item.isNotEmpty) {
-                                addDoctorScreenRead.updateStateClass(
-                                  clinicId: item.first.ahMstKey,
+                          child: Focus(
+                            onFocusChange: (hasFocus) {
+                              if (!hasFocus) {
+                                Future.delayed(
+                                  const Duration(milliseconds: 400),
+                                  () {
+                                    addDoctorScreenRead
+                                        .clearFilteredClinicList();
+                                  },
                                 );
-
-                                log(
-                                  'clinic id id assign ${item.first.ahMstKey}',
-                                );
-                              } else {
-                                addDoctorScreenRead.updateStateClass(
-                                  clinicId: 0,
-                                );
-
-                                log('clinic id id assign 0');
                               }
                             },
-                            validationType: ValidationType.name,
-                            hintText: 'Clinic Name',
-                            textController:
-                                addDoctorScreenWatch.doctorClinicController,
+                            child: TypeTextFormField(
+                              onChanged: (p0) {
+                                addDoctorScreenRead.filterClinic(p0);
+                                final item = addDoctorScreenWatch.clinicList
+                                    .cast()
+                                    .where(
+                                      (e) =>
+                                          (e.ahMstPName ?? '')
+                                              .trim()
+                                              .toLowerCase() ==
+                                          p0.trim().toLowerCase(),
+                                    );
+                                if (p0.isEmpty) {
+                                  addDoctorScreenRead.clearFilteredClinicList();
+                                }
+                                if (item.isNotEmpty) {
+                                  addDoctorScreenRead.updateStateClass(
+                                    clinicId: item.first.ahMstPName.isNotEmpty
+                                        ? item.first.ahMstKey
+                                        : 0,
+                                  );
 
-                            preIcon: Icon(
-                              Icons.medical_services_outlined,
-                              color: AppColors.appPrimaryRed,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        GestureDetector(
-                          onTapDown: (details) {
-                            showMore(
-                              isClinic: true,
-                              context: context,
-                              tapPosition: details.globalPosition,
-                              items: addDoctorScreenWatch.clinicList,
-                              onSelected: (ahMstKey, ahMstPName) {
-                                addDoctorScreenWatch
-                                        .doctorClinicController
-                                        .text =
-                                    ahMstPName;
-                                addDoctorScreenRead.updateStateClass(
-                                  clinicId: ahMstKey,
+                                  log(
+                                    'clinic id assign 1 :${addDoctorScreenWatch.clinicId}',
+                                  );
+                                } else {
+                                  addDoctorScreenRead.updateStateClass(
+                                    clinicId: 0,
+                                  );
+                                  //  addDoctorScreenRead.clearFilteredClinicList();
+
+                                  log(
+                                    'clinic id assign 2 :${addDoctorScreenWatch.clinicId}',
+                                  );
+                                }
+                                log(
+                                  'clinic id assign 3 :${addDoctorScreenWatch.clinicId}',
                                 );
                               },
-                            ); // directly pass it
-                          },
-                          child: Container(
-                            height: 60, // same height as TextField
-                            padding: const EdgeInsets.symmetric(horizontal: 12),
-                            decoration: BoxDecoration(
-                              color: const Color(
-                                0xFFFFEBEE,
-                              ), // light red background
-                              borderRadius: BorderRadius.circular(12),
+                              validationType: ValidationType.name,
+                              hintText: 'Clinic Name',
+                              textController:
+                                  addDoctorScreenWatch.doctorClinicController,
+
+                              preIcon: Icon(
+                                Icons.medical_services_outlined,
+                                color: AppColors.appPrimaryRed,
+                              ),
                             ),
-                            child: Row(children: [Icon(Icons.arrow_drop_down)]),
                           ),
                         ),
                       ],
                     ),
+                    Consumer(
+                      builder: (context, ref, child) {
+                        final state = ref.watch(addDoctorProvider);
+                        final controller = ref.read(addDoctorProvider.notifier);
 
+                        // if (state.finalClinicList.isEmpty) {
+                        //   return const SizedBox.shrink();
+                        // }
+
+                        return Container(
+                          color: AppColors.appGrey,
+                          constraints: const BoxConstraints(maxHeight: 200),
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: state.finalClinicList.length,
+                            itemBuilder: (context, index) {
+                              final item = state.finalClinicList[index];
+
+                              return ListTile(
+                                title: Text(item.ahMstPName ?? ''),
+                                onTap: () {
+                                  state.doctorClinicController.text =
+                                      item.ahMstPName ?? '';
+
+                                  controller.updateStateClass(
+                                    clinicId: item.ahMstKey,
+                                  );
+                                  log('Selected clinic id 5: ${item.ahMstKey}');
+                                  Future.microtask(() {
+                                    log(
+                                      'Updated clinic id 6: ${ref.read(addDoctorProvider).clinicId}',
+                                    );
+                                  });
+                                  log('assign clinic id 4 :${state.clinicId}');
+                                  controller.clearFilteredClinicList();
+                                  FocusScope.of(context).unfocus();
+                                },
+                              );
+                            },
+                          ),
+                        );
+                      },
+                    ),
                     SizedBox(height: 10),
                     TopText(heading: 'Incentive'),
                     SizedBox(height: 7),
@@ -415,6 +507,9 @@ class AddDoctorScreen extends ConsumerWidget {
                                       ? false
                                       : true,
                                   areaId: addDoctorScreenWatch.areaId,
+                                  areaName: addDoctorScreenWatch
+                                      .areaIdController
+                                      .text,
                                 );
 
                                 log(

@@ -5,6 +5,7 @@ import 'package:doctor_visit/apis/add_doctor/area_fetch_api.dart';
 import 'package:doctor_visit/apis/add_doctor/clinic_fetch_api.dart';
 import 'package:doctor_visit/apis/add_doctor/specialty_fetch_api.dart';
 import 'package:doctor_visit/controller/add_doctor_controller/add_doctor_state.dart';
+import 'package:doctor_visit/core/constants/app_constants.dart';
 import 'package:doctor_visit/model/add_doctor_screen/areaOrSpeciality_fetch_response_model.dart';
 import 'package:doctor_visit/model/add_doctor_screen/clinic_fetch_response_model.dart';
 import 'package:doctor_visit/view/screens/home_screen/widget/alert_dialog.dart';
@@ -87,6 +88,60 @@ class AddDoctorsController extends StateNotifier<AddDoctorsState> {
     );
   }
 
+  //filtered area search list
+  void filterArea(String query) {
+    if (query.isEmpty) {
+      state = state.copyWith(finalAreaList: state.areaList);
+      return;
+    }
+
+    final filtered = state.areaList.where((e) {
+      return (e.desc ?? '').toLowerCase().contains(query.toLowerCase());
+    }).toList();
+
+    state = state.copyWith(finalAreaList: filtered);
+  }
+
+  //filter specialty list
+  void filterSpeciality(String query) {
+    if (query.isEmpty) {
+      state = state.copyWith(finalSpecialityList: state.specialityList);
+      return;
+    }
+
+    final filtered = state.specialityList.where((e) {
+      return (e.desc ?? '').toLowerCase().contains(query.toLowerCase());
+    }).toList();
+
+    state = state.copyWith(finalSpecialityList: filtered);
+  }
+
+  //filter clinic list
+  void filterClinic(String query) {
+    if (query.isEmpty) {
+      state = state.copyWith(finalClinicList: state.clinicList);
+      return;
+    }
+
+    final filtered = state.clinicList.where((e) {
+      return (e.ahMstPName ?? '').toLowerCase().contains(query.toLowerCase());
+    }).toList();
+
+    state = state.copyWith(finalClinicList: filtered);
+  }
+
+  void clearFilteredAreaList() {
+    state = state.copyWith(finalAreaList: []);
+  }
+
+  void clearFilteredspecialityList() {
+    state = state.copyWith(finalSpecialityList: []);
+  }
+
+  void clearFilteredClinicList() {
+    state = state.copyWith(finalClinicList: []);
+  }
+
   //add doctor saving
   Future<void> addDoctorSave({
     required BuildContext context,
@@ -99,10 +154,12 @@ class AddDoctorsController extends StateNotifier<AddDoctorsState> {
     required String discription,
     required bool isIncentive,
     required int areaId,
+    required String areaName,
   }) async {
     state = state.copyWith(isSubmitted: true);
     try {
       final String? response = await AddDoctorSaveApi.addDoctorSaveApi(
+        proId: int.parse(AppConstants.employeeID),
         doctocName: doctocName,
         doctorPhone: doctorPhone,
         specialId: specialId,
@@ -112,6 +169,7 @@ class AddDoctorsController extends StateNotifier<AddDoctorsState> {
         discription: discription,
         isIncentive: isIncentive,
         areaId: areaId,
+        areaName: areaName,
       );
       log(response.toString());
       if (response != null && response.isNotEmpty) {

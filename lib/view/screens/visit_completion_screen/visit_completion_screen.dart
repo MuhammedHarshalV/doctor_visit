@@ -315,7 +315,40 @@ class VisitCompletionScreen extends ConsumerWidget {
                           final time = await showTimePicker(
                             context: context,
                             initialTime: TimeOfDay.now(),
+                            builder: (context, child) {
+                              return Theme(
+                                data: Theme.of(context).copyWith(
+                                  colorScheme: ColorScheme.light(
+                                    primary: AppColors
+                                        .appPrimaryRed, // selected hour/minute
+                                    onPrimary: Colors.white, // text on selected
+                                    onSurface: Colors.black, // normal text
+                                    surface: Colors.white, // dialog background
+                                  ),
+                                  timePickerTheme: TimePickerThemeData(
+                                    backgroundColor: Colors.white,
+                                    hourMinuteColor: AppColors.appTextFieldRed,
+                                    hourMinuteTextColor: AppColors.appBlack,
+                                    dayPeriodColor: AppColors.appTextFieldRed,
+                                    dayPeriodTextColor: AppColors.appBlack,
+                                    dialBackgroundColor:
+                                        AppColors.appTextFieldRed,
+                                    dialHandColor: AppColors.appPrimaryRed,
+                                    dialTextColor: AppColors.appBlack,
+                                    entryModeIconColor: AppColors.appPrimaryRed,
+                                    cancelButtonStyle: TextButton.styleFrom(
+                                      foregroundColor: AppColors.appPrimaryRed,
+                                    ),
+                                    confirmButtonStyle: TextButton.styleFrom(
+                                      foregroundColor: AppColors.appPrimaryRed,
+                                    ),
+                                  ),
+                                ),
+                                child: child!,
+                              );
+                            },
                           );
+
                           if (time != null) {
                             doctorVisitController.setStartTime(time);
                           }
@@ -342,7 +375,40 @@ class VisitCompletionScreen extends ConsumerWidget {
                           final time = await showTimePicker(
                             context: context,
                             initialTime: TimeOfDay.now(),
+                            builder: (context, child) {
+                              return Theme(
+                                data: Theme.of(context).copyWith(
+                                  colorScheme: ColorScheme.light(
+                                    primary: AppColors
+                                        .appPrimaryRed, // selected hour/minute
+                                    onPrimary: Colors.white, // text on selected
+                                    onSurface: Colors.black, // normal text
+                                    surface: Colors.white, // dialog background
+                                  ),
+                                  timePickerTheme: TimePickerThemeData(
+                                    backgroundColor: Colors.white,
+                                    hourMinuteColor: AppColors.appTextFieldRed,
+                                    hourMinuteTextColor: AppColors.appBlack,
+                                    dayPeriodColor: AppColors.appTextFieldRed,
+                                    dayPeriodTextColor: AppColors.appBlack,
+                                    dialBackgroundColor:
+                                        AppColors.appTextFieldRed,
+                                    dialHandColor: AppColors.appPrimaryRed,
+                                    dialTextColor: AppColors.appBlack,
+                                    entryModeIconColor: AppColors.appPrimaryRed,
+                                    cancelButtonStyle: TextButton.styleFrom(
+                                      foregroundColor: AppColors.appPrimaryRed,
+                                    ),
+                                    confirmButtonStyle: TextButton.styleFrom(
+                                      foregroundColor: AppColors.appPrimaryRed,
+                                    ),
+                                  ),
+                                ),
+                                child: child!,
+                              );
+                            },
                           );
+
                           if (time != null) {
                             doctorVisitController.setEndTime(time);
                           }

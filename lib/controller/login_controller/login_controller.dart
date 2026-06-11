@@ -5,7 +5,9 @@ import 'package:doctor_visit/controller/login_controller/login_state.dart';
 import 'package:doctor_visit/core/api_errors/api_errors.dart';
 import 'package:doctor_visit/core/constants/app_constants.dart';
 import 'package:doctor_visit/core/routes/app_route_names.dart';
+import 'package:doctor_visit/core/theme/colors/appcolors.dart';
 import 'package:doctor_visit/model/login/login_response_model.dart';
+
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:flutter/material.dart';
 
@@ -14,8 +16,15 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+
 class LoginController extends StateNotifier<LoginState> {
-  LoginController() : super(LoginState(pincontroller: TextEditingController()));
+  LoginController()
+    : super(
+        LoginState(
+          pincontroller: TextEditingController(),
+          baseUrlController: TextEditingController(), formKey:  GlobalKey<FormState>(),
+        ),
+      );
 
   void decryptValue({
     required String encryptedUsername,
@@ -52,6 +61,83 @@ class LoginController extends StateNotifier<LoginState> {
       final LoginResponseModel? response =
           await LoginApiService.loginApiService(pin: pin, context: context);
       if (response == null) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            backgroundColor: AppColors.appWhite,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.warning_outlined,
+                  color: AppColors.appBlack,
+                  size: 30,
+                ),
+                SizedBox(width: 8),
+                Text(
+                  "Alert",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                ),
+              ],
+            ),
+            content: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+
+              children: [
+                Text(
+                  "Connection failed. Please check the Base URL settings and try again. If the issue persists, contact Icon Support.",
+                  style: TextStyle(fontWeight: FontWeight.w400, fontSize: 15),
+                ),
+                SizedBox(height: 10),
+                GestureDetector(
+                  onTap: () {
+                    state.pincontroller.clear();
+                    state.baseUrlController.clear();
+                    AppConstants.baseUrl = '';
+                    context.goNamed(AppRouteNames.baseUrlScreen.name);
+                    log("baseUrl ${AppConstants.baseUrl}");
+                  },
+                  child: Container(
+                    height: 50,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: AppColors.appPrimaryRed,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+
+                    child: Row(
+                      spacing: 10,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Center(
+                          child: Text(
+                            'Base URL',
+                            style: TextStyle(color: AppColors.appWhite),
+                          ),
+                        ),
+                        Icon(
+                          Icons.replay_rounded,
+                          color: AppColors.appWhite,
+                          size: 15,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10),
+              ],
+            ),
+            actionsPadding: const EdgeInsets.symmetric(
+              horizontal: 10,
+              vertical: 15,
+            ),
+          ),
+        );
         return;
       }
       if (response.message == 'Invalid pin.') {
@@ -67,6 +153,7 @@ class LoginController extends StateNotifier<LoginState> {
 
         if (response.success == true) {
           AppConstants.yearID = response.yrId.toString();
+
           await mstKeyAndDetKeyChecking();
           // ignore: use_build_context_synchronously
           context.goNamed(AppRouteNames.bottomNavScreen.name);
@@ -90,9 +177,16 @@ class LoginController extends StateNotifier<LoginState> {
     final String? mstKey = prefs.getString('mst_key');
     final String? detKey = prefs.getString('det_key');
     final String? date = prefs.getString('Today_date');
+    final String? url = prefs.getString('BaseURL');
+    if (url == null) {
+      await prefs.setString('BaseURL', state.baseUrlController.text);
+    }
 
     if (mstKey != null && mstKey.isNotEmpty) {
       AppConstants.mstKey = mstKey;
+    }
+    if (url != null && url.isNotEmpty) {
+      AppConstants.baseUrl = url;
     }
     if (detKey != null && detKey.isNotEmpty) {
       AppConstants.detKey = detKey;
@@ -104,6 +198,8 @@ class LoginController extends StateNotifier<LoginState> {
     log('Stored mstkey : $mstKey');
     log('Stored detKey : $detKey');
     log('Stored date : $date');
+    log('Stored baseUrl : $url');
+
     if (AppConstants.date != currentDate) {
       await prefs.setString('mst_key', '');
 
@@ -112,6 +208,7 @@ class LoginController extends StateNotifier<LoginState> {
       log('mstkey :${AppConstants.mstKey}');
       log('detkey :${AppConstants.detKey}');
       log('date : ${AppConstants.date}');
+      log('baseUrl : ${AppConstants.baseUrl}');
     }
   }
 }

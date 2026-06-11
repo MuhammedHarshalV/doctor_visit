@@ -2,7 +2,7 @@ import 'package:doctor_visit/core/theme/colors/appcolors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-enum ValidationType { none, name, email, phone }
+enum ValidationType { none, name, email, phone, url }
 
 class TypeTextFormField extends StatelessWidget {
   final String hintText;
@@ -10,6 +10,7 @@ class TypeTextFormField extends StatelessWidget {
   final bool isSuffix;
   final bool isNumber;
   final Icon preIcon;
+
   final ValidationType validationType;
   final bool isReadOnly;
   final Function(String)? onChanged;
@@ -20,6 +21,7 @@ class TypeTextFormField extends StatelessWidget {
     required this.textController,
     this.isSuffix = false,
     this.isNumber = false,
+
     this.validationType = ValidationType.none,
     required this.preIcon,
 
@@ -86,6 +88,17 @@ class TypeTextFormField extends StatelessWidget {
                 if (text.length != 10) {
                   return 'Enter a valid 10 digit phone number';
                 }
+                return null;
+              case ValidationType.url:
+                if (text.isEmpty) {
+                  return 'URL is required';
+                }
+
+                if (!text.startsWith('http://') &&
+                    !text.startsWith('https://')) {
+                  return 'Enter a valid URL';
+                }
+
                 return null;
             }
           }

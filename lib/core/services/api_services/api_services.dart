@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:doctor_visit/core/api_errors/api_errors.dart';
+import 'package:doctor_visit/core/constants/app_constants.dart';
 import 'package:flutter/material.dart';
 
 //Dio get Api
@@ -28,13 +29,13 @@ class GetApiServices {
     try {
       log("=========== API REQUEST ===========");
       log("METHOD : GET");
-      log("URL    : $url");
+      log("URL    :${AppConstants.baseUrl}$url");
       log("BODY   : ${body ?? {}}");
       log("QUERY  : ${queryParams ?? {}}");
       log("===================================");
 
       final response = await dio.get(
-        url,
+        "${AppConstants.baseUrl}$url",
         data: body,
         queryParameters: queryParams,
         options: Options(
@@ -57,6 +58,11 @@ class GetApiServices {
         return null;
       }
     } on DioException catch (e) {
+      log("TYPE: ${e.type}");
+      log("MESSAGE: ${e.message}");
+      log("ERROR: ${e.error}");
+      log("RESPONSE: ${e.response?.data}");
+      log("STATUS: ${e.response?.statusCode}");
       log("DIO ERROR : ${e.message}");
 
       if (e.type == DioExceptionType.connectionTimeout ||
@@ -74,7 +80,7 @@ class GetApiServices {
       } else {
         if (context != null) {
           // ignore: use_build_context_synchronously
-          AppMessage.show(context, e.message ?? "Unknown Error");
+          // AppMessage.show(context, e.message ?? "Unknown Error");
         }
       }
 
@@ -111,13 +117,13 @@ class PostApiServices {
     try {
       log("=========== API REQUEST ===========");
       log("METHOD : POST");
-      log("URL    : $url");
+      log("URL    : ${AppConstants.baseUrl}$url");
       log("BODY   : ${body ?? {}}");
       log("QUERY  : ${queryParams ?? {}}");
       log("===================================");
 
       final response = await dio.post(
-        url,
+        "${AppConstants.baseUrl}$url",
         data: body,
         queryParameters: queryParams,
         options: Options(
