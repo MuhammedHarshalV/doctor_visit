@@ -217,8 +217,8 @@ class FoodCard extends StatelessWidget {
                       ),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
-                          vertical: 3,
-                          horizontal: 5,
+                          vertical: 5,
+                          horizontal: 15,
                         ),
                         child: Text(
                           'Edit',

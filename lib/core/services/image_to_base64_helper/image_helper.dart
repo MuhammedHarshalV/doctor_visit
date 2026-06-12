@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:doctor_visit/core/theme/colors/appcolors.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -45,14 +46,15 @@ class ImageHelper {
       return await picker.pickImage(
         source: ImageSource.camera,
         preferredCameraDevice: CameraDevice.front,
-        imageQuality: 10,
-        maxWidth: 400,
-        maxHeight: 400,
+        imageQuality: 15,
+        maxWidth: 800,
+        maxHeight: 800,
       );
     } else {
       // Show options: Camera / Gallery
       return await showModalBottomSheet<XFile?>(
         context: context,
+        backgroundColor: AppColors.appWhite,
         builder: (context) {
           return SafeArea(
             child: Wrap(
@@ -64,9 +66,9 @@ class ImageHelper {
                     final image = await picker.pickImage(
                       source: ImageSource.camera,
                       preferredCameraDevice: CameraDevice.rear,
-                      imageQuality: 10,
-                      maxWidth: 400,
-                      maxHeight: 400,
+                      imageQuality: 15,
+                      maxWidth: 800,
+                      maxHeight: 800,
                     );
                     // ignore: use_build_context_synchronously
                     Navigator.pop(context, image);
@@ -78,9 +80,9 @@ class ImageHelper {
                   onTap: () async {
                     final image = await picker.pickImage(
                       source: ImageSource.gallery,
-                      imageQuality: 10,
-                      maxWidth: 400,
-                      maxHeight: 400,
+                      imageQuality: 15,
+                      maxWidth: 800,
+                      maxHeight: 800,
                     );
                     // ignore: use_build_context_synchronously
                     Navigator.pop(context, image);

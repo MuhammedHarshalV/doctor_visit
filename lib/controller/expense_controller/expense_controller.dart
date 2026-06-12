@@ -49,7 +49,7 @@ class ExpenseController extends StateNotifier<ExpenseState> {
     }
   }
 
-  void updateImage(Uint8List? image, String? fileImage) {
+  void updateImage(Uint8List? image,) {
     state = state.copyWith(base64Image: image);
   }
 
