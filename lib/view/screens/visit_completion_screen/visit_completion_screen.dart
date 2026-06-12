@@ -3,11 +3,13 @@ import 'dart:developer';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
 import 'package:doctor_visit/controller/doctor_visit_controller/doctor_visit_controller.dart';
+
 import 'package:doctor_visit/controller/home_screen_controller/home_screen_controller.dart';
 import 'package:doctor_visit/core/constants/app_constants.dart';
 import 'package:doctor_visit/core/services/location_services/location_services.dart';
 import 'package:doctor_visit/core/theme/colors/appcolors.dart';
 import 'package:doctor_visit/view/screens/home_screen/widget/alert_dialog.dart';
+import 'package:doctor_visit/view/widgets/common_image_container.dart';
 import 'package:doctor_visit/view/widgets/common_title_text.dart';
 import 'package:doctor_visit/core/services/image_to_base64_helper/image_helper.dart';
 import 'package:flutter/material.dart';
@@ -268,7 +270,7 @@ class VisitCompletionScreen extends ConsumerWidget {
                           if (bytes == null) return;
 
                           //  Step 4 — Save to controller
-                          doctorVisitController.updateImage(bytes, image.path);
+                          doctorVisitController.updateImage(bytes);
 
                           log(
                             "Image ready. Base64 KB: ${(base64String.length / 1024).toStringAsFixed(1)}",
@@ -276,33 +278,9 @@ class VisitCompletionScreen extends ConsumerWidget {
                           doctorVisitController.base64ToApiUpdate(base64String);
                           // log('harshal image : $base64String');
                         },
-                        child: Container(
-                          height: 170,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: AppColors.appTextFieldRed,
-                            borderRadius: BorderRadius.circular(12),
-                            image: doctorVisitState.base64Image.isNotEmpty
-                                ? DecorationImage(
-                                    image: MemoryImage(
-                                      doctorVisitState.base64Image,
-                                    ),
-                                    fit: BoxFit.cover,
-                                  )
-                                : null,
-                          ),
-                          child: Center(
-                            child: doctorVisitState.base64Image.isNotEmpty
-                                ? null
-                                : Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(Icons.camera_alt_outlined, size: 30),
-                                      SizedBox(height: 5),
-                                      Text("Tap to capture selfie"),
-                                    ],
-                                  ),
-                          ),
+                        child: ImageContainer(
+                          state: doctorVisitState,
+                          controller: doctorVisitController,
                         ),
                       ),
 

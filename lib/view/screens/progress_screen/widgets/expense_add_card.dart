@@ -7,6 +7,7 @@ import 'package:doctor_visit/view/screens/home_screen/widget/alert_dialog.dart';
 import 'package:doctor_visit/view/screens/progress_screen/widgets/category_widget.dart';
 import 'package:doctor_visit/view/widgets/build_input_field.dart';
 import 'package:doctor_visit/core/services/image_to_base64_helper/image_helper.dart';
+import 'package:doctor_visit/view/widgets/common_image_container.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -124,95 +125,9 @@ class ExpenseFormCard extends ConsumerWidget {
                 );
                 progressController.base64ToApiUpdate(base64String);
               },
-              child: Stack(
-                children: [
-                  Container(
-                    height: 170,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: AppColors.appTextFieldRed,
-                      borderRadius: BorderRadius.circular(12),
-                      image: progressState.base64Image.isNotEmpty
-                          ? DecorationImage(
-                              image: MemoryImage(progressState.base64Image),
-                              fit: BoxFit.cover,
-                            )
-                          : null,
-                    ),
-                    child: Center(
-                      child: progressState.base64Image.isNotEmpty
-                          ? null
-                          : Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: const [
-                                Icon(Icons.camera_alt_outlined, size: 30),
-                                SizedBox(height: 5),
-                                Text("Tap to capture Bill"),
-                              ],
-                            ),
-                    ),
-                  ),
-
-                  // Action buttons
-                  if (progressState.base64Image.isNotEmpty)
-                    Positioned(
-                      top: 8,
-                      right: 8,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              showDialog(
-                                context: context,
-                                builder: (_) => Dialog(
-                                  child: InteractiveViewer(
-                                    child: Image.memory(
-                                      progressState.base64Image,
-                                      fit: BoxFit.contain,
-                                    ),
-                                  ),
-                                ),
-                              );
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.all(6),
-                              decoration: const BoxDecoration(
-                                color: Colors.black54,
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Icon(
-                                Icons.visibility,
-                                color: Colors.white,
-                                size: 20,
-                              ),
-                            ),
-                          ),
-
-                          const SizedBox(width: 8),
-
-                          GestureDetector(
-                            onTap: () {
-                              progressController.updateImage(Uint8List(0));
-                              progressController.base64ToApiUpdate('');
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.all(6),
-                              decoration: BoxDecoration(
-                                color: AppColors.appPrimaryRed.withOpacity(.7),
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Icon(
-                                Icons.delete,
-                                color: Colors.white,
-                                size: 20,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                ],
+              child: ImageContainer(
+                state: progressState,
+                controller: progressController,
               ),
             ),
 

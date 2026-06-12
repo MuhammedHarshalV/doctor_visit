@@ -82,7 +82,7 @@ class VisitController extends StateNotifier<DoctorVisitCompletion> {
     state = state.copyWith(startTime: time);
   }
 
-  void updateImage(Uint8List? image, String? fileImage) {
+  void updateImage(Uint8List? image) {
     state = state.copyWith(base64Image: image);
   }
 
