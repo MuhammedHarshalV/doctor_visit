@@ -37,7 +37,7 @@ class SplashScreen extends ConsumerWidget {
           children: [
             Center(
               child: Lottie.asset(
-                'asset/lottie/Medical_app.json',
+                'asset/lottie/doctor_visit_loading.json',
                 width: double.infinity,
                 // height: 00,
                 fit: BoxFit.cover,
