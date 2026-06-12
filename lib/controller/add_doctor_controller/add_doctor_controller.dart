@@ -73,6 +73,9 @@ class AddDoctorsController extends StateNotifier<AddDoctorsState> {
   }
 
   void updateStateClass({
+    bool? isDropdownSpeciality,
+    bool? isDropdownarea,
+    bool? isDropdownClinic,
     bool? isSubmitted,
     String? isIncentive,
     int? areaId,
@@ -85,6 +88,9 @@ class AddDoctorsController extends StateNotifier<AddDoctorsState> {
       areaId: areaId,
       specialityId: specialityId,
       clinicId: clinicId,
+      isDropdownSpeciality: isDropdownSpeciality,
+      isDropdownarea: isDropdownarea,
+      isDropdownClinic: isDropdownClinic,
     );
   }
 
@@ -99,7 +105,7 @@ class AddDoctorsController extends StateNotifier<AddDoctorsState> {
       return (e.desc ?? '').toLowerCase().contains(query.toLowerCase());
     }).toList();
 
-    state = state.copyWith(finalAreaList: filtered);
+    state = state.copyWith(finalAreaList: filtered, isDropdownarea: true);
   }
 
   //filter specialty list
@@ -113,7 +119,10 @@ class AddDoctorsController extends StateNotifier<AddDoctorsState> {
       return (e.desc ?? '').toLowerCase().contains(query.toLowerCase());
     }).toList();
 
-    state = state.copyWith(finalSpecialityList: filtered);
+    state = state.copyWith(
+      finalSpecialityList: filtered,
+      isDropdownSpeciality: true,
+    );
   }
 
   //filter clinic list
@@ -127,7 +136,7 @@ class AddDoctorsController extends StateNotifier<AddDoctorsState> {
       return (e.ahMstPName ?? '').toLowerCase().contains(query.toLowerCase());
     }).toList();
 
-    state = state.copyWith(finalClinicList: filtered);
+    state = state.copyWith(finalClinicList: filtered, isDropdownClinic: true);
   }
 
   void clearFilteredAreaList() {

@@ -3,6 +3,10 @@ import 'package:doctor_visit/model/add_doctor_screen/clinic_fetch_response_model
 import 'package:flutter/material.dart';
 
 class AddDoctorsState {
+  final bool isDropdownSpeciality;
+  final bool isDropdownarea;
+  final bool isDropdownClinic;
+
   final GlobalKey<FormState> formKey;
   final int areaId;
   final int specialityId;
@@ -26,6 +30,9 @@ class AddDoctorsState {
 
   AddDoctorsState({
     required this.formKey,
+    this.isDropdownSpeciality = false,
+    this.isDropdownarea = false,
+    this.isDropdownClinic = false,
     this.areaId = 0,
     this.specialityId = 0,
     this.clinicId = 0,
@@ -48,6 +55,9 @@ class AddDoctorsState {
 
   AddDoctorsState copyWith({
     GlobalKey<FormState>? formKey,
+    bool? isDropdownSpeciality,
+    bool? isDropdownarea,
+    bool? isDropdownClinic,
     int? clinicId,
     int? areaId,
     int? specialityId,
@@ -69,6 +79,9 @@ class AddDoctorsState {
   }) {
     return AddDoctorsState(
       areaIdController: areaIdController ?? this.areaIdController,
+      isDropdownSpeciality: isDropdownSpeciality ?? this.isDropdownSpeciality,
+      isDropdownarea: isDropdownarea ?? this.isDropdownarea,
+      isDropdownClinic: isDropdownClinic ?? this.isDropdownClinic,
       isIncentive: isIncentive ?? this.isIncentive,
       clinicId: clinicId ?? this.clinicId,
       finalAreaList: finalAreaList ?? this.finalAreaList,

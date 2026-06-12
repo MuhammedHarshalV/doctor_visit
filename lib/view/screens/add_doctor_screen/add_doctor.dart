@@ -91,52 +91,46 @@ class AddDoctorScreen extends ConsumerWidget {
                     Row(
                       children: [
                         Expanded(
-                          child: Focus(
-                            onFocusChange: (hasFocus) {
-                              if (!hasFocus) {
-                                Future.delayed(
-                                  const Duration(milliseconds: 400),
-                                  () {
-                                    addDoctorScreenRead
-                                        .clearFilteredspecialityList();
-                                  },
+                          child: TypeTextFormField(
+                            validationType: ValidationType.name,
+                            hintText: 'Speciality',
+                            textController:
+                                addDoctorScreenWatch.doctorSpecialityController,
+                            preIcon: Icon(
+                              Icons.medical_information_outlined,
+                              color: AppColors.appPrimaryRed,
+                            ),
+                            onChanged: (p0) {
+                              addDoctorScreenRead.updateStateClass(
+                                isDropdownarea: false,
+                                isDropdownClinic: false,
+                              );
+                              addDoctorScreenRead.filterSpeciality(p0);
+                              final item = addDoctorScreenWatch.specialityList
+                                  .cast()
+                                  .where(
+                                    (e) =>
+                                        (e.desc ?? '').trim().toLowerCase() ==
+                                        p0.trim().toLowerCase(),
+                                  );
+                              if (p0.isEmpty) {
+                                addDoctorScreenRead
+                                    .clearFilteredspecialityList();
+                              }
+                              if (item.isNotEmpty) {
+                                addDoctorScreenRead.updateStateClass(
+                                  specialityId: item.first.key,
                                 );
+
+                                log('speciality id assign ${item.first.key}');
+                              } else {
+                                addDoctorScreenRead.updateStateClass(
+                                  specialityId: 0,
+                                );
+
+                                log('speciality id assign 0');
                               }
                             },
-                            child: TypeTextFormField(
-                              validationType: ValidationType.name,
-                              hintText: 'Speciality',
-                              textController: addDoctorScreenWatch
-                                  .doctorSpecialityController,
-                              preIcon: Icon(
-                                Icons.medical_information_outlined,
-                                color: AppColors.appPrimaryRed,
-                              ),
-                              onChanged: (p0) {
-                                addDoctorScreenRead.filterSpeciality(p0);
-                                final item = addDoctorScreenWatch.specialityList
-                                    .cast()
-                                    .where(
-                                      (e) =>
-                                          (e.desc ?? '').trim().toLowerCase() ==
-                                          p0.trim().toLowerCase(),
-                                    );
-
-                                if (item.isNotEmpty) {
-                                  addDoctorScreenRead.updateStateClass(
-                                    specialityId: item.first.key,
-                                  );
-
-                                  log('speciality id assign ${item.first.key}');
-                                } else {
-                                  addDoctorScreenRead.updateStateClass(
-                                    specialityId: 0,
-                                  );
-
-                                  log('speciality id assign 0');
-                                }
-                              },
-                            ),
                           ),
                         ),
                       ],
@@ -145,6 +139,10 @@ class AddDoctorScreen extends ConsumerWidget {
                       builder: (context, ref, child) {
                         final state = ref.watch(addDoctorProvider);
                         final controller = ref.read(addDoctorProvider.notifier);
+                        if (state.isDropdownSpeciality == false ||
+                            state.finalSpecialityList.isEmpty) {
+                          return const SizedBox.shrink();
+                        }
 
                         return Container(
                           color: AppColors.appGrey,
@@ -164,12 +162,17 @@ class AddDoctorScreen extends ConsumerWidget {
 
                                   state.doctorSpecialityController.text =
                                       item.desc ?? '';
-
+                                  Future.microtask(() {
+                                    log(
+                                      'Updated speciality id : ${ref.read(addDoctorProvider).specialityId}',
+                                    );
+                                  });
                                   log(
                                     "After: ${state.doctorSpecialityController.text}",
                                   );
                                   controller.updateStateClass(
                                     specialityId: item.key,
+                                    isDropdownSpeciality: false,
                                   );
                                   controller.clearFilteredspecialityList();
                                   FocusScope.of(context).unfocus();
@@ -187,62 +190,52 @@ class AddDoctorScreen extends ConsumerWidget {
                     Row(
                       children: [
                         Expanded(
-                          child: Focus(
-                            onFocusChange: (hasFocus) {
-                              if (!hasFocus) {
-                                Future.delayed(
-                                  const Duration(milliseconds: 400),
-                                  () {
-                                    addDoctorScreenRead.clearFilteredAreaList();
-                                  },
+                          child: TypeTextFormField(
+                            validationType: ValidationType.name,
+                            textController:
+                                addDoctorScreenWatch.areaIdController,
+                            onChanged: (p0) {
+                              addDoctorScreenRead.updateStateClass(
+                                isDropdownSpeciality: false,
+                                isDropdownClinic: false,
+                              );
+                              addDoctorScreenRead.filterArea(p0);
+                              String normalize() {
+                                return p0.trim().toLowerCase().replaceAll(
+                                  RegExp(r'\s+'),
+                                  ' ',
                                 );
                               }
+
+                              final item = addDoctorScreenWatch.areaList
+                                  .cast()
+                                  .where(
+                                    (e) =>
+                                        (e.desc ?? '').trim().toLowerCase() ==
+                                        normalize(),
+                                  );
+                              if (p0.isEmpty) {
+                                addDoctorScreenRead.clearFilteredAreaList();
+                              }
+                              if (item.isNotEmpty) {
+                                addDoctorScreenRead.updateStateClass(
+                                  areaId: item.first.key,
+                                );
+
+                                log('area id id assign ${item.first.key}');
+                              } else {
+                                addDoctorScreenRead.updateStateClass(areaId: 0);
+
+                                log('area id id assign 0');
+                              }
                             },
-                            child: TypeTextFormField(
-                              validationType: ValidationType.name,
-                              textController:
-                                  addDoctorScreenWatch.areaIdController,
-                              onChanged: (p0) {
-                                addDoctorScreenRead.filterArea(p0);
-                                String normalize() {
-                                  return p0.trim().toLowerCase().replaceAll(
-                                    RegExp(r'\s+'),
-                                    ' ',
-                                  );
-                                }
+                            hintText: addDoctorScreenWatch.areaId == 0
+                                ? 'Area'
+                                : '',
 
-                                final item = addDoctorScreenWatch.areaList
-                                    .cast()
-                                    .where(
-                                      (e) =>
-                                          (e.desc ?? '').trim().toLowerCase() ==
-                                          normalize(),
-                                    );
-                                if (p0.isEmpty) {
-                                  addDoctorScreenRead.clearFilteredAreaList();
-                                }
-                                if (item.isNotEmpty) {
-                                  addDoctorScreenRead.updateStateClass(
-                                    areaId: item.first.key,
-                                  );
-
-                                  log('area id id assign ${item.first.key}');
-                                } else {
-                                  addDoctorScreenRead.updateStateClass(
-                                    areaId: 0,
-                                  );
-
-                                  log('area id id assign 0');
-                                }
-                              },
-                              hintText: addDoctorScreenWatch.areaId == 0
-                                  ? 'Area'
-                                  : '',
-
-                              preIcon: Icon(
-                                Icons.area_chart_outlined,
-                                color: AppColors.appPrimaryRed,
-                              ),
+                            preIcon: Icon(
+                              Icons.area_chart_outlined,
+                              color: AppColors.appPrimaryRed,
                             ),
                           ),
                         ),
@@ -252,10 +245,10 @@ class AddDoctorScreen extends ConsumerWidget {
                       builder: (context, ref, child) {
                         final state = ref.watch(addDoctorProvider);
                         final controller = ref.read(addDoctorProvider.notifier);
-                        // if (!clinicFocusNode.hasFocus ||
-                        //     state.finalClinicList.isEmpty) {
-                        //   return const SizedBox.shrink();
-                        // }
+                        if (state.isDropdownarea == false ||
+                            state.finalAreaList.isEmpty) {
+                          return const SizedBox.shrink();
+                        }
                         return Container(
                           color: AppColors.appGrey,
                           constraints: const BoxConstraints(maxHeight: 200),
@@ -295,66 +288,57 @@ class AddDoctorScreen extends ConsumerWidget {
                     Row(
                       children: [
                         Expanded(
-                          child: Focus(
-                            onFocusChange: (hasFocus) {
-                              if (!hasFocus) {
-                                Future.delayed(
-                                  const Duration(milliseconds: 400),
-                                  () {
-                                    addDoctorScreenRead
-                                        .clearFilteredClinicList();
-                                  },
+                          child: TypeTextFormField(
+                            onChanged: (p0) {
+                              addDoctorScreenRead.updateStateClass(
+                                isDropdownSpeciality: false,
+                                isDropdownarea: false,
+                              );
+                              addDoctorScreenRead.filterClinic(p0);
+                              final item = addDoctorScreenWatch.clinicList
+                                  .cast()
+                                  .where(
+                                    (e) =>
+                                        (e.ahMstPName ?? '')
+                                            .trim()
+                                            .toLowerCase() ==
+                                        p0.trim().toLowerCase(),
+                                  );
+                              if (p0.isEmpty) {
+                                addDoctorScreenRead.clearFilteredClinicList();
+                              }
+                              if (item.isNotEmpty) {
+                                addDoctorScreenRead.updateStateClass(
+                                  clinicId: item.first.ahMstPName.isNotEmpty
+                                      ? item.first.ahMstKey
+                                      : 0,
+                                );
+
+                                log(
+                                  'clinic id assign 1 :${addDoctorScreenWatch.clinicId}',
+                                );
+                              } else {
+                                addDoctorScreenRead.updateStateClass(
+                                  clinicId: 0,
+                                );
+                                //  addDoctorScreenRead.clearFilteredClinicList();
+
+                                log(
+                                  'clinic id assign 2 :${addDoctorScreenWatch.clinicId}',
                                 );
                               }
+                              log(
+                                'clinic id assign 3 :${addDoctorScreenWatch.clinicId}',
+                              );
                             },
-                            child: TypeTextFormField(
-                              onChanged: (p0) {
-                                addDoctorScreenRead.filterClinic(p0);
-                                final item = addDoctorScreenWatch.clinicList
-                                    .cast()
-                                    .where(
-                                      (e) =>
-                                          (e.ahMstPName ?? '')
-                                              .trim()
-                                              .toLowerCase() ==
-                                          p0.trim().toLowerCase(),
-                                    );
-                                if (p0.isEmpty) {
-                                  addDoctorScreenRead.clearFilteredClinicList();
-                                }
-                                if (item.isNotEmpty) {
-                                  addDoctorScreenRead.updateStateClass(
-                                    clinicId: item.first.ahMstPName.isNotEmpty
-                                        ? item.first.ahMstKey
-                                        : 0,
-                                  );
+                            validationType: ValidationType.name,
+                            hintText: 'Clinic Name',
+                            textController:
+                                addDoctorScreenWatch.doctorClinicController,
 
-                                  log(
-                                    'clinic id assign 1 :${addDoctorScreenWatch.clinicId}',
-                                  );
-                                } else {
-                                  addDoctorScreenRead.updateStateClass(
-                                    clinicId: 0,
-                                  );
-                                  //  addDoctorScreenRead.clearFilteredClinicList();
-
-                                  log(
-                                    'clinic id assign 2 :${addDoctorScreenWatch.clinicId}',
-                                  );
-                                }
-                                log(
-                                  'clinic id assign 3 :${addDoctorScreenWatch.clinicId}',
-                                );
-                              },
-                              validationType: ValidationType.name,
-                              hintText: 'Clinic Name',
-                              textController:
-                                  addDoctorScreenWatch.doctorClinicController,
-
-                              preIcon: Icon(
-                                Icons.medical_services_outlined,
-                                color: AppColors.appPrimaryRed,
-                              ),
+                            preIcon: Icon(
+                              Icons.medical_services_outlined,
+                              color: AppColors.appPrimaryRed,
                             ),
                           ),
                         ),
@@ -365,9 +349,10 @@ class AddDoctorScreen extends ConsumerWidget {
                         final state = ref.watch(addDoctorProvider);
                         final controller = ref.read(addDoctorProvider.notifier);
 
-                        // if (state.finalClinicList.isEmpty) {
-                        //   return const SizedBox.shrink();
-                        // }
+                        if (state.finalClinicList.isEmpty ||
+                            state.isDropdownClinic == false) {
+                          return const SizedBox.shrink();
+                        }
 
                         return Container(
                           color: AppColors.appGrey,
