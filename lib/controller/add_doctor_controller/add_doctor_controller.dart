@@ -6,7 +6,7 @@ import 'package:doctor_visit/apis/add_doctor/clinic_fetch_api.dart';
 import 'package:doctor_visit/apis/add_doctor/specialty_fetch_api.dart';
 import 'package:doctor_visit/controller/add_doctor_controller/add_doctor_state.dart';
 import 'package:doctor_visit/core/constants/app_constants.dart';
-import 'package:doctor_visit/model/add_doctor_screen/areaOrSpeciality_fetch_response_model.dart';
+import 'package:doctor_visit/model/add_doctor_screen/area_or_speciality_fetch_response_model.dart';
 import 'package:doctor_visit/model/add_doctor_screen/clinic_fetch_response_model.dart';
 import 'package:doctor_visit/view/screens/home_screen/widget/alert_dialog.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +23,7 @@ class AddDoctorsController extends StateNotifier<AddDoctorsState> {
           doctorClinicController: TextEditingController(),
           doctorDiscussionController: TextEditingController(),
           areaIdController: TextEditingController(),
+          genderController: TextEditingController(),
         ),
       ) {
     iniatialCall();
@@ -164,6 +165,7 @@ class AddDoctorsController extends StateNotifier<AddDoctorsState> {
     required bool isIncentive,
     required int areaId,
     required String areaName,
+    required String proGender,
   }) async {
     state = state.copyWith(isSubmitted: true);
     try {
@@ -179,6 +181,7 @@ class AddDoctorsController extends StateNotifier<AddDoctorsState> {
         isIncentive: isIncentive,
         areaId: areaId,
         areaName: areaName,
+        proGender: proGender,
       );
       log(response.toString());
       if (response != null && response.isNotEmpty) {

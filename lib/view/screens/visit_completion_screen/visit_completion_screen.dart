@@ -281,6 +281,7 @@ class VisitCompletionScreen extends ConsumerWidget {
                         child: ImageContainer(
                           state: doctorVisitState,
                           controller: doctorVisitController,
+                          imagePurpose: 'Selfie',
                         ),
                       ),
 

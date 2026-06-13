@@ -8,10 +8,12 @@ class ImageContainer extends StatelessWidget {
     super.key,
     required this.state,
     required this.controller,
+    required this.imagePurpose,
   });
 
   final dynamic state;
   final dynamic controller;
+  final String imagePurpose;
 
   @override
   Widget build(BuildContext context) {
@@ -35,10 +37,10 @@ class ImageContainer extends StatelessWidget {
                 ? null
                 : Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
+                    children: [
                       Icon(Icons.camera_alt_outlined, size: 30),
                       SizedBox(height: 5),
-                      Text("Tap to capture Selfie"),
+                      Text("Tap to capture $imagePurpose"),
                     ],
                   ),
           ),

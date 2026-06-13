@@ -10,7 +10,7 @@ class TypeTextFormField extends StatelessWidget {
   final bool isSuffix;
   final bool isNumber;
   final Icon preIcon;
-
+  final bool isIncentive;
   final ValidationType validationType;
   final bool isReadOnly;
   final Function(String)? onChanged;
@@ -21,7 +21,7 @@ class TypeTextFormField extends StatelessWidget {
     required this.textController,
     this.isSuffix = false,
     this.isNumber = false,
-
+    this.isIncentive = false,
     this.validationType = ValidationType.none,
     required this.preIcon,
 
@@ -108,7 +108,18 @@ class TypeTextFormField extends StatelessWidget {
         },
         decoration: InputDecoration(
           prefixIcon: preIcon,
-
+          suffixIcon: isSuffix
+              ? InkWell(
+                  splashColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
+                  hoverColor: Colors.transparent,
+                  focusColor: Colors.transparent,
+                  onTapDown: (details) {
+                    dropDown(context, details.globalPosition, isIncentive);
+                  },
+                  child: Icon(Icons.arrow_drop_down, color: AppColors.appBlack),
+                )
+              : null,
           border: InputBorder.none,
           hintText: hintText,
           hintStyle: TextStyle(color: AppColors.appBlack),
@@ -141,5 +152,43 @@ class TypeTextFormField extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void dropDown(
+    BuildContext context,
+    Offset tapPosition,
+    bool isIncentive,
+  ) async {
+    final screenSize = MediaQuery.of(context).size;
+
+    final selected = await showMenu<String>(
+      context: context,
+      color: AppColors.appWhite,
+      position: RelativeRect.fromLTRB(
+        tapPosition.dx,
+        tapPosition.dy,
+        screenSize.width,
+        screenSize.height - tapPosition.dy,
+      ),
+      items: isIncentive == true
+          ? [
+              PopupMenuItem(value: 'Yes', child: Text('Yes')),
+              PopupMenuItem(value: 'No', child: Text('No')),
+            ]
+          : [
+              PopupMenuItem(value: 'Male', child: Text('Male')),
+              PopupMenuItem(value: 'Female', child: Text('Female')),
+              PopupMenuItem(value: 'Others', child: Text('Others')),
+            ],
+    );
+
+    if (selected != null) {
+      textController.text = selected;
+
+      // send value outside
+      if (onChanged != null) {
+        onChanged!(selected);
+      }
+    }
   }
 }

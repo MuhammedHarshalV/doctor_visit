@@ -389,62 +389,38 @@ class AddDoctorScreen extends ConsumerWidget {
                       },
                     ),
                     SizedBox(height: 10),
-                    TopText(heading: 'Incentive'),
-                    SizedBox(height: 7),
-                    Container(
-                      height: 60,
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFFFEBEE),
-                        borderRadius: BorderRadius.circular(12),
+                  
+                    _sectionTitle("Incentive"),
+                    SizedBox(height: 5),
+                    TypeTextFormField(
+                      isIncentive: true,
+                      hintText: addDoctorScreenWatch.isIncentive,
+                      textController: TextEditingController(
+                        text: addDoctorScreenWatch.isIncentive,
                       ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButtonFormField<String>(
-                          value: addDoctorScreenWatch.isIncentive,
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: const Color(0xFFFFEBEE),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide.none,
-                            ),
-                          ),
-                          dropdownColor: Colors.white, // dropdown background
-
-                          borderRadius: BorderRadius.circular(
-                            15,
-                          ), // popup border radius
-                          // Always display this text
-                          selectedItemBuilder: (context) {
-                            return ['Yes', 'No'].map((e) {
-                              return Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  addDoctorScreenWatch.isIncentive,
-                                  style: TextStyle(
-                                    color: AppColors.appBlack,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              );
-                            }).toList();
-                          },
-
-                          items: const [
-                            DropdownMenuItem(value: 'Yes', child: Text('Yes')),
-                            DropdownMenuItem(value: 'No', child: Text('No')),
-                          ],
-
-                          onChanged: (value) {
-                            addDoctorScreenRead.updateStateClass(
-                              isIncentive: value,
-                            );
-                          },
-                        ),
+                      isSuffix: true,
+                      isReadOnly: true,
+                      onChanged: (p0) {
+                        addDoctorScreenRead.updateStateClass(isIncentive: p0);
+                      },
+                      preIcon: Icon(
+                        Icons.card_giftcard,
+                        color: AppColors.appPrimaryRed,
                       ),
                     ),
                     SizedBox(height: 5),
-
+                    _sectionTitle("Gender *"),
+                    SizedBox(height: 5),
+                    TypeTextFormField(
+                      hintText: 'Gender',
+                      textController: addDoctorScreenWatch.genderController,
+                      isSuffix: true,
+                      isReadOnly: true,
+                      onChanged: (p0) {
+                        addDoctorScreenWatch.genderController.text = p0;
+                      },
+                      preIcon: Icon(Icons.wc, color: AppColors.appPrimaryRed),
+                    ),
                     _sectionTitle("Discussion"),
                     TextFormField(
                       controller:
@@ -494,6 +470,9 @@ class AddDoctorScreen extends ConsumerWidget {
                                   areaId: addDoctorScreenWatch.areaId,
                                   areaName: addDoctorScreenWatch
                                       .areaIdController
+                                      .text,
+                                  proGender: addDoctorScreenWatch
+                                      .genderController
                                       .text,
                                 );
 

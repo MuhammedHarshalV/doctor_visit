@@ -62,6 +62,7 @@ class LoginController extends StateNotifier<LoginState> {
           await LoginApiService.loginApiService(pin: pin, context: context);
       if (response == null) {
         showDialog(
+          // ignore: use_build_context_synchronously
           context: context,
           builder: (context) => AlertDialog(
             backgroundColor: AppColors.appWhite,

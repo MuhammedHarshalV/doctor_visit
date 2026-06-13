@@ -128,6 +128,7 @@ class ExpenseFormCard extends ConsumerWidget {
               child: ImageContainer(
                 state: progressState,
                 controller: progressController,
+                imagePurpose: 'Bill',
               ),
             ),
 

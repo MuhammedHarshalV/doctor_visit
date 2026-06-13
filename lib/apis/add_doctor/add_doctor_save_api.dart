@@ -17,6 +17,7 @@ class AddDoctorSaveApi {
     required bool? isIncentive,
     required int? areaId,
     required int? proId,
+    required String? proGender
   }) async {
     try {
       final Map<String, dynamic> body = {};
@@ -54,6 +55,8 @@ class AddDoctorSaveApi {
       }
       if (proId != null) {
         body["TempDr_ProId"] = proId;
+      }if (proGender != null) {
+        body["TempDr_Gender"] = proGender;
       }
 
       final response = await PostApiServices.callApi(

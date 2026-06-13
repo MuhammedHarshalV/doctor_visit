@@ -1,4 +1,4 @@
-import 'package:doctor_visit/model/add_doctor_screen/areaOrSpeciality_fetch_response_model.dart';
+import 'package:doctor_visit/model/add_doctor_screen/area_or_speciality_fetch_response_model.dart';
 import 'package:doctor_visit/model/add_doctor_screen/clinic_fetch_response_model.dart';
 import 'package:flutter/material.dart';
 
@@ -19,6 +19,8 @@ class AddDoctorsState {
   final TextEditingController doctorClinicController;
   final TextEditingController doctorDiscussionController;
   final TextEditingController areaIdController;
+  final TextEditingController genderController;
+
   final List<Datum> areaList;
   final List<Datum> finalAreaList;
 
@@ -51,6 +53,7 @@ class AddDoctorsState {
     required this.doctorClinicController,
     required this.doctorDiscussionController,
     required this.areaIdController,
+    required this.genderController,
   });
 
   AddDoctorsState copyWith({
@@ -75,6 +78,8 @@ class AddDoctorsState {
     TextEditingController? doctorClinicController,
     TextEditingController? doctorDiscussionController,
     TextEditingController? areaIdController,
+    TextEditingController? genderController,
+
     String? isIncentive,
   }) {
     return AddDoctorsState(
@@ -93,6 +98,8 @@ class AddDoctorsState {
       clinicList: clinicList ?? this.clinicList,
       isSubmitted: isSubmitted ?? this.isSubmitted,
       doctorNameController: doctorNameController ?? this.doctorNameController,
+      genderController: genderController ?? this.genderController,
+
       doctorPhoneController:
           doctorPhoneController ?? this.doctorPhoneController,
       doctorSpecialityController:

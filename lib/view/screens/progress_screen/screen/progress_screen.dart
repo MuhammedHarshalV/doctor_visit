@@ -4,7 +4,7 @@ import 'package:doctor_visit/view/screens/progress_screen/widgets/main_progress_
 import 'package:doctor_visit/view/screens/progress_screen/widgets/row_stat_card.dart';
 import 'package:doctor_visit/view/widgets/common_appbar.dart';
 
-import 'package:doctor_visit/view/screens/progress_screen/widgets/expense_History_card.dart';
+import 'package:doctor_visit/view/screens/progress_screen/widgets/expense_history_card.dart';
 import 'package:doctor_visit/view/screens/progress_screen/widgets/expense_add_card.dart';
 import 'package:doctor_visit/view/screens/progress_screen/widgets/today_expense_card.dart';
 import 'package:flutter/material.dart';

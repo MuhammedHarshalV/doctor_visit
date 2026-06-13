@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:doctor_visit/core/constants/api_constants.dart';
 
 import 'package:doctor_visit/core/services/api_services/api_services.dart';
-import 'package:doctor_visit/model/add_doctor_screen/areaOrSpeciality_fetch_response_model.dart';
+import 'package:doctor_visit/model/add_doctor_screen/area_or_speciality_fetch_response_model.dart';
 
 class AreaFetchApi {
   static Future<dynamic> areaFetchApi() async {

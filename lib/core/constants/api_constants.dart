@@ -4,7 +4,7 @@ class ApiConstants {
   static String getDoctorsVisit = 'ProVisitList';
   static String proDetails = 'Details';
   static String workStartCompletevisit = 'SaveUpdate';
-  static String isGoing = 'IsGoing';
+  static String proIsGoing = 'IsGoing';
   static String progressPercentage = 'Dash';
   static String expenseHistory = 'ExpenseGet';
   static String expenseSaveorEdit = 'ExpenseSave';
