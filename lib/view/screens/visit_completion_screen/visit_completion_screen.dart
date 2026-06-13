@@ -67,164 +67,187 @@ class VisitCompletionScreen extends ConsumerWidget {
                     ),
                     Spacer(),
                     InkWell(
-                      onTap: () async {
-                        bool isConnected = await checkInternetConnection();
-                        log("1========${isConnected.toString()}");
+                      splashColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      hoverColor: Colors.transparent,
+                      focusColor: Colors.transparent,
+                      onTap:
+                          homeScreenState.doctorsListAPI[index].drIsGoing ==
+                              true
+                          ? () {}
+                          : () async {
+                              bool isConnected =
+                                  await checkInternetConnection();
+                              log("1========${isConnected.toString()}");
 
-                        if (isConnected) {
-                          log("Internet ON");
-                        } else {
-                          log("2========${isConnected.toString()}");
-                          log("Internet OFF");
-                        }
-                        bool isAnyStarted = homeScreenState.doctorsListAPI.any(
-                          (element) => element.drIsGoing == true,
-                        );
+                              if (isConnected) {
+                                log("Internet ON");
+                              } else {
+                                log("2========${isConnected.toString()}");
+                                log("Internet OFF");
+                              }
+                              bool isAnyStarted = homeScreenState.doctorsListAPI
+                                  .any((element) => element.drIsGoing == true);
 
-                        if ((homeScreenState.doctorsListAPI[index].drIsGoing ==
-                                    null ||
-                                homeScreenState
-                                        .doctorsListAPI[index]
-                                        .drIsGoing ==
-                                    false) &&
-                            isConnected == true &&
-                            isAnyStarted == false) {
-                          try {
-                            final String doctorID = homeScreenState
-                                .doctorsListAPI[index]
-                                .drId
-                                .toString();
-                            doctorVisitController.isGoingStart(
-                              doctorID: doctorID,
-                            );
+                              if ((homeScreenState
+                                              .doctorsListAPI[index]
+                                              .drIsGoing ==
+                                          null ||
+                                      homeScreenState
+                                              .doctorsListAPI[index]
+                                              .drIsGoing ==
+                                          false) &&
+                                  isConnected == true &&
+                                  isAnyStarted == false) {
+                                try {
+                                  final String doctorID = homeScreenState
+                                      .doctorsListAPI[index]
+                                      .drId
+                                      .toString();
+                                  doctorVisitController.isGoingStart(
+                                    doctorID: doctorID,
+                                  );
 
-                            Position position = await getCurrentLocation();
-                            String currentTime = DateTime.now()
-                                .toIso8601String();
-                            String currentDate = DateFormat(
-                              'yyyy-MM-dd',
-                            ).format(DateTime.now());
-                            String mapUrl =
-                                "https://www.google.com/maps?q=${position.latitude},${position.longitude}";
+                                  Position position =
+                                      await getCurrentLocation();
+                                  String currentTime = DateTime.now()
+                                      .toIso8601String();
+                                  String currentDate = DateFormat(
+                                    'yyyy-MM-dd',
+                                  ).format(DateTime.now());
+                                  String mapUrl =
+                                      "https://www.google.com/maps?q=${position.latitude},${position.longitude}";
 
-                            log("Time: $currentTime");
-                            log("Date: $currentDate");
-                            log("Lat: ${position.latitude}");
-                            log("Lng: ${position.longitude}");
-                            log(mapUrl);
-                            await doctorVisitController
-                                .isGoingAndCompletionLocationSend(
-                                  isStart: true,
-                                  base64Image: null,
-                                  doctorID: doctorID,
-                                  date: currentDate,
-                                  startLocation: mapUrl,
-                                  startTime: currentTime,
-                                  endLocation: null,
-                                  endTime: null,
-                                  feedback: null,
-                                  detKey: null,
-                                  workstatus: null,
-                                );
-                            if (doctorVisitState.response.isEmpty) {
-                              await homeScreenController.getDoctorsVisit();
-                              doctorVisitController.updateResponse('');
-                              doctorVisitController.setStartTime(null);
-                            }
-                          } catch (e) {
-                            log("harshal==================${e.toString()}");
+                                  log("Time: $currentTime");
+                                  log("Date: $currentDate");
+                                  log("Lat: ${position.latitude}");
+                                  log("Lng: ${position.longitude}");
+                                  log(mapUrl);
+                                  await doctorVisitController
+                                      .isGoingAndCompletionLocationSend(
+                                        isStart: true,
+                                        base64Image: null,
+                                        doctorID: doctorID,
+                                        date: currentDate,
+                                        startLocation: mapUrl,
+                                        startTime: currentTime,
+                                        endLocation: null,
+                                        endTime: null,
+                                        feedback: null,
+                                        detKey: null,
+                                        workstatus: null,
+                                      );
+                                  if (doctorVisitState.response.isEmpty) {
+                                    await homeScreenController
+                                        .getDoctorsVisit();
+                                    doctorVisitController.updateResponse('');
+                                    doctorVisitController.setStartTime(null);
+                                  }
+                                } catch (e) {
+                                  log(
+                                    "harshal==================${e.toString()}",
+                                  );
 
-                            if (context.mounted) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    e.toString(),
-                                    style: TextStyle(
-                                      color: AppColors.appWhite,
-                                      fontWeight: FontWeight.bold,
+                                  if (context.mounted) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          e.toString(),
+                                          style: TextStyle(
+                                            color: AppColors.appWhite,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        backgroundColor: Colors.blue,
+                                        behavior: SnackBarBehavior.floating,
+                                        margin: EdgeInsets.only(
+                                          bottom:
+                                              MediaQuery.of(
+                                                context,
+                                              ).size.height -
+                                              120,
+                                          left: 16,
+                                          right: 16,
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                }
+                              } else if ((homeScreenState
+                                              .doctorsListAPI[index]
+                                              .drIsGoing ==
+                                          null ||
+                                      homeScreenState
+                                              .doctorsListAPI[index]
+                                              .drIsGoing ==
+                                          false) &&
+                                  isConnected == false) {
+                                if (context.mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      // padding: EdgeInsets.all(10),
+                                      content: Text(
+                                        "No internet connection. Please try again when the network is available.",
+                                        style: TextStyle(
+                                          color: AppColors.appBlack,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      backgroundColor: AppColors.appWhite,
+                                      behavior: SnackBarBehavior.floating,
+                                      margin: EdgeInsets.only(
+                                        bottom:
+                                            MediaQuery.of(context).size.height -
+                                            120,
+                                        left: 16,
+                                        right: 16,
+                                      ),
                                     ),
-                                  ),
-                                  backgroundColor: Colors.blue,
-                                  behavior: SnackBarBehavior.floating,
-                                  margin: EdgeInsets.only(
-                                    bottom:
-                                        MediaQuery.of(context).size.height -
-                                        120,
-                                    left: 16,
-                                    right: 16,
-                                  ),
-                                ),
-                              );
-                            }
-                          }
-                        } else if ((homeScreenState
-                                        .doctorsListAPI[index]
-                                        .drIsGoing ==
-                                    null ||
-                                homeScreenState
-                                        .doctorsListAPI[index]
-                                        .drIsGoing ==
-                                    false) &&
-                            isConnected == false) {
-                          if (context.mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                // padding: EdgeInsets.all(10),
-                                content: Text(
-                                  "No internet connection. Please try again when the network is available.",
-                                  style: TextStyle(
-                                    color: AppColors.appBlack,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                backgroundColor: AppColors.appWhite,
-                                behavior: SnackBarBehavior.floating,
-                                margin: EdgeInsets.only(
-                                  bottom:
-                                      MediaQuery.of(context).size.height - 120,
-                                  left: 16,
-                                  right: 16,
-                                ),
-                              ),
-                            );
-                          }
-                        } else if ((homeScreenState
-                                        .doctorsListAPI[index]
-                                        .drIsGoing ==
-                                    null ||
-                                homeScreenState
-                                        .doctorsListAPI[index]
-                                        .drIsGoing ==
-                                    false) &&
-                            isConnected == true &&
-                            isAnyStarted == true) {
-                          if (context.mounted) {
-                            showDialog(
-                              context: context,
-                              builder: (context) => CommonAlertDialog(
-                                message:
-                                    "You already have an active visit in progress. Please complete the current visit before starting a new one.",
-                              ),
-                            );
-                          }
-                        }
-                        // update via Riverpod
-                      },
+                                  );
+                                }
+                              } else if ((homeScreenState
+                                              .doctorsListAPI[index]
+                                              .drIsGoing ==
+                                          null ||
+                                      homeScreenState
+                                              .doctorsListAPI[index]
+                                              .drIsGoing ==
+                                          false) &&
+                                  isConnected == true &&
+                                  isAnyStarted == true) {
+                                if (context.mounted) {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => CommonAlertDialog(
+                                      message:
+                                          "You already have an active visit in progress. Please complete the current visit before starting a new one.",
+                                    ),
+                                  );
+                                }
+                              }
+                              // update via Riverpod
+                            },
                       child: Container(
                         height: 40,
                         width: 100,
                         decoration: BoxDecoration(
-                          color: AppColors.appGreen,
+                          color:
+                              homeScreenState.doctorsListAPI[index].drIsGoing ==
+                                  true
+                              ? AppColors.appGreen.withOpacity(.5)
+                              : AppColors.appGreen,
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: doctorVisitState.isLoading == true
-                            ? SizedBox(
-                                height: 20,
-                                width: 20,
-                                child: Center(
-                                  child: CircularProgressIndicator(
-                                    color: AppColors.appWhite,
-                                    strokeWidth: 1,
+                            ? Center(
+                                child: SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: Center(
+                                    child: CircularProgressIndicator(
+                                      color: AppColors.appWhite,
+                                      strokeWidth: 3,
+                                    ),
                                   ),
                                 ),
                               )

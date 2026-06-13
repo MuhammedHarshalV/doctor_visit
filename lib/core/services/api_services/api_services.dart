@@ -1,6 +1,8 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
 import 'package:doctor_visit/core/api_errors/api_errors.dart';
 import 'package:doctor_visit/core/constants/app_constants.dart';
 import 'package:flutter/material.dart';
@@ -8,16 +10,25 @@ import 'package:flutter/material.dart';
 //Dio get Api
 
 class GetApiServices {
-  static final Dio dio = Dio(
-    BaseOptions(
-      connectTimeout: const Duration(seconds: 15),
-      receiveTimeout: const Duration(seconds: 15),
-      headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-      },
-    ),
-  );
+  static final Dio dio =
+      Dio(
+          BaseOptions(
+            connectTimeout: const Duration(seconds: 15),
+            receiveTimeout: const Duration(seconds: 15),
+            headers: {
+              "Content-Type": "application/json",
+              "Accept": "application/json",
+            },
+          ),
+        )
+        ..httpClientAdapter = IOHttpClientAdapter(
+          createHttpClient: () {
+            final client = HttpClient();
+            client.badCertificateCallback =
+                (X509Certificate cert, String host, int port) => true;
+            return client;
+          },
+        );
 
   static Future<dynamic> callApi({
     BuildContext? context,
@@ -96,16 +107,25 @@ class GetApiServices {
 
 //post api service
 class PostApiServices {
-  static final Dio dio = Dio(
-    BaseOptions(
-      connectTimeout: const Duration(seconds: 15),
-      receiveTimeout: const Duration(seconds: 15),
-      headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-      },
-    ),
-  );
+  static final Dio dio =
+      Dio(
+          BaseOptions(
+            connectTimeout: const Duration(seconds: 15),
+            receiveTimeout: const Duration(seconds: 15),
+            headers: {
+              "Content-Type": "application/json",
+              "Accept": "application/json",
+            },
+          ),
+        )
+        ..httpClientAdapter = IOHttpClientAdapter(
+          createHttpClient: () {
+            final client = HttpClient();
+            client.badCertificateCallback =
+                (X509Certificate cert, String host, int port) => true;
+            return client;
+          },
+        );
 
   static Future<dynamic> callApi({
     BuildContext? context,

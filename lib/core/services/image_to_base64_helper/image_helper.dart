@@ -46,9 +46,9 @@ class ImageHelper {
       return await picker.pickImage(
         source: ImageSource.camera,
         preferredCameraDevice: CameraDevice.front,
-        imageQuality: 15,
-        maxWidth: 800,
-        maxHeight: 800,
+        imageQuality: 10,
+        maxWidth: 500,
+        maxHeight: 500,
       );
     } else {
       // Show options: Camera / Gallery
@@ -66,9 +66,9 @@ class ImageHelper {
                     final image = await picker.pickImage(
                       source: ImageSource.camera,
                       preferredCameraDevice: CameraDevice.rear,
-                      imageQuality: 15,
-                      maxWidth: 800,
-                      maxHeight: 800,
+                      imageQuality: 10,
+                      maxWidth: 500,
+                      maxHeight: 500,
                     );
                     // ignore: use_build_context_synchronously
                     Navigator.pop(context, image);
@@ -80,9 +80,9 @@ class ImageHelper {
                   onTap: () async {
                     final image = await picker.pickImage(
                       source: ImageSource.gallery,
-                      imageQuality: 15,
-                      maxWidth: 800,
-                      maxHeight: 800,
+                      imageQuality: 10,
+                      maxWidth: 500,
+                      maxHeight: 500,
                     );
                     // ignore: use_build_context_synchronously
                     Navigator.pop(context, image);

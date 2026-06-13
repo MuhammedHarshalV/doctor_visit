@@ -39,8 +39,7 @@ class ProgressScreen extends ConsumerWidget {
               backgroundColor: AppColors.appLightRed, // circle background
               strokeWidth: 2,
               onRefresh: () async {
-                await progressController.getProgressPercentage();
-                await progressController.todayExpenseHistory();
+                await progressController.iniatialCall();
               },
               child: SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
