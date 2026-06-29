@@ -6,4 +6,5 @@ class AppConstants {
   static String mstKey = '';
   static String detKey = '';
   static String date = '';
+  static bool isProAssign = false;
 }

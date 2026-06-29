@@ -19,7 +19,7 @@ class VisitController extends StateNotifier<DoctorVisitCompletion> {
     final IsGoingResponseModel response = await GetIsGoingApi.getIsGoingApi(
       doctorID: doctorID,
     );
-    log('========$response');
+    log('========${response.message}${response.status}');
   }
 
   Future<void> isGoingAndCompletionLocationSend({

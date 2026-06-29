@@ -59,7 +59,22 @@ class ExpenseHistoryCard extends ConsumerWidget {
             if (progressState.isExpandedHistory == true) SizedBox(height: 10),
             if (progressState.isExpandedHistory == true &&
                 progressState.weeklyExpenseSeperatedDate.isNotEmpty)
-              WeeklyExpenseCard(),
+              WeeklyExpenseDateCard(
+                date:
+                    progressState
+                        .weeklyExpenseHistory
+                        .first
+                        .expenseList![progressState.weeklyListIndex]
+                        .date ??
+                    '',
+                onTapDecrease: () {
+                  progressController.weeklyListChangeDecrease();
+                },
+                onTapIncrease: () {
+                  progressController.weeklyListChangeIcrease();
+                },
+                weeklyExpense: progressState.weekEotalExpense.toString(),
+              ),
             if (progressState.isExpandedHistory == true) SizedBox(height: 10),
 
             if (progressState.isExpandedHistory == true &&

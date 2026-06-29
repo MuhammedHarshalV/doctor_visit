@@ -13,6 +13,8 @@ enum AppRouteNames {
   bottomNavScreen(route: '/bottomNavScreen', name: 'bottomNavScreen'),
 
   progressScreen(route: '/progressScreen', name: 'progressScreen'),
+  assignedScreen(route: '/assignedScreen', name: 'assignedScreen'),
+
   profileScreen(route: '/profileScreen', name: 'profileScreen');
 
   final String route;

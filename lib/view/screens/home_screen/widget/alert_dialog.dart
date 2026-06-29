@@ -4,8 +4,8 @@ import 'package:go_router/go_router.dart';
 
 class CommonAlertDialog extends StatelessWidget {
   final String message;
-
-  const CommonAlertDialog({super.key, required this.message});
+  final VoidCallback? onEdit;
+  const CommonAlertDialog({super.key, required this.message, this.onEdit});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,13 @@ class CommonAlertDialog extends StatelessWidget {
         SizedBox(
           width: double.infinity,
           child: TextButton(
-            onPressed: () => context.pop(),
+            onPressed: () async {
+              if (onEdit != null) {
+                onEdit!();
+              } else {
+                context.pop();
+              }
+            },
             style: TextButton.styleFrom(
               backgroundColor: AppColors.appPrimaryRed,
               shape: RoundedRectangleBorder(

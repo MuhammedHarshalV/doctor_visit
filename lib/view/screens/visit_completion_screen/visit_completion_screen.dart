@@ -234,7 +234,7 @@ class VisitCompletionScreen extends ConsumerWidget {
                           color:
                               homeScreenState.doctorsListAPI[index].drIsGoing ==
                                   true
-                              ? AppColors.appGreen.withOpacity(.5)
+                              ? AppColors.appGreen.withValues(alpha: .5)
                               : AppColors.appGreen,
                           borderRadius: BorderRadius.circular(10),
                         ),

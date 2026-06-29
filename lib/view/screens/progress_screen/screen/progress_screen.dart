@@ -1,4 +1,6 @@
 import 'package:doctor_visit/controller/expense_controller/expense_controller.dart';
+import 'package:doctor_visit/core/constants/app_constants.dart';
+import 'package:doctor_visit/core/routes/app_route_names.dart';
 import 'package:doctor_visit/core/theme/colors/appcolors.dart';
 import 'package:doctor_visit/view/screens/progress_screen/widgets/main_progress_card.dart';
 import 'package:doctor_visit/view/screens/progress_screen/widgets/row_stat_card.dart';
@@ -10,6 +12,7 @@ import 'package:doctor_visit/view/screens/progress_screen/widgets/today_expense_
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class ProgressScreen extends ConsumerWidget {
   const ProgressScreen({super.key});
@@ -57,7 +60,46 @@ class ProgressScreen extends ConsumerWidget {
                       "Today's visit summary",
                       style: TextStyle(color: Colors.grey),
                     ),
+                    if (AppConstants.isProAssign == true) SizedBox(height: 16),
+                    if (AppConstants.isProAssign == true)
+                      InkWell(
+                        splashColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
+                        hoverColor: Colors.transparent,
+                        focusColor: Colors.transparent,
+                        onTap: () {
+                          context.pushNamed(AppRouteNames.assignedScreen.name);
+                        },
+
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(color: AppColors.appPrimaryRed),
+                            // color: AppColors.appBlue.withOpacity(.7),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              children: [
+                                Text(
+                                  'Assign Doctors',
+                                  style: TextStyle(
+                                    color: AppColors.appPrimaryRed,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Spacer(),
+                                Icon(
+                                  Icons.arrow_outward_sharp,
+                                  color: AppColors.appPrimaryRed,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
                     const SizedBox(height: 16),
+
                     MainProgressCard(
                       percentage: progressState.progressPeercentage.isEmpty
                           ? '0'

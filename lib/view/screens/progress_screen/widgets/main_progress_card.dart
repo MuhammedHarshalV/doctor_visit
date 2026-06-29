@@ -15,10 +15,10 @@ class MainProgressCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(24),
+      padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
       decoration: BoxDecoration(
         color: AppColors.appPrimaryRed, // Primary Red
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
             // ignore: deprecated_member_use
@@ -33,7 +33,7 @@ class MainProgressCard extends StatelessWidget {
           Text(
             "$percentage %",
             style: TextStyle(
-              fontSize: 48,
+              fontSize: 30,
               fontWeight: FontWeight.bold,
               color: Colors.white,
             ),
@@ -42,7 +42,7 @@ class MainProgressCard extends StatelessWidget {
             "Visits Completed",
             style: TextStyle(color: Colors.white70, fontSize: 16),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 10),
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
             child: LinearProgressIndicator(

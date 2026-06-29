@@ -1,16 +1,24 @@
-import 'package:doctor_visit/controller/expense_controller/expense_controller.dart';
 import 'package:doctor_visit/core/theme/colors/appcolors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
-class WeeklyExpenseCard extends ConsumerWidget {
-  const WeeklyExpenseCard({super.key});
+class WeeklyExpenseDateCard extends ConsumerWidget {
+  final String date;
+  final VoidCallback onTapDecrease;
+  final VoidCallback onTapIncrease;
+  final String? weeklyExpense;
+
+  const WeeklyExpenseDateCard({
+    super.key,
+    required this.date,
+    required this.onTapDecrease,
+    required this.onTapIncrease,
+    this.weeklyExpense,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final progressState = ref.watch(dayExpenseProvider);
-    final progressController = ref.read(dayExpenseProvider.notifier);
     return Container(
       width: double.infinity, // Adjust width as needed
       padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 16),
@@ -32,12 +40,8 @@ class WeeklyExpenseCard extends ConsumerWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  progressState
-                          .weeklyExpenseHistory
-                          .first
-                          .expenseList![progressState.weeklyListIndex]
-                          .date ??
-                      '',
+                  date,
+
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
@@ -49,16 +53,7 @@ class WeeklyExpenseCard extends ConsumerWidget {
           ),
           SizedBox(height: 5),
           Text(
-            DateFormat('EEEE').format(
-              DateTime.parse(
-                progressState
-                        .weeklyExpenseHistory
-                        .first
-                        .expenseList![progressState.weeklyListIndex]
-                        .date ??
-                    '',
-              ),
-            ),
+            DateFormat('EEEE').format(DateTime.parse(date)),
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w600,
@@ -73,29 +68,26 @@ class WeeklyExpenseCard extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               IconButton(
-                onPressed: () {
-                  progressController.weeklyListChangeIcrease();
-                },
+                onPressed: onTapIncrease,
                 icon: Icon(Icons.chevron_left, size: 32),
                 color: AppColors.appBlack,
                 padding: EdgeInsets.zero,
                 constraints: BoxConstraints(), // Removes default extra padding
               ),
 
-              Text(
-                "₹${progressState.weekEotalExpense}",
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.appBlack,
-                  letterSpacing: 0.5,
+              if (weeklyExpense != null)
+                Text(
+                  weeklyExpense ?? '0',
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.appBlack,
+                    letterSpacing: 0.5,
+                  ),
                 ),
-              ),
 
               IconButton(
-                onPressed: () {
-                  progressController.weeklyListChangeDecrease();
-                },
+                onPressed: onTapDecrease,
                 icon: const Icon(Icons.chevron_right, size: 32),
                 color: Colors.black,
                 padding: EdgeInsets.zero,

@@ -15,7 +15,8 @@ class LoginResponseModel {
   String? message;
   String? empid;
   String? username;
-  num? yrId;
+  int? yrId;
+  bool? proAssignDr;
 
   LoginResponseModel({
     this.success,
@@ -23,6 +24,7 @@ class LoginResponseModel {
     this.empid,
     this.username,
     this.yrId,
+    this.proAssignDr,
   });
 
   factory LoginResponseModel.fromJson(Map<String, dynamic> json) =>
@@ -32,6 +34,7 @@ class LoginResponseModel {
         empid: json["Empid"],
         username: json["username"],
         yrId: json["YrId"],
+        proAssignDr: json["ProAssignDr"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -40,5 +43,6 @@ class LoginResponseModel {
     "Empid": empid,
     "username": username,
     "YrId": yrId,
+    "ProAssignDr": proAssignDr,
   };
 }

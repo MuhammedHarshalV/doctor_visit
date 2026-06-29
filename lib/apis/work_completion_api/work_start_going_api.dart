@@ -21,14 +21,6 @@ class PostWorkStartGoingApi {
     required String? endLocation,
   }) async {
     try {
-      //       FormData formData = FormData.fromMap({
-      //   "EmpId": "1182",
-      //   "Description": "Test Image",
-      //   "image": await MultipartFile.fromFile(
-      //     imageFile.path,
-      //     filename: imageFile.path.split('/').last,
-      //   ),
-      // });
       final Map<String, dynamic> proDet = {};
 
       if (workstatus != null) {
@@ -63,17 +55,15 @@ class PostWorkStartGoingApi {
       }
 
       final response = await PostApiServices.callApi(
-        body:
-            //formData,
-            {
-              "IsUpdate": true,
-              "ProMst_Key": AppConstants.mstKey,
-              "ProMst_ProId": AppConstants.employeeID,
-              "ProMst_Date": date,
-              "ProMst_YrId": AppConstants.yearID,
+        body: {
+          "IsUpdate": true,
+          "ProMst_Key": AppConstants.mstKey,
+          "ProMst_ProId": AppConstants.employeeID,
+          "ProMst_Date": date,
+          "ProMst_YrId": AppConstants.yearID,
 
-              "proDet": [proDet],
-            },
+          "proDet": [proDet],
+        },
         url: "${ApiConstants.baseUrl}${ApiConstants.workStartCompletevisit}",
       );
 

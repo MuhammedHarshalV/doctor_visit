@@ -12,4 +12,9 @@ class ApiConstants {
   static String specialityFetch = 'Srch/Specilzed';
   static String tempDoctorSave = 'TempDrSave';
   static String clinicSearch = 'Acc/Hosp';
+  static String getAssignedDoctorArea = 'GetDrByArea';
+  static String assignDoctors = 'AssignDctr';
+  static String weeklyAssignedDoctorHistory = 'ProDctrList';
+  static String deleteAssignedDoctor = 'DeleteAssignedDoctor';
+
 }

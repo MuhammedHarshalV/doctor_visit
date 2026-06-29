@@ -16,13 +16,13 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class LoginController extends StateNotifier<LoginState> {
   LoginController()
     : super(
         LoginState(
           pincontroller: TextEditingController(),
-          baseUrlController: TextEditingController(), formKey:  GlobalKey<FormState>(),
+          baseUrlController: TextEditingController(),
+          formKey: GlobalKey<FormState>(),
         ),
       );
 
@@ -154,6 +154,7 @@ class LoginController extends StateNotifier<LoginState> {
 
         if (response.success == true) {
           AppConstants.yearID = response.yrId.toString();
+          AppConstants.isProAssign = response.proAssignDr ?? false;
 
           await mstKeyAndDetKeyChecking();
           // ignore: use_build_context_synchronously
