@@ -123,13 +123,15 @@ class AssignedDoctorController extends StateNotifier<AssignedDoctorState> {
   }
 
   //is edit on
-  bool isEditOn() {
+  bool isEditOn(bool drVisitStatus) {
     final selectedDate = DateTime.parse(state.weeklyDate);
     final today = DateTime.now();
 
     final currentDate = DateTime(today.year, today.month, today.day);
+    bool value =
+        (!selectedDate.isBefore(currentDate) && drVisitStatus == false);
 
-    return !selectedDate.isBefore(currentDate);
+    return value;
   }
 
   //area switching time filter doctors list

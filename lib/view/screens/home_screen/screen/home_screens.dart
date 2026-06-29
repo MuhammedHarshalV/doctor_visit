@@ -125,6 +125,8 @@ class HomeScreen extends ConsumerWidget {
                                 ? null
                                 : doctor.visitStatus == 1
                                 ? 1
+                                : doctor.visitStatus == 0
+                                ? 0
                                 : 2,
                             isSelected: doctor.drIsGoing == true ? true : false,
                           );

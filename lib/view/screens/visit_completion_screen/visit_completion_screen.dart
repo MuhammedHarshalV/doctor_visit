@@ -135,7 +135,7 @@ class VisitCompletionScreen extends ConsumerWidget {
                                         endTime: null,
                                         feedback: null,
                                         detKey: null,
-                                        workstatus: null,
+                                        workstatus: "0",
                                       );
                                   if (doctorVisitState.response.isEmpty) {
                                     await homeScreenController

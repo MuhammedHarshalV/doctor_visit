@@ -40,10 +40,13 @@ class WeeklyAssignedDoctorsWidget extends ConsumerWidget {
             ? Expanded(
                 child: ListView.separated(
                   itemBuilder: (context, index) {
-                    bool on = assignedController.isEditOn();
                     if (index == assignedState.weeklyAssignList.length) {
                       return const SizedBox(height: 10);
                     }
+                    bool on = assignedController.isEditOn(
+                      assignedState.weeklyAssignList[index].drVisitStatus ??
+                          true,
+                    );
                     return CommonDoctorAssigningCard(
                       onEdit: () async {
                         showDialog(

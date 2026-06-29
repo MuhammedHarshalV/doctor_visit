@@ -47,7 +47,8 @@ class DoctorCard extends ConsumerWidget {
       focusColor: Colors.transparent,
       onTap: () {
         if (homeState.isOn &&
-            homeState.doctorsListAPI[indexGet].visitStatus != null) {
+            (homeState.doctorsListAPI[indexGet].visitStatus == 2 ||
+                homeState.doctorsListAPI[indexGet].visitStatus == 1)) {
           showDialog(
             context: context,
             builder: (BuildContext context) {
@@ -58,7 +59,8 @@ class DoctorCard extends ConsumerWidget {
           );
         }
         if (homeState.isOn &&
-            (homeState.doctorsListAPI[indexGet].visitStatus == null)) {
+            (homeState.doctorsListAPI[indexGet].visitStatus == null ||
+                homeState.doctorsListAPI[indexGet].visitStatus == 0)) {
           PersistentNavBarNavigator.pushNewScreen(
             context,
             screen: VisitCompletionScreen(index: indexGet),
@@ -88,7 +90,7 @@ class DoctorCard extends ConsumerWidget {
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             width: 1,
-            color: isDone == null
+            color: (isDone == null || isDone == 0)
                 // ignore: deprecated_member_use
                 ? Colors.orange.withOpacity(.20)
                 : isDone == 1
@@ -98,7 +100,7 @@ class DoctorCard extends ConsumerWidget {
           ),
           boxShadow: [
             BoxShadow(
-              color: isDone == null
+              color: (isDone == null || isDone == 0)
                   // ignore: deprecated_member_use
                   ? Colors.orange.withOpacity(.20)
                   : isDone == 1
@@ -109,7 +111,7 @@ class DoctorCard extends ConsumerWidget {
               offset: const Offset(0, 2),
             ),
             BoxShadow(
-              color: isDone == null
+              color: (isDone == null || isDone == 0)
                   // ignore: deprecated_member_use
                   ? Colors.orange.withOpacity(.20)
                   : isDone == 1
@@ -175,7 +177,7 @@ class DoctorCard extends ConsumerWidget {
                             vertical: 2,
                           ),
                           decoration: BoxDecoration(
-                            color: isDone == null
+                            color: (isDone == null || isDone == 0)
                                 ? Colors.orange
                                 : isDone == 1
                                 ? Colors.green
@@ -187,6 +189,8 @@ class DoctorCard extends ConsumerWidget {
                                 ? 'Upcoming'
                                 : isDone == 1
                                 ? 'Completed'
+                                : isDone == 0
+                                ? 'Upcoming'
                                 : 'Postponed',
                             style: TextStyle(
                               color: AppColors.appWhite,

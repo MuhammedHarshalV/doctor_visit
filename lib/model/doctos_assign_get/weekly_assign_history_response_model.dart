@@ -52,7 +52,7 @@ class WeeklyDrList {
   String? drAddress;
   bool? drIsGoing;
   DateTime? assignedDate;
-
+  bool? drVisitStatus;
   WeeklyDrList({
     this.drId,
     this.drName,
@@ -61,6 +61,7 @@ class WeeklyDrList {
     this.drAddress,
     this.drIsGoing,
     this.assignedDate,
+    this.drVisitStatus,
   });
 
   factory WeeklyDrList.fromJson(Map<String, dynamic> json) => WeeklyDrList(
@@ -73,6 +74,7 @@ class WeeklyDrList {
     assignedDate: json["AssignedDate"] == null
         ? null
         : DateTime.parse(json["AssignedDate"]),
+    drVisitStatus: json["DrVisitStatus"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -83,5 +85,6 @@ class WeeklyDrList {
     "DrAddress": drAddress,
     "DrIsGoing": drIsGoing,
     "AssignedDate": assignedDate?.toIso8601String(),
+    "DrVisitStatus": drVisitStatus,
   };
 }
