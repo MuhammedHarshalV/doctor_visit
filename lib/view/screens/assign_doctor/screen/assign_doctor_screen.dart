@@ -1,7 +1,7 @@
 
 import 'package:doctor_visit/controller/assigned_doctor_controller/assigned_doctor_controller.dart';
 import 'package:doctor_visit/core/theme/colors/appcolors.dart';
-import 'package:doctor_visit/view/screens/assign_doctor/widgets/common_doctor_Assigning_card.dart';
+import 'package:doctor_visit/view/screens/assign_doctor/widgets/common_doctor_assigning_card.dart';
 import 'package:doctor_visit/view/screens/assign_doctor/widgets/date_area_container.dart';
 import 'package:doctor_visit/view/screens/assign_doctor/widgets/search_container.dart';
 

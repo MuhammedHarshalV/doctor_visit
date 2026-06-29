@@ -2,7 +2,7 @@ import 'package:doctor_visit/core/routes/app_route_names.dart';
 import 'package:doctor_visit/view/bottom_nav_screen/bottom_nav_screen.dart';
 import 'package:doctor_visit/view/screens/add_doctor_screen/add_doctor.dart';
 import 'package:doctor_visit/view/screens/assign_doctor/screen/assign_doctor_screen.dart';
-import 'package:doctor_visit/view/screens/base_url_screen/base_URL.dart';
+import 'package:doctor_visit/view/screens/base_url_screen/base_url.dart';
 import 'package:doctor_visit/view/screens/home_screen/screen/home_screens.dart';
 import 'package:doctor_visit/view/screens/login_screen/login_screen.dart';
 import 'package:doctor_visit/view/screens/profile_screen/profile_screen.dart';

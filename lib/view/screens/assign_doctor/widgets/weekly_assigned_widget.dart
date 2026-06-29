@@ -1,6 +1,6 @@
 import 'package:doctor_visit/controller/assigned_doctor_controller/assigned_doctor_controller.dart';
 import 'package:doctor_visit/core/theme/colors/appcolors.dart';
-import 'package:doctor_visit/view/screens/assign_doctor/widgets/common_doctor_Assigning_card.dart';
+import 'package:doctor_visit/view/screens/assign_doctor/widgets/common_doctor_assigning_card.dart';
 import 'package:doctor_visit/view/screens/home_screen/widget/alert_dialog.dart';
 import 'package:doctor_visit/view/screens/progress_screen/widgets/weekly_expense_card.dart';
 

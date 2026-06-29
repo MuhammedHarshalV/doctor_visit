@@ -1,7 +1,8 @@
 import 'dart:developer';
 import 'dart:typed_data';
 
-import 'package:doctor_visit/apis/work_completion_api/pro_isGoing.dart';
+
+import 'package:doctor_visit/apis/work_completion_api/pro_is_going.dart';
 import 'package:doctor_visit/apis/work_completion_api/work_start_going_api.dart';
 import 'package:doctor_visit/controller/doctor_visit_controller/doctor_visit_state.dart';
 import 'package:doctor_visit/core/constants/app_constants.dart';

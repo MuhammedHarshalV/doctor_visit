@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:doctor_visit/apis/add_doctor/area_fetch_api.dart';
 import 'package:doctor_visit/apis/assign_doctors_api/assign_doctors_api.dart';
 import 'package:doctor_visit/apis/assigned_doctors_screen/delete_assigned_doctor_api.dart';
-import 'package:doctor_visit/apis/assigned_doctors_screen/get_doctors_areaID.dart';
+import 'package:doctor_visit/apis/assigned_doctors_screen/get_doctors_area_id.dart';
 import 'package:doctor_visit/apis/assigned_doctors_screen/weekly_assigned_doctor_history.dart';
 import 'package:doctor_visit/controller/assigned_doctor_controller/assigned_doctor_state.dart';
 import 'package:doctor_visit/model/add_doctor_screen/area_or_speciality_fetch_response_model.dart';
