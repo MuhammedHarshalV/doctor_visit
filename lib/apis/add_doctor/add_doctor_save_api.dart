@@ -17,7 +17,7 @@ class AddDoctorSaveApi {
     required bool? isIncentive,
     required int? areaId,
     required int? proId,
-    required String? proGender
+    required String? proGender,
   }) async {
     try {
       final Map<String, dynamic> body = {};
@@ -55,7 +55,8 @@ class AddDoctorSaveApi {
       }
       if (proId != null) {
         body["TempDr_ProId"] = proId;
-      }if (proGender != null) {
+      }
+      if (proGender != null) {
         body["TempDr_Gender"] = proGender;
       }
 
@@ -68,7 +69,7 @@ class AddDoctorSaveApi {
         return null;
       }
 
-      return response['message'];
+      return response['status'].toString();
     } catch (e) {
       log("add doctor save error : $e");
       return null;

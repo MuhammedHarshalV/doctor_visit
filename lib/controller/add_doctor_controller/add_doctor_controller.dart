@@ -184,7 +184,7 @@ class AddDoctorsController extends StateNotifier<AddDoctorsState> {
         proGender: proGender,
       );
       log(response.toString());
-      if (response != null && response.isNotEmpty) {
+      if (response != null && response.isNotEmpty && response == 'true') {
         state.doctorNameController.clear();
         state.doctorPhoneController.clear();
         state.doctorSpecialityController.clear();
