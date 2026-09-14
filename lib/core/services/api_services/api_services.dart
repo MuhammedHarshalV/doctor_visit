@@ -138,7 +138,25 @@ class PostApiServices {
       log("=========== API REQUEST ===========");
       log("METHOD : POST");
       log("URL    : ${AppConstants.baseUrl}$url");
-      log("BODY   : ${body ?? {}}");
+      if (body is FormData) {
+        log('FORM DATA FIELDS:');
+
+        for (final field in body.fields) {
+          log('${field.key} : ${field.value}');
+        }
+
+        log('FORM DATA FILES:');
+
+        for (final file in body.files) {
+          log(
+            '${file.key} : '
+            '${file.value.filename} '
+            '(${file.value.length} bytes)',
+          );
+        }
+      } else {
+        log('BODY : ${body ?? {}}');
+      }
       log("QUERY  : ${queryParams ?? {}}");
       log("===================================");
 

@@ -1,3 +1,4 @@
+import 'package:doctor_visit/core/theme/app_texts/app_texts.dart';
 import 'package:doctor_visit/core/theme/colors/appcolors.dart';
 import 'package:flutter/material.dart';
 
@@ -20,7 +21,7 @@ class DropDownWidget {
         screenSize.height - tapPosition.dy,
       ),
       items: items.map((item) {
-        return PopupMenuItem<String>(value: item, child: Text(item));
+        return PopupMenuItem<String>(value: item, child: Text(item,style:  AppTextStyles.anekMalayalam(),));
       }).toList(),
       constraints: BoxConstraints(maxHeight: screenSize.height / 2),
     );

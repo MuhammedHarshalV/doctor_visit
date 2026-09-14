@@ -1,7 +1,8 @@
 import 'dart:developer';
 import 'dart:typed_data';
 
-
+import 'package:dio/dio.dart';
+import 'package:doctor_visit/apis/work_completion_api/hi-tech_completion_api.dart';
 import 'package:doctor_visit/apis/work_completion_api/pro_is_going.dart';
 import 'package:doctor_visit/apis/work_completion_api/work_start_going_api.dart';
 import 'package:doctor_visit/controller/doctor_visit_controller/doctor_visit_state.dart';
@@ -14,7 +15,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class VisitController extends StateNotifier<DoctorVisitCompletion> {
   VisitController()
-    : super(DoctorVisitCompletion(feedbackController: TextEditingController()));
+    : super(
+        DoctorVisitCompletion(
+          feedbackController: TextEditingController(),
+          placeController: TextEditingController(),
+        ),
+      );
 
   Future<void> isGoingStart({required String doctorID}) async {
     final IsGoingResponseModel response = await GetIsGoingApi.getIsGoingApi(
@@ -63,12 +69,8 @@ class VisitController extends StateNotifier<DoctorVisitCompletion> {
         );
         AppConstants.detKey = response.data?.proDetKey?.toString() ?? '';
         log('stored det_key :${AppConstants.detKey}');
-        state = state.copyWith(
-          base64toApi: '',
-          startTime: null,
-          endTime: null,
-          base64Image: Uint8List(0),
-        );
+
+        resetController();
       }
       log('==============$response');
     } catch (e) {
@@ -79,8 +81,88 @@ class VisitController extends StateNotifier<DoctorVisitCompletion> {
     }
   }
 
+  //is hi-tech
+  Future<bool> hiTechCompletion({
+    BuildContext? context,
+
+    String? name,
+    String? arrivalTime,
+    String? date,
+    String? doctorId,
+    String? place,
+    String? startTime,
+    String? endTime,
+    String? feedback,
+
+    String? image,
+  }) async {
+    try {
+      state = state.copyWith(isComplete: true);
+      final Map<String, dynamic> data = {};
+
+      if (name != null) {
+        data['Pro_Name'] = name;
+      }
+
+      if (arrivalTime != null) {
+        data['Pro_ArrTime'] = arrivalTime;
+      }
+
+      if (date != null) {
+        data['Pro_Date'] = date;
+      }
+
+      if (doctorId != null) {
+        data['Pro_DctrId'] = doctorId;
+      }
+
+      if (place != null) {
+        data['Place'] = place;
+      }
+      if (startTime != null) {
+        data['Pro_StartTime'] = startTime;
+      }
+      if (endTime != null) {
+        data['Pro_EndTime'] = endTime;
+      }
+      if (feedback != null) {
+        data['Pro_Remarks'] = feedback;
+      }
+      if (name != null) {
+        data['Pro_UsrInfo'] = name;
+      }
+      if (image != null && image.isNotEmpty) {
+        data['Pro_Img'] = await MultipartFile.fromFile(
+          image,
+          filename: image.split('/').last,
+        );
+      }
+
+      data['Pro_Id'] = AppConstants.employeeID;
+
+      final formData = FormData.fromMap(data);
+
+      final response = await HiTechCompletionApi.hiTechCompletionApi(
+        body: formData,
+      );
+      if (response == true) {
+        resetController();
+      }
+      return response;
+    } catch (e, stackTrace) {
+      log('Update profile API error: $e', stackTrace: stackTrace);
+    } finally {
+      state = state.copyWith(isComplete: false);
+    }
+    return false;
+  }
+
   void setStartTime(TimeOfDay? time) {
     state = state.copyWith(startTime: time);
+  }
+
+  void setArrivedTime(TimeOfDay? time) {
+    state = state.copyWith(arrivedTime: time);
   }
 
   void updateImage(Uint8List? image) {
@@ -91,8 +173,16 @@ class VisitController extends StateNotifier<DoctorVisitCompletion> {
     state = state.copyWith(base64toApi: imageString);
   }
 
+  void setImagePath(String imagePath) {
+    state = state.copyWith(imagePath: imagePath);
+  }
+
   void updateResponse(String response) {
     state = state.copyWith(response: response);
+  }
+
+  void setPlace(String place) {
+    state = state.copyWith(place: place);
   }
 
   void setIsGoing(bool isGoing) {
@@ -109,6 +199,25 @@ class VisitController extends StateNotifier<DoctorVisitCompletion> {
 
   void setPostponedTime(TimeOfDay? time) {
     state = state.copyWith(postponedTime: time);
+  }
+
+  void resetController() {
+    final feedbackController = state.feedbackController;
+    final placeController = state.placeController;
+
+    feedbackController.clear();
+    placeController.clear();
+
+    state = DoctorVisitCompletion(
+      feedbackController: feedbackController,
+      placeController: placeController,
+    );
+  }
+
+  @override
+  void dispose() {
+    log('===== visit status controller =====');
+    super.dispose();
   }
 }
 

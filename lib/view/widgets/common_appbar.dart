@@ -1,9 +1,11 @@
 import 'package:doctor_visit/controller/profile_details_controller/profile_details_controller.dart';
+import 'package:doctor_visit/core/theme/app_texts/app_texts.dart';
 import 'package:doctor_visit/core/theme/colors/appcolors.dart';
 import 'package:doctor_visit/view/screens/profile_screen/profile_screen.dart';
 import 'package:doctor_visit/view/widgets/switch_botton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 
 class CommonAppBar extends ConsumerWidget implements PreferredSizeWidget {
@@ -30,7 +32,7 @@ class CommonAppBar extends ConsumerWidget implements PreferredSizeWidget {
             children: [
               Text(
                 subtitle,
-                style: TextStyle(
+                style: AppTextStyles.anekMalayalam(
                   fontSize: 14,
                   // ignore: deprecated_member_use
                   color: AppColors.appWhite.withOpacity(0.9),
@@ -43,7 +45,7 @@ class CommonAppBar extends ConsumerWidget implements PreferredSizeWidget {
           ),
           Text(
             title,
-            style: TextStyle(
+            style: AppTextStyles.anekMalayalam(
               fontSize: 24,
               color: AppColors.appWhite,
               fontWeight: FontWeight.bold,
@@ -64,7 +66,6 @@ class CommonAppBar extends ConsumerWidget implements PreferredSizeWidget {
             focusColor: Colors.transparent,
 
             onTap: () async {
-             
               PersistentNavBarNavigator.pushNewScreen(
                 context,
                 screen: const ProfileScreen(),

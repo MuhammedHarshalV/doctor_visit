@@ -1,11 +1,14 @@
 // ============================================================
 // food_card.dart — Redesigned
 // ============================================================
+import 'package:doctor_visit/core/theme/app_texts/app_texts.dart';
 import 'package:flutter/material.dart';
 import 'package:doctor_visit/core/theme/colors/appcolors.dart';
 
 class FoodCard extends StatelessWidget {
+  final String? isApproavedAmount;
   final bool isWeekly;
+  final bool? isApproved;
   final String title;
   final String description;
   final String price;
@@ -14,6 +17,8 @@ class FoodCard extends StatelessWidget {
 
   const FoodCard({
     super.key,
+    this.isApproved,
+    this.isApproavedAmount,
     required this.isWeekly,
     required this.title,
     required this.description,
@@ -91,7 +96,7 @@ class FoodCard extends StatelessWidget {
                 Expanded(
                   child: Text(
                     title,
-                    style: TextStyle(
+                    style: AppTextStyles.anekMalayalam(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
                       color: colorGet,
@@ -107,23 +112,36 @@ class FoodCard extends StatelessWidget {
                     ),
                     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
 
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: const [
-                        Icon(
-                          Icons.check_circle_outline,
-                          size: 13,
-                          color: Color(0xFF27500A),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(
+                              Icons.check_circle_outline,
+                              size: 13,
+                              color: Color(0xFF27500A),
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              isApproved == true ? 'Approved' : 'Waiting',
+                              style: AppTextStyles.anekMalayalam(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w600,
+                                color: const Color(0xFF27500A),
+                              ),
+                            ),
+                          ],
                         ),
-                        SizedBox(width: 4),
-                        Text(
-                          'Approved',
-                          style: TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xFF27500A),
+                        if (isApproavedAmount != null)
+                          Text(
+                            "₹ $isApproavedAmount",
+                            style: TextStyle(
+                              color: const Color(0xFF27500A),
+                              fontSize: 10,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
-                        ),
                       ],
                     ),
                   ),
@@ -159,14 +177,17 @@ class FoodCard extends StatelessWidget {
                 children: [
                   Text(
                     'Description',
-                    style: TextStyle(fontSize: 11, color: Colors.grey.shade500),
+                    style: AppTextStyles.anekMalayalam(
+                      fontSize: 11,
+                      color: Colors.grey.shade500,
+                    ),
                   ),
                   const SizedBox(height: 3),
                   Text(
                     description,
                     maxLines: 4,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
+                    style: AppTextStyles.anekMalayalam(
                       fontSize: 13,
                       color: Color(0xFF555555),
                       height: 1.5,
@@ -185,7 +206,7 @@ class FoodCard extends StatelessWidget {
                   children: [
                     Text(
                       'Amount',
-                      style: TextStyle(
+                      style: AppTextStyles.anekMalayalam(
                         fontSize: 11,
                         color: Colors.grey.shade500,
                       ),
@@ -193,7 +214,7 @@ class FoodCard extends StatelessWidget {
                     const SizedBox(height: 2),
                     Text(
                       '₹ $price',
-                      style: const TextStyle(
+                      style: AppTextStyles.anekMalayalam(
                         fontSize: 20,
                         fontWeight: FontWeight.w700,
                         color: Color(0xFF222222),
@@ -222,7 +243,7 @@ class FoodCard extends StatelessWidget {
                         ),
                         child: Text(
                           'Edit',
-                          style: TextStyle(
+                          style: AppTextStyles.anekMalayalam(
                             fontWeight: FontWeight.bold,
                             color: AppColors.appWhite,
                           ),

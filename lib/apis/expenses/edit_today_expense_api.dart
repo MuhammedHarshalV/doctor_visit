@@ -14,7 +14,7 @@ class EditTodayExpenseApi {
     required String? employeeID,
     required String? date,
     required String? yearID,
-
+    required String? expenseEditKey,
     required String? expenseBill,
     required String? expenseDiscr,
   }) async {
@@ -23,16 +23,19 @@ class EditTodayExpenseApi {
       if (employeeID != null) {
         expSend["Exp_EmpId"] = employeeID;
       }
+      if (expenseKey != null) {
+        expSend["Exp_ExpId"] = expenseKey;
+      }
       if (date != null) {
         expSend["Exp_Date"] = date;
+      }
+      if (expenseEditKey != null) {
+        expSend["Exp_Key"] = expenseEditKey;
       }
       if (yearID != null) {
         expSend["Exp_YrId"] = yearID;
       }
 
-      if (expenseKey != null) {
-        expSend["Exp_Key"] = expenseKey;
-      }
       if (expenseNote != null) {
         expSend["Exp_Note"] = expenseNote;
       }

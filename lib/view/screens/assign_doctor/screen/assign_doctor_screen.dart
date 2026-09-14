@@ -1,5 +1,5 @@
-
 import 'package:doctor_visit/controller/assigned_doctor_controller/assigned_doctor_controller.dart';
+import 'package:doctor_visit/core/theme/app_texts/app_texts.dart';
 import 'package:doctor_visit/core/theme/colors/appcolors.dart';
 import 'package:doctor_visit/view/screens/assign_doctor/widgets/common_doctor_assigning_card.dart';
 import 'package:doctor_visit/view/screens/assign_doctor/widgets/date_area_container.dart';
@@ -12,7 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 
 class AssignDoctorScreen extends ConsumerStatefulWidget {
   const AssignDoctorScreen({super.key});
@@ -125,7 +124,7 @@ class _AssignDoctorScreenState extends ConsumerState<AssignDoctorScreen> {
                                       padding: const EdgeInsets.all(13),
                                       child: Text(
                                         'New Assign',
-                                        style: TextStyle(
+                                        style: AppTextStyles.anekMalayalam(
                                           color: assignedState.clicked == 1
                                               ? AppColors.appWhite
                                               : AppColors.appPrimaryRed,
@@ -167,7 +166,7 @@ class _AssignDoctorScreenState extends ConsumerState<AssignDoctorScreen> {
                                       padding: const EdgeInsets.all(13),
                                       child: Text(
                                         'Assigned History',
-                                        style: TextStyle(
+                                        style: AppTextStyles.anekMalayalam(
                                           color: assignedState.clicked == 2
                                               ? AppColors.appWhite
                                               : AppColors.appPrimaryRed,
@@ -216,6 +215,8 @@ class _AssignDoctorScreenState extends ConsumerState<AssignDoctorScreen> {
                                           child: Center(
                                             child: Text(
                                               'Select area to get results.',
+                                              style:
+                                                  AppTextStyles.anekMalayalam(),
                                             ),
                                           ),
                                         ),
@@ -227,6 +228,8 @@ class _AssignDoctorScreenState extends ConsumerState<AssignDoctorScreen> {
                                                 child: Center(
                                                   child: Text(
                                                     'No Doctors are available.',
+                                                    style:
+                                                        AppTextStyles.anekMalayalam(),
                                                   ),
                                                 ),
                                               ),
@@ -289,6 +292,8 @@ class _AssignDoctorScreenState extends ConsumerState<AssignDoctorScreen> {
                                           child: Center(
                                             child: Text(
                                               'No booked doctors found.',
+                                              style:
+                                                  AppTextStyles.anekMalayalam(),
                                             ),
                                           ),
                                         ),
@@ -372,8 +377,9 @@ class _AssignDoctorScreenState extends ConsumerState<AssignDoctorScreen> {
                               )
                             : Text(
                                 "Book Doctor",
-                                style: TextStyle(
+                                style: AppTextStyles.anekMalayalam(
                                   fontWeight: FontWeight.bold,
+                                  color: AppColors.appWhite,
                                   fontSize: 15,
                                 ),
                               ),

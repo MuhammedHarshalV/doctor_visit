@@ -1,3 +1,4 @@
+import 'package:doctor_visit/core/theme/app_texts/app_texts.dart';
 import 'package:flutter/material.dart';
 
 class CategoryWidget extends StatelessWidget {
@@ -39,7 +40,7 @@ class CategoryWidget extends StatelessWidget {
             const SizedBox(width: 8),
             Text(
               text,
-              style: TextStyle(
+              style: AppTextStyles.anekMalayalam(
                 color: isSelected ? Colors.white : Colors.black87,
                 fontWeight: FontWeight.bold,
               ),

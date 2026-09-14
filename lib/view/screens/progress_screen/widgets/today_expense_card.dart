@@ -1,9 +1,15 @@
+import 'dart:developer';
+
 import 'package:doctor_visit/controller/expense_controller/expense_controller.dart';
+import 'package:doctor_visit/core/constants/app_constants.dart';
+import 'package:doctor_visit/core/theme/app_texts/app_texts.dart';
 import 'package:doctor_visit/core/theme/colors/appcolors.dart';
+import 'package:doctor_visit/model/expense_keys/get_expense_keys_response_model.dart';
 import 'package:doctor_visit/view/screens/progress_screen/widgets/category_widget.dart';
 import 'package:doctor_visit/view/screens/progress_screen/widgets/food_card.dart';
 import 'package:doctor_visit/view/widgets/common_title_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class TotalSpentCard extends ConsumerWidget {
@@ -40,12 +46,14 @@ class TotalSpentCard extends ConsumerWidget {
                 SizedBox(width: 12),
                 Text(
                   "Total Spent Today",
-                  style: TextStyle(fontWeight: FontWeight.w600),
+                  style: AppTextStyles.anekMalayalam(
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
                 Spacer(),
                 Text(
                   progressState.totalExpense.toString(),
-                  style: TextStyle(
+                  style: AppTextStyles.anekMalayalam(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: AppColors.appPrimaryRed,
@@ -130,7 +138,7 @@ class TotalSpentCard extends ConsumerWidget {
                                           alignment: Alignment.centerLeft,
                                           child: Text(
                                             "Category",
-                                            style: TextStyle(
+                                            style: AppTextStyles.anekMalayalam(
                                               color: Color(0xFFE53935),
                                               fontWeight: FontWeight.bold,
                                             ),
@@ -212,6 +220,11 @@ class TotalSpentCard extends ConsumerWidget {
                                         TextFormField(
                                           controller: todayExpenseState
                                               .amountController,
+                                          keyboardType: TextInputType.number,
+                                          inputFormatters: [
+                                            FilteringTextInputFormatter
+                                                .digitsOnly,
+                                          ],
                                           // maxLines: 4,
                                           //maxLength: 1000,
                                           decoration: _inputDecoration(
@@ -232,10 +245,12 @@ class TotalSpentCard extends ConsumerWidget {
                                         onPressed: () {
                                           expenseController.editExpense(
                                             context: context,
-                                            expenseKey: todayExpenseState
+                                            expenseEditKey: todayExpenseState
                                                 .todayExpenseList[index]
                                                 .expKey
                                                 .toString(),
+                                            employeeID: AppConstants.employeeID,
+                                            yearId: AppConstants.yearID,
                                             expenseAmount: todayExpenseState
                                                 .amountController
                                                 .text,
@@ -243,15 +258,35 @@ class TotalSpentCard extends ConsumerWidget {
                                                 .descriptionController
                                                 .text,
                                             expenseNote:
-                                                todayExpenseState.category == 1
+                                                ref
+                                                        .read(
+                                                          dayExpenseProvider,
+                                                        )
+                                                        .category ==
+                                                    1
                                                 ? 'Food'
-                                                : todayExpenseState.category ==
+                                                : ref
+                                                          .read(
+                                                            dayExpenseProvider,
+                                                          )
+                                                          .category ==
                                                       2
                                                 ? 'Petrol'
-                                                : todayExpenseState.category ==
+                                                : ref
+                                                          .read(
+                                                            dayExpenseProvider,
+                                                          )
+                                                          .category ==
                                                       3
                                                 ? 'Travel'
                                                 : 'Other',
+                                            expenseKey: getExpenseKey(
+                                              description: ref
+                                                  .read(dayExpenseProvider)
+                                                  .category,
+                                              expenseKeyList:
+                                                  progressState.expenseKeyList,
+                                            ),
                                           );
                                         },
                                         style: TextButton.styleFrom(
@@ -279,11 +314,13 @@ class TotalSpentCard extends ConsumerWidget {
                                               )
                                             : Text(
                                                 "Submit",
-                                                style: TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.white,
-                                                ),
+                                                style:
+                                                    AppTextStyles.anekMalayalam(
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.white,
+                                                    ),
                                               ),
                                       ),
                                     ),
@@ -302,6 +339,44 @@ class TotalSpentCard extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  String getExpenseKey({
+    required int description,
+    required List<Mastervalue> expenseKeyList,
+  }) {
+    String expenseDescription;
+
+    switch (description) {
+      case 1:
+        expenseDescription = 'Food';
+        break;
+
+      case 2:
+        expenseDescription = 'Petrol';
+        break;
+
+      case 3:
+        expenseDescription = 'Travel';
+        break;
+
+      case 4:
+        expenseDescription = 'Other';
+        break;
+
+      default:
+        return '';
+    }
+
+    for (final item in expenseKeyList) {
+      if (item.desc?.trim().toUpperCase() == expenseDescription.toUpperCase()) {
+        log('Expense: ${item.desc}, Key: ${item.mstrkey}');
+
+        return item.mstrkey.toString();
+      }
+    }
+
+    return '';
   }
 
   InputDecoration _inputDecoration(String hint) {

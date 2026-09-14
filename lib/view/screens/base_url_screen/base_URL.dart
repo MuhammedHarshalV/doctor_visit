@@ -2,6 +2,7 @@ import 'package:doctor_visit/controller/login_controller/login_controller.dart';
 import 'package:doctor_visit/core/constants/app_constants.dart';
 import 'dart:developer';
 import 'package:doctor_visit/core/routes/app_route_names.dart';
+import 'package:doctor_visit/core/theme/app_texts/app_texts.dart';
 import 'package:doctor_visit/core/theme/colors/appcolors.dart';
 import 'package:doctor_visit/view/widgets/text_field_container.dart';
 import 'package:flutter/material.dart';
@@ -79,7 +80,7 @@ class BaseUrlScreen extends ConsumerWidget {
                       },
                       child: Text(
                         "Sumbit",
-                        style: TextStyle(
+                        style:  AppTextStyles.anekMalayalam(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,

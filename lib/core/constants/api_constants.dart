@@ -4,6 +4,7 @@ class ApiConstants {
   static String getDoctorsVisit = 'ProVisitList';
   static String proDetails = 'Details';
   static String workStartCompletevisit = 'SaveUpdate';
+  static String hiTechCompletion = 'SaveUpdate/V2';
   static String proIsGoing = 'IsGoing';
   static String progressPercentage = 'Dash';
   static String expenseHistory = 'ExpenseGet';
@@ -16,5 +17,5 @@ class ApiConstants {
   static String assignDoctors = 'AssignDctr';
   static String weeklyAssignedDoctorHistory = 'ProDctrList';
   static String deleteAssignedDoctor = 'DeleteAssignedDoctor';
-
+  static String expenseKey = '/api/LabInvoiceSaveUpdate';
 }

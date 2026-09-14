@@ -61,7 +61,7 @@ class ImageHelper {
               children: [
                 ListTile(
                   leading: const Icon(Icons.camera_alt),
-                  title: const Text('Camera'),
+                  title: const Text('Camera',),
                   onTap: () async {
                     final image = await picker.pickImage(
                       source: ImageSource.camera,

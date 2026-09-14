@@ -1,4 +1,5 @@
 import 'package:doctor_visit/controller/assigned_doctor_controller/assigned_doctor_controller.dart';
+import 'package:doctor_visit/core/theme/app_texts/app_texts.dart';
 import 'package:doctor_visit/core/theme/colors/appcolors.dart';
 import 'package:doctor_visit/view/screens/assign_doctor/widgets/common_doctor_assigning_card.dart';
 import 'package:doctor_visit/view/screens/home_screen/widget/alert_dialog.dart';
@@ -90,7 +91,12 @@ class WeeklyAssignedDoctorsWidget extends ConsumerWidget {
               )
             : Expanded(
                 child: SizedBox(
-                  child: Center(child: Text('No booked doctors found.')),
+                  child: Center(
+                    child: Text(
+                      'No booked doctors found.',
+                      style: AppTextStyles.anekMalayalam(),
+                    ),
+                  ),
                 ),
               ),
       ],

@@ -155,10 +155,13 @@ class LoginController extends StateNotifier<LoginState> {
         if (response.success == true) {
           AppConstants.yearID = response.yrId.toString();
           AppConstants.isProAssign = response.proAssignDr ?? false;
+          AppConstants.isHiTech = response.isPro2 ?? false;
 
           await mstKeyAndDetKeyChecking();
           // ignore: use_build_context_synchronously
-          context.goNamed(AppRouteNames.bottomNavScreen.name);
+          AppConstants.isHiTech
+              ? context.goNamed(AppRouteNames.homeScreen.name)
+              : context.goNamed(AppRouteNames.bottomNavScreen.name);
         }
       }
       log("controller response $response");

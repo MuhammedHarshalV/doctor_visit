@@ -1,3 +1,4 @@
+import 'package:doctor_visit/core/theme/app_texts/app_texts.dart';
 import 'package:doctor_visit/core/theme/colors/appcolors.dart';
 import 'package:flutter/material.dart';
 
@@ -32,15 +33,15 @@ class MainProgressCard extends StatelessWidget {
         children: [
           Text(
             "$percentage %",
-            style: TextStyle(
+            style:  AppTextStyles.anekMalayalam(
               fontSize: 30,
               fontWeight: FontWeight.bold,
               color: Colors.white,
             ),
           ),
-          const Text(
+           Text(
             "Visits Completed",
-            style: TextStyle(color: Colors.white70, fontSize: 16),
+            style:  AppTextStyles.anekMalayalam(color: Colors.white70, fontSize: 16),
           ),
           const SizedBox(height: 10),
           ClipRRect(

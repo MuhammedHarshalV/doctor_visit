@@ -2,10 +2,13 @@ import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:doctor_visit/apis/expenses/edit_today_expense_api.dart';
+import 'package:doctor_visit/apis/expenses/expense_key_checking_api.dart';
 import 'package:doctor_visit/apis/expenses/progress_percentage_api.dart';
 import 'package:doctor_visit/apis/expenses/today_expense_get_api.dart';
 import 'package:doctor_visit/apis/expenses/weekly_expense_history_api.dart';
 import 'package:doctor_visit/controller/expense_controller/expense_state.dart';
+import 'package:doctor_visit/core/api_errors/api_errors.dart';
+import 'package:doctor_visit/model/expense_keys/get_expense_keys_response_model.dart';
 
 import 'package:doctor_visit/model/progress_percentage/progress_percentage_response_model.dart';
 import 'package:doctor_visit/model/progress_percentage/today_expense_history_response_model.dart';
@@ -28,10 +31,29 @@ class ExpenseController extends StateNotifier<ExpenseState> {
   }
 
   Future<void> iniatialCall() async {
-    //  await checkDatabaseStatus();
+    await getExpenseKeys();
     await getProgressPercentage();
     await todayExpenseHistory();
     await weeklyExpensesHistory();
+  }
+
+  //expense keys
+  Future<void> getExpenseKeys() async {
+    ExpenseKeysResponseModel? response = await GetExpenseKeys.getExpenseKeys();
+    if (response == null || response.mastervalues?.isEmpty != false) {
+      return;
+    }
+    final expenseList = response.mastervalues!
+        .where((item) => item.mstrType?.toLowerCase() == 'expense')
+        .toList();
+
+    state = state.copyWith(expenseKeyList: expenseList);
+    log('''
+===========================
+Expenses are:
+${state.expenseKeyList}
+===========================
+''');
   }
 
   //progress_api
@@ -49,7 +71,7 @@ class ExpenseController extends StateNotifier<ExpenseState> {
     }
   }
 
-  void updateImage(Uint8List? image,) {
+  void updateImage(Uint8List? image) {
     state = state.copyWith(base64Image: image);
   }
 
@@ -77,7 +99,9 @@ class ExpenseController extends StateNotifier<ExpenseState> {
     String? expenseAmount,
     String? expenseNote,
     String? expenseKey,
+    String? expenseEditKey,
     String? expenseBill,
+
     String? expenseDiscr,
     String? employeeID,
     String? date,
@@ -96,11 +120,12 @@ class ExpenseController extends StateNotifier<ExpenseState> {
             employeeID: employeeID,
             date: date,
             yearID: yearId,
+            expenseEditKey: expenseEditKey,
           );
       log('today expense list from controller: ${response.toString()}');
       log('response: $response');
 
-      if (response != null && response.status == true && employeeID == null) {
+      if (response != null && response.status == true && date == null) {
         log('Status true');
 
         if (!context.mounted) {
@@ -114,12 +139,14 @@ class ExpenseController extends StateNotifier<ExpenseState> {
       }
     } catch (e) {
       log(e.toString());
+      // ignore: use_build_context_synchronously
+      AppMessage.show(context, e.toString());
     } finally {
-      await todayExpenseHistory();
-      await weeklyExpensesHistory();
       state = state.copyWith(isEditLoading: false);
       state.descriptionController.clear();
       state.amountController.clear();
+      await todayExpenseHistory();
+      await weeklyExpensesHistory();
     }
   }
 

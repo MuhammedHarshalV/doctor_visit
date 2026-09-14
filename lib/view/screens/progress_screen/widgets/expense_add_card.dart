@@ -3,6 +3,8 @@ import 'dart:typed_data';
 
 import 'package:doctor_visit/controller/expense_controller/expense_controller.dart';
 import 'package:doctor_visit/core/constants/app_constants.dart';
+import 'package:doctor_visit/core/theme/app_texts/app_texts.dart';
+import 'package:doctor_visit/model/expense_keys/get_expense_keys_response_model.dart';
 import 'package:doctor_visit/view/screens/home_screen/widget/alert_dialog.dart';
 import 'package:doctor_visit/view/screens/progress_screen/widgets/category_widget.dart';
 import 'package:doctor_visit/view/widgets/build_input_field.dart';
@@ -37,7 +39,7 @@ class ExpenseFormCard extends ConsumerWidget {
           children: [
             Text(
               "Category",
-              style: TextStyle(
+              style: AppTextStyles.anekMalayalam(
                 color: AppColors.appPrimaryRed,
                 fontWeight: FontWeight.bold,
               ),
@@ -175,6 +177,10 @@ class ExpenseFormCard extends ConsumerWidget {
                           : progressState.category == 3
                           ? 'Travel'
                           : 'Other',
+                      expenseKey: getExpenseKey(
+                        description: progressState.category,
+                        expenseKeyList: progressState.expenseKeyList,
+                      ),
                     );
                   }
                 },
@@ -191,7 +197,7 @@ class ExpenseFormCard extends ConsumerWidget {
                       )
                     : Text(
                         "Add Expense",
-                        style: TextStyle(
+                        style: AppTextStyles.anekMalayalam(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
@@ -211,16 +217,54 @@ class ExpenseFormCard extends ConsumerWidget {
     );
   }
 
-  InputDecoration _inputDecoration(String hint) {
-    return InputDecoration(
-      hintText: hint,
+  String getExpenseKey({
+    required int description,
+    required List<Mastervalue> expenseKeyList,
+  }) {
+    String expenseDescription;
 
-      filled: true,
-      fillColor: AppColors.appTextFieldRed,
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(10),
-        borderSide: BorderSide.none,
-      ),
-    );
+    switch (description) {
+      case 1:
+        expenseDescription = 'Food';
+        break;
+
+      case 2:
+        expenseDescription = 'Petrol';
+        break;
+
+      case 3:
+        expenseDescription = 'Travel';
+        break;
+
+      case 4:
+        expenseDescription = 'Other';
+        break;
+
+      default:
+        return '';
+    }
+
+    for (final item in expenseKeyList) {
+      if (item.desc?.trim().toUpperCase() == expenseDescription.toUpperCase()) {
+        log('Expense: ${item.desc}, Key: ${item.mstrkey}');
+
+        return item.mstrkey.toString();
+      }
+    }
+
+    return '';
   }
+}
+
+InputDecoration _inputDecoration(String hint) {
+  return InputDecoration(
+    hintText: hint,
+
+    filled: true,
+    fillColor: AppColors.appTextFieldRed,
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10),
+      borderSide: BorderSide.none,
+    ),
+  );
 }

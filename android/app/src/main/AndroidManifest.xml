@@ -12,6 +12,7 @@
     <application
         android:label="doctor_visit"
         android:name="${applicationName}"
+        android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher">
 
         <activity

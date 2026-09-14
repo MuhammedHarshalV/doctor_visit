@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:doctor_visit/controller/home_screen_controller/home_screen_controller.dart';
+import 'package:doctor_visit/core/theme/app_texts/app_texts.dart';
 import 'package:doctor_visit/core/theme/colors/appcolors.dart';
 import 'package:doctor_visit/view/screens/home_screen/widget/alert_dialog.dart';
 
@@ -133,7 +134,7 @@ class DoctorCard extends ConsumerWidget {
                 backgroundColor: AppColors.appLightRed,
                 child: Text(
                   initial,
-                  style: const TextStyle(
+                  style:   AppTextStyles.anekMalayalam(
                     color: Color(0xFFE53935),
                     fontWeight: FontWeight.bold,
                     fontSize: 20,
@@ -152,9 +153,9 @@ class DoctorCard extends ConsumerWidget {
                       textAlign: TextAlign.start,
                       maxLines: 5,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style:  AppTextStyles.anekMalayalam(fontWeight: FontWeight.bold),
                     ),
-                    Text(address, style: TextStyle(color: Colors.orange[700])),
+                    Text(address, style:  AppTextStyles.anekMalayalam(color: Colors.orange.shade700)),
                     const SizedBox(height: 4),
                     Row(
                       children: [
@@ -164,7 +165,7 @@ class DoctorCard extends ConsumerWidget {
                           color: Color(0xFFE53935),
                         ),
                         const SizedBox(width: 4),
-                        Text(phone, style: const TextStyle(fontSize: 12)),
+                        Text(phone, style:   AppTextStyles.anekMalayalam(fontSize: 12)),
                       ],
                     ),
 
@@ -192,7 +193,7 @@ class DoctorCard extends ConsumerWidget {
                                 : isDone == 0
                                 ? 'Upcoming'
                                 : 'Postponed',
-                            style: TextStyle(
+                            style:  AppTextStyles.anekMalayalam(
                               color: AppColors.appWhite,
 
                               fontSize: 10,

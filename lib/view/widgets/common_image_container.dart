@@ -30,7 +30,7 @@ class ImageContainer extends StatelessWidget {
                     image: MemoryImage(state.base64Image),
                     fit: BoxFit.cover,
                   )
-                : null,
+                                : null,
           ),
           child: Center(
             child: state.base64Image.isNotEmpty
@@ -71,9 +71,9 @@ class ImageContainer extends StatelessWidget {
                       builder: (_) => Dialog(
                         child: InteractiveViewer(
                           child: Image.memory(
-                            state.base64Image,
-                            fit: BoxFit.contain,
-                          ),
+                                  state.base64Image,
+                                  fit: BoxFit.contain,
+                                ),
                         ),
                       ),
                     );
@@ -99,7 +99,7 @@ class ImageContainer extends StatelessWidget {
                   onTap: () {
                     controller.updateImage(Uint8List(0));
                     controller.base64ToApiUpdate('');
-                  },
+                                      },
                   child: Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(

@@ -2,6 +2,7 @@ import 'package:doctor_visit/controller/add_doctor_controller/add_doctor_control
 import 'package:doctor_visit/controller/bottom_nav_screen/bottom_nav_controller.dart';
 import 'package:doctor_visit/controller/expense_controller/expense_controller.dart';
 import 'package:doctor_visit/controller/home_screen_controller/home_screen_controller.dart';
+import 'package:doctor_visit/core/theme/app_texts/app_texts.dart';
 
 import 'package:doctor_visit/core/theme/colors/appcolors.dart';
 import 'package:doctor_visit/view/screens/add_doctor_screen/add_doctor.dart';
@@ -117,14 +118,14 @@ class BottomNavScreen extends ConsumerWidget {
         icon: Icon(Icons.home),
         inactiveIcon: Icon(Icons.home),
         title: "Home",
-        textStyle: TextStyle(fontWeight: FontWeight.w500),
+        textStyle: AppTextStyles.anekMalayalam(fontWeight: FontWeight.w500),
         activeColorPrimary: AppColors.appPrimaryRed,
         inactiveColorPrimary: AppColors.appDarkGrey,
       ),
       PersistentBottomNavBarItem(
         title: 'Add Doctor',
         icon: Icon(Icons.add_box_outlined),
-        textStyle: TextStyle(fontWeight: FontWeight.w500),
+        textStyle: AppTextStyles.anekMalayalam(fontWeight: FontWeight.w500),
         inactiveIcon: Icon(Icons.add_box_outlined),
         activeColorPrimary: AppColors.appPrimaryRed,
         inactiveColorPrimary: AppColors.appDarkGrey,
@@ -133,7 +134,7 @@ class BottomNavScreen extends ConsumerWidget {
         icon: Icon(Icons.bar_chart),
         inactiveIcon: Icon(Icons.leaderboard_outlined),
         title: 'Progress',
-        textStyle: TextStyle(fontWeight: FontWeight.w500),
+        textStyle: AppTextStyles.anekMalayalam(fontWeight: FontWeight.w500),
         activeColorPrimary: AppColors.appPrimaryRed,
         inactiveColorPrimary: AppColors.appDarkGrey,
       ),

@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:doctor_visit/controller/home_screen_controller/home_screen_controller.dart';
 import 'package:doctor_visit/core/services/location_services/location_services.dart';
+import 'package:doctor_visit/core/theme/app_texts/app_texts.dart';
 import 'package:doctor_visit/core/theme/colors/appcolors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -109,7 +110,7 @@ class CustomSwitchButton extends ConsumerWidget {
                 // padding: EdgeInsets.all(10),
                 content: Text(
                   "No internet connection. Please try again when the network is available.",
-                  style: TextStyle(
+                  style: AppTextStyles.anekMalayalam(
                     color: AppColors.appBlack,
                     fontWeight: FontWeight.bold,
                   ),
@@ -153,7 +154,10 @@ class CustomSwitchButton extends ConsumerWidget {
             if (context.mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(e.toString()),
+                  content: Text(
+                    e.toString(),
+                    style: AppTextStyles.anekMalayalam(),
+                  ),
                   backgroundColor: Colors.blue,
                   behavior: SnackBarBehavior.floating,
                   margin: EdgeInsets.only(
@@ -172,7 +176,7 @@ class CustomSwitchButton extends ConsumerWidget {
                 // padding: EdgeInsets.all(10),
                 content: Text(
                   "No internet connection. Please try again when the network is available.",
-                  style: TextStyle(
+                  style: AppTextStyles.anekMalayalam(
                     color: AppColors.appBlack,
                     fontWeight: FontWeight.bold,
                   ),
@@ -213,7 +217,7 @@ class CustomSwitchButton extends ConsumerWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Text(
                   homeState.isOn == true ? "On" : "Off",
-                  style: const TextStyle(
+                  style: AppTextStyles.anekMalayalam(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
                   ),

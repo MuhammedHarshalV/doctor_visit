@@ -3,8 +3,8 @@ import 'dart:developer';
 
 import 'package:doctor_visit/controller/assigned_doctor_controller/assigned_doctor_controller.dart';
 import 'package:doctor_visit/controller/home_screen_controller/home_screen_controller.dart';
+import 'package:doctor_visit/core/theme/app_texts/app_texts.dart';
 import 'package:doctor_visit/core/theme/colors/appcolors.dart';
-
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -91,7 +91,7 @@ class CommonDoctorAssigningCard extends ConsumerWidget {
                 backgroundColor: AppColors.appLightRed,
                 child: Text(
                   initial.toUpperCase(),
-                  style: const TextStyle(
+                  style: AppTextStyles.anekMalayalam(
                     color: Color(0xFFE53935),
                     fontWeight: FontWeight.bold,
                     fontSize: 20,
@@ -117,7 +117,9 @@ class CommonDoctorAssigningCard extends ConsumerWidget {
                             textAlign: TextAlign.start,
                             maxLines: 5,
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                            style: AppTextStyles.anekMalayalam(
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                         // Spacer(),
@@ -140,7 +142,9 @@ class CommonDoctorAssigningCard extends ConsumerWidget {
                     if (assignedBy.isNotEmpty)
                       Text(
                         "Assigned to ${assignedBy.isNotEmpty == true ? assignedBy[0].toUpperCase() + assignedBy.substring(1) : ''}",
-                        style: TextStyle(color: Colors.orange[700]),
+                        style: AppTextStyles.anekMalayalam(
+                          color: Colors.orange.shade700,
+                        ),
                       ),
 
                     if (isEdit == null)
@@ -162,7 +166,7 @@ class CommonDoctorAssigningCard extends ConsumerWidget {
                               (assignedBy.isNotEmpty)
                                   ? 'Completed'
                                   : 'Available',
-                              style: TextStyle(
+                              style: AppTextStyles.anekMalayalam(
                                 color: AppColors.appWhite,
 
                                 fontSize: 10,
@@ -191,7 +195,7 @@ class CommonDoctorAssigningCard extends ConsumerWidget {
                               ),
                               child: Text(
                                 (isEdit == true) ? 'Delete' : 'Completed',
-                                style: TextStyle(
+                                style: AppTextStyles.anekMalayalam(
                                   color: AppColors.appWhite,
 
                                   fontSize: 10,

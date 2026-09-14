@@ -1,3 +1,4 @@
+import 'package:doctor_visit/core/theme/app_texts/app_texts.dart';
 import 'package:flutter/material.dart';
 import 'package:doctor_visit/core/theme/colors/appcolors.dart';
 import 'package:go_router/go_router.dart';
@@ -14,7 +15,13 @@ class CommonAlertDialog extends StatelessWidget {
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          children: [Text(message, textAlign: TextAlign.center)],
+          children: [
+            Text(
+              message,
+              style: AppTextStyles.anekMalayalam(),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ),
       ),
       actions: [
@@ -34,9 +41,9 @@ class CommonAlertDialog extends StatelessWidget {
                 borderRadius: BorderRadius.circular(6),
               ),
             ),
-            child: const Text(
+            child: Text(
               "OK",
-              style: TextStyle(
+              style: AppTextStyles.anekMalayalam(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,

@@ -1,3 +1,4 @@
+import 'package:doctor_visit/core/theme/app_texts/app_texts.dart';
 import 'package:doctor_visit/core/theme/colors/appcolors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -42,7 +43,7 @@ class WeeklyExpenseDateCard extends ConsumerWidget {
                 Text(
                   date,
 
-                  style: TextStyle(
+                  style: AppTextStyles.anekMalayalam(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
                     color: AppColors.appWhite,
@@ -54,7 +55,7 @@ class WeeklyExpenseDateCard extends ConsumerWidget {
           SizedBox(height: 5),
           Text(
             DateFormat('EEEE').format(DateTime.parse(date)),
-            style: TextStyle(
+            style: AppTextStyles.anekMalayalam(
               fontSize: 18,
               fontWeight: FontWeight.w600,
               color: AppColors.appPrimaryRed,
@@ -78,7 +79,7 @@ class WeeklyExpenseDateCard extends ConsumerWidget {
               if (weeklyExpense != null)
                 Text(
                   weeklyExpense ?? '0',
-                  style: TextStyle(
+                  style: AppTextStyles.anekMalayalam(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
                     color: AppColors.appBlack,

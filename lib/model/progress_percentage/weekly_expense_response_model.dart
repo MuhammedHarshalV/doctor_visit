@@ -73,14 +73,28 @@ class Expenses {
   String? expNote;
   num? expAmt;
   String? expDesc;
+  int? expExpId;
+  dynamic expIsApproved;
+  dynamic expApprovedAmt;
 
-  Expenses({this.expKey, this.expNote, this.expAmt, this.expDesc});
+  Expenses({
+    this.expKey,
+    this.expNote,
+    this.expAmt,
+    this.expDesc,
+    this.expExpId,
+    this.expIsApproved,
+    this.expApprovedAmt,
+  });
 
   factory Expenses.fromJson(Map<String, dynamic> json) => Expenses(
     expKey: json["Exp_Key"],
     expNote: json["Exp_Note"],
     expAmt: json["Exp_Amt"],
     expDesc: json["Exp_Desc"],
+    expExpId: json["Exp_ExpId"],
+    expIsApproved: json["Exp_isApproved"],
+    expApprovedAmt: json["Exp_ApprovedAmt"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -88,5 +102,8 @@ class Expenses {
     "Exp_Note": expNote,
     "Exp_Amt": expAmt,
     "Exp_Desc": expDesc,
+    "Exp_ExpId": expExpId,
+    "Exp_isApproved": expIsApproved,
+    "Exp_ApprovedAmt": expApprovedAmt,
   };
 }

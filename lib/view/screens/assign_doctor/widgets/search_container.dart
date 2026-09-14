@@ -1,4 +1,5 @@
 import 'package:doctor_visit/controller/assigned_doctor_controller/assigned_doctor_controller.dart';
+import 'package:doctor_visit/core/theme/app_texts/app_texts.dart';
 import 'package:doctor_visit/core/theme/colors/appcolors.dart';
 import 'package:doctor_visit/view/screens/assign_doctor/widgets/drop_down_widget.dart';
 
@@ -37,14 +38,14 @@ class DoctorSearchWidget extends ConsumerWidget {
                 assignedController.updateStateClass(searchController: value);
                 assignedController.searchDoctors();
               },
-              style: TextStyle(
+              style:  AppTextStyles.anekMalayalam(
                 // fontSize: 16,
                 fontWeight: FontWeight.w600,
                 color: AppColors.appPrimaryRed,
               ),
               decoration: InputDecoration(
                 hintText: 'Search Dr Name...',
-                hintStyle: TextStyle(
+                hintStyle:  AppTextStyles.anekMalayalam(
                   fontWeight: FontWeight.bold,
                   color: AppColors.appPrimaryRed,
                 ),
@@ -99,7 +100,7 @@ class DoctorSearchWidget extends ConsumerWidget {
                   children: [
                     Text(
                       assignedState.searchText,
-                      style: TextStyle(
+                      style:  AppTextStyles.anekMalayalam(
                         fontWeight: FontWeight.w500,
                         color: AppColors.appWhite,
                       ),

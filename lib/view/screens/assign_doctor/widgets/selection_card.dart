@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:doctor_visit/core/theme/app_texts/app_texts.dart';
 import 'package:doctor_visit/core/theme/colors/appcolors.dart';
 import 'package:doctor_visit/view/screens/assign_doctor/widgets/drop_down_widget.dart';
 import 'package:flutter/material.dart';
@@ -110,7 +111,7 @@ class SelectionCard extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: const TextStyle(
+                    style:   AppTextStyles.anekMalayalam(
                       fontSize: 13,
                       fontWeight: FontWeight.bold,
                       color: Color(0xFF2C333A),
@@ -120,7 +121,7 @@ class SelectionCard extends StatelessWidget {
                   if (subtitle != null)
                     Text(
                       subtitle!,
-                      style: TextStyle(
+                      style:  AppTextStyles.anekMalayalam(
                         fontSize: 13,
                         color: Colors.grey.shade600,
                       ),

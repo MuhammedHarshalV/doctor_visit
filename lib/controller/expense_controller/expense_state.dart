@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-
+import 'package:doctor_visit/model/expense_keys/get_expense_keys_response_model.dart';
 import 'package:doctor_visit/model/progress_percentage/progress_percentage_response_model.dart';
 import 'package:doctor_visit/model/progress_percentage/today_expense_history_response_model.dart';
 import 'package:doctor_visit/model/progress_percentage/weekly_expense_response_model.dart';
@@ -23,10 +23,9 @@ class ExpenseState {
   final List<Expense> todayExpenseList;
   final List<WeeklyExpenseResponseModel> weeklyExpenseHistory;
   final List<ExpenseLists> weeklyExpenseSeperatedDate;
+  final List<Mastervalue> expenseKeyList;
 
   final int category;
-
- 
 
   ExpenseState({
     this.base64toApi = '',
@@ -36,7 +35,7 @@ class ExpenseState {
     this.isEditLoading = false,
     this.progressValue = 0,
     this.totalExpense = 0,
-   
+    this.expenseKeyList = const [],
     this.weeklyExpenseSeperatedDate = const [],
 
     this.progressPeercentage = const [],
@@ -61,6 +60,7 @@ class ExpenseState {
     num? progressValue,
     int? category,
     List<ExpenseLists>? weeklyExpenseSeperatedDate,
+    List<Mastervalue>? expenseKeyList,
     List<WeeklyExpenseResponseModel>? weeklyExpenseHistory,
     num? totalExpense,
     num? weekEotalExpense,
@@ -68,7 +68,7 @@ class ExpenseState {
     bool? isExpanded,
     bool? isExpandedHistory,
     List<Expense>? todayExpenseList,
-   
+
     List<ProgressPercentageResponseModel>? progressPeercentage,
   }) {
     return ExpenseState(
@@ -85,7 +85,7 @@ class ExpenseState {
       base64Image: base64Image ?? this.base64Image,
       isExpanded: isExpanded ?? this.isExpanded,
       weeklyExpenseHistory: weeklyExpenseHistory ?? this.weeklyExpenseHistory,
-     
+      expenseKeyList: expenseKeyList ?? this.expenseKeyList,
       todayExpenseList: todayExpenseList ?? this.todayExpenseList,
       category: category ?? this.category,
       isExpandedHistory: isExpandedHistory ?? this.isExpandedHistory,

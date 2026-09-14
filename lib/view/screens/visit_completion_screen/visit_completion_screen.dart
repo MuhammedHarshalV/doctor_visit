@@ -6,10 +6,13 @@ import 'package:doctor_visit/controller/doctor_visit_controller/doctor_visit_con
 
 import 'package:doctor_visit/controller/home_screen_controller/home_screen_controller.dart';
 import 'package:doctor_visit/core/constants/app_constants.dart';
+import 'package:doctor_visit/core/services/image_to_base64_helper/image_helper_bytes.dart';
 import 'package:doctor_visit/core/services/location_services/location_services.dart';
+import 'package:doctor_visit/core/theme/app_texts/app_texts.dart';
 import 'package:doctor_visit/core/theme/colors/appcolors.dart';
 import 'package:doctor_visit/view/screens/home_screen/widget/alert_dialog.dart';
-import 'package:doctor_visit/view/widgets/common_image_container.dart';
+import 'package:doctor_visit/view/screens/visit_completion_screen/image_container.dart';
+
 import 'package:doctor_visit/view/widgets/common_title_text.dart';
 import 'package:doctor_visit/core/services/image_to_base64_helper/image_helper.dart';
 import 'package:flutter/material.dart';
@@ -153,7 +156,7 @@ class VisitCompletionScreen extends ConsumerWidget {
                                       SnackBar(
                                         content: Text(
                                           e.toString(),
-                                          style: TextStyle(
+                                          style: AppTextStyles.anekMalayalam(
                                             color: AppColors.appWhite,
                                             fontWeight: FontWeight.bold,
                                           ),
@@ -188,7 +191,7 @@ class VisitCompletionScreen extends ConsumerWidget {
                                       // padding: EdgeInsets.all(10),
                                       content: Text(
                                         "No internet connection. Please try again when the network is available.",
-                                        style: TextStyle(
+                                        style: AppTextStyles.anekMalayalam(
                                           color: AppColors.appBlack,
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -254,7 +257,7 @@ class VisitCompletionScreen extends ConsumerWidget {
                             : Center(
                                 child: Text(
                                   'Start Going',
-                                  style: TextStyle(
+                                  style: AppTextStyles.anekMalayalam(
                                     fontWeight: FontWeight.bold,
                                     color: AppColors.appWhite,
                                   ),
@@ -275,38 +278,123 @@ class VisitCompletionScreen extends ConsumerWidget {
                       GestureDetector(
                         onTap: () async {
                           //  Step 1 — Pick image
-                          final XFile? image = await ImageHelper.pickImage(
-                            isSelfie: true,
-                            context: context,
-                          );
-                          if (image == null) return;
 
-                          //  Step 2 — Convert to base64
-                          final String? base64String =
-                              await ImageHelper.imageToBase64(image.path);
-                          if (base64String == null) return;
+                          final XFile? image = AppConstants.isHiTech == false
+                              ? await ImageHelper.pickImage(
+                                  context: context,
+                                  isSelfie: true,
+                                )
+                              : await ImageHelperBytes.pickImage(
+                                  context: context,
+                                );
 
-                          //  Step 3 — Convert to bytes for display
-                          final Uint8List? bytes = ImageHelper.base64ToBytes(
-                            base64String,
-                          );
-                          if (bytes == null) return;
+                          if (AppConstants.isHiTech) {
+                            if (image == null) return;
+                            doctorVisitController.setImagePath(image.path);
+                          } else {
+                            if (image == null) return;
 
-                          //  Step 4 — Save to controller
-                          doctorVisitController.updateImage(bytes);
+                            //  Step 2 — Convert to base64
+                            final String? base64String =
+                                await ImageHelper.imageToBase64(image.path);
+                            if (base64String == null) return;
 
-                          log(
-                            "Image ready. Base64 KB: ${(base64String.length / 1024).toStringAsFixed(1)}",
-                          );
-                          doctorVisitController.base64ToApiUpdate(base64String);
+                            //  Step 3 — Convert to bytes for display
+                            final Uint8List? bytes = ImageHelper.base64ToBytes(
+                              base64String,
+                            );
+                            if (bytes == null) return;
+
+                            //  Step 4 — Save to controller
+                            doctorVisitController.updateImage(bytes);
+
+                            log(
+                              "Image ready. Base64 KB: ${(base64String.length / 1024).toStringAsFixed(1)}",
+                            );
+                            doctorVisitController.base64ToApiUpdate(
+                              base64String,
+                            );
+                          }
+
                           // log('harshal image : $base64String');
                         },
-                        child: ImageContainer(
+                        child: ImageContainerClarity(
                           state: doctorVisitState,
                           controller: doctorVisitController,
                           imagePurpose: 'Selfie',
                         ),
                       ),
+
+                      if (AppConstants.isHiTech) const SizedBox(height: 10),
+                      if (AppConstants.isHiTech)
+                        CommonTitleText(title: "Arrival Time *"),
+                      if (AppConstants.isHiTech)
+                        GestureDetector(
+                          onTap: () async {
+                            final time = await showTimePicker(
+                              context: context,
+                              initialTime: TimeOfDay.now(),
+                              builder: (context, child) {
+                                return Theme(
+                                  data: Theme.of(context).copyWith(
+                                    colorScheme: ColorScheme.light(
+                                      primary: AppColors
+                                          .appPrimaryRed, // selected hour/minute
+                                      onPrimary:
+                                          Colors.white, // text on selected
+                                      onSurface: Colors.black, // normal text
+                                      surface:
+                                          Colors.white, // dialog background
+                                    ),
+                                    timePickerTheme: TimePickerThemeData(
+                                      backgroundColor: Colors.white,
+                                      hourMinuteColor:
+                                          AppColors.appTextFieldRed,
+                                      hourMinuteTextColor: AppColors.appBlack,
+                                      dayPeriodColor: AppColors.appTextFieldRed,
+                                      dayPeriodTextColor: AppColors.appBlack,
+                                      dialBackgroundColor:
+                                          AppColors.appTextFieldRed,
+                                      dialHandColor: AppColors.appPrimaryRed,
+                                      dialTextColor: AppColors.appBlack,
+                                      entryModeIconColor:
+                                          AppColors.appPrimaryRed,
+                                      cancelButtonStyle: TextButton.styleFrom(
+                                        foregroundColor:
+                                            AppColors.appPrimaryRed,
+                                      ),
+                                      confirmButtonStyle: TextButton.styleFrom(
+                                        foregroundColor:
+                                            AppColors.appPrimaryRed,
+                                      ),
+                                    ),
+                                  ),
+                                  child: child!,
+                                );
+                              },
+                            );
+
+                            if (time != null) {
+                              doctorVisitController.setArrivedTime(time);
+                            }
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.all(14),
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: AppColors.appTextFieldRed,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Text(
+                              doctorVisitState.arrivedTime == null
+                                  ? "Arrival time"
+                                  : doctorVisitState.arrivedTime!.format(
+                                      context,
+                                    ),
+                              style: AppTextStyles.anekMalayalam(),
+                            ),
+                          ),
+                        ),
 
                       const SizedBox(height: 10),
 
@@ -366,6 +454,7 @@ class VisitCompletionScreen extends ConsumerWidget {
                             doctorVisitState.startTime == null
                                 ? "Select time"
                                 : doctorVisitState.startTime!.format(context),
+                            style: AppTextStyles.anekMalayalam(),
                           ),
                         ),
                       ),
@@ -426,12 +515,13 @@ class VisitCompletionScreen extends ConsumerWidget {
                             doctorVisitState.endTime == null
                                 ? "Select time"
                                 : doctorVisitState.endTime!.format(context),
+                            style: AppTextStyles.anekMalayalam(),
                           ),
                         ),
                       ),
                       const SizedBox(height: 10),
 
-                      /// 📝 FEEDBACK
+                      ///  FEEDBACK
                       CommonTitleText(title: "Feedback / Discussion"),
                       TextFormField(
                         controller: doctorVisitState.feedbackController,
@@ -439,13 +529,26 @@ class VisitCompletionScreen extends ConsumerWidget {
                         maxLength: 1000,
                         decoration: _inputDecoration("Enter your notes..."),
                       ),
+                      if (AppConstants.isHiTech) const SizedBox(height: 10),
 
+                      ///  FEEDBACK
+                      if (AppConstants.isHiTech)
+                        CommonTitleText(title: "Place *"),
+                      if (AppConstants.isHiTech)
+                        TextFormField(
+                          controller: doctorVisitState.placeController,
+                          maxLines: 1,
+                          maxLength: 50,
+                          decoration: _inputDecoration(
+                            "Enter current place...",
+                          ),
+                        ),
                       const SizedBox(height: 30),
                     ],
                   ),
                 ),
 
-                /// 🔘 BUTTONS
+                ///  BUTTONS
                 SizedBox(height: 10),
                 Row(
                   children: [
@@ -488,37 +591,6 @@ class VisitCompletionScreen extends ConsumerWidget {
                                               "Enter the Reason...",
                                             ),
                                           ),
-                                          // CommonTitleText(
-                                          //   title: "Select Time *",
-                                          // ),
-                                          // GestureDetector(
-                                          //   onTap: () async {
-                                          //     final time = await showTimePicker(
-                                          //       context: context,
-                                          //       initialTime: TimeOfDay.now(),
-                                          //     );
-                                          //     if (time != null) {
-                                          //       visitController
-                                          //           .setPostponedTime(time);
-                                          //     }
-                                          //   },
-                                          //   child: Container(
-                                          //     padding: const EdgeInsets.all(14),
-                                          //     width: double.infinity,
-                                          //     decoration: BoxDecoration(
-                                          //       color:
-                                          //           AppColors.appTextFieldRed,
-                                          //       borderRadius:
-                                          //           BorderRadius.circular(10),
-                                          //     ),
-                                          //     child: Text(
-                                          //       visitState.postponedTime == null
-                                          //           ? "Select time"
-                                          //           : visitState.postponedTime!
-                                          //                 .format(context),
-                                          //     ),
-                                          //   ),
-                                          // ),
                                         ],
                                       ),
                                     ),
@@ -598,6 +670,8 @@ class VisitCompletionScreen extends ConsumerWidget {
                                                       .updateResponse('');
                                                   visitState.feedbackController
                                                       .clear();
+                                                  visitState.placeController
+                                                      .clear();
 
                                                   // ignore: use_build_context_synchronously
                                                   context.pop();
@@ -615,12 +689,14 @@ class VisitCompletionScreen extends ConsumerWidget {
                                                       SnackBar(
                                                         content: Text(
                                                           e.toString(),
-                                                          style: TextStyle(
-                                                            color: AppColors
-                                                                .appWhite,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                          ),
+                                                          style:
+                                                              AppTextStyles.anekMalayalam(
+                                                                color: AppColors
+                                                                    .appWhite,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
                                                         ),
                                                         backgroundColor:
                                                             Colors.blue,
@@ -654,19 +730,23 @@ class VisitCompletionScreen extends ConsumerWidget {
                                           child: visitState.isLoading == true
                                               ? Text(
                                                   "Loading",
-                                                  style: TextStyle(
-                                                    fontSize: 18,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.white,
-                                                  ),
+                                                  style:
+                                                      AppTextStyles.anekMalayalam(
+                                                        fontSize: 18,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.white,
+                                                      ),
                                                 )
                                               : Text(
                                                   "Submit",
-                                                  style: TextStyle(
-                                                    fontSize: 18,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.white,
-                                                  ),
+                                                  style:
+                                                      AppTextStyles.anekMalayalam(
+                                                        fontSize: 18,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.white,
+                                                      ),
                                                 ),
                                         ),
                                       ),
@@ -679,7 +759,7 @@ class VisitCompletionScreen extends ConsumerWidget {
                         },
                         child: Text(
                           "Postponed",
-                          style: TextStyle(
+                          style: AppTextStyles.anekMalayalam(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
@@ -688,169 +768,369 @@ class VisitCompletionScreen extends ConsumerWidget {
                       ),
                     ),
                     const SizedBox(width: 10),
-                    Expanded(
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          fixedSize: const Size(double.maxFinite, 50),
-                          backgroundColor:
+                    if (AppConstants.isHiTech == true)
+                      Expanded(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            fixedSize: const Size(double.maxFinite, 50),
+                            backgroundColor:
+                                homeScreenState
+                                        .doctorsListAPI[index]
+                                        .drIsGoing ==
+                                    true
+                                ? AppColors.appPrimaryRed
+                                : const Color.fromARGB(255, 243, 163, 156),
+                          ),
+                          onPressed:
                               homeScreenState.doctorsListAPI[index].drIsGoing ==
                                   true
-                              ? AppColors.appPrimaryRed
-                              : const Color.fromARGB(255, 243, 163, 156),
-                        ),
-                        onPressed:
-                            homeScreenState.doctorsListAPI[index].drIsGoing ==
-                                true
-                            ? () async {
-                                bool isConnected =
-                                    await checkInternetConnection();
-                                log("1========${isConnected.toString()}");
+                              ? () async {
+                                  bool isConnected =
+                                      await checkInternetConnection();
+                                  log("1========${isConnected.toString()}");
 
-                                if (isConnected) {
-                                  log("Internet ON");
-                                } else {
-                                  log("2========${isConnected.toString()}");
-                                  log("Internet OFF");
-                                }
+                                  if (isConnected) {
+                                    log("Internet ON");
+                                  } else {
+                                    log("2========${isConnected.toString()}");
+                                    log("Internet OFF");
+                                  }
 
-                                if (isConnected == true) {
-                                  try {
-                                    final String doctorID = homeScreenState
-                                        .doctorsListAPI[index]
-                                        .drId
-                                        .toString();
+                                  if (isConnected == true) {
+                                    try {
+                                      final String doctorID = homeScreenState
+                                          .doctorsListAPI[index]
+                                          .drId
+                                          .toString();
 
-                                    Position position =
-                                        await getCurrentLocation();
-                                    String currentTime = DateTime.now()
-                                        .toIso8601String();
-                                    String currentDate = DateFormat(
-                                      'yyyy-MM-dd',
-                                    ).format(DateTime.now());
-                                    String mapUrl =
-                                        "https://www.google.com/maps?q=${position.latitude},${position.longitude}";
+                                      String currentTime = DateTime.now()
+                                          .toIso8601String();
+                                      String currentDate = DateFormat(
+                                        'yyyy-MM-dd',
+                                      ).format(DateTime.now());
 
-                                    log("Time: $currentTime");
-                                    log("Date: $currentDate");
-                                    log("Lat: ${position.latitude}");
-                                    log("Lng: ${position.longitude}");
-                                    log(mapUrl);
-                                    final missingFields = <String>[];
+                                      log("Time: $currentTime");
+                                      log("Date: $currentDate");
 
-                                    if (doctorVisitState.startTime == null) {
-                                      missingFields.add('Start time');
-                                    }
-                                    if (doctorVisitState.endTime == null) {
-                                      missingFields.add('End time');
-                                    }
-                                    if (doctorVisitState.base64Image.isEmpty) {
-                                      missingFields.add('Selfie');
-                                    }
-                                    if (missingFields.isNotEmpty) {
-                                      showDialog(
+                                      final missingFields = <String>[];
+
+                                      if (doctorVisitState.startTime == null) {
+                                        missingFields.add('Start time');
+                                      }
+                                      if (doctorVisitState.endTime == null) {
+                                        missingFields.add('End time');
+                                      }
+                                      if (doctorVisitState.imagePath.isEmpty) {
+                                        missingFields.add('Selfie');
+                                      }
+                                      if (doctorVisitState
+                                          .placeController
+                                          .text
+                                          .isEmpty) {
+                                        missingFields.add('Place');
+                                      }
+                                      if (doctorVisitState.arrivedTime ==
+                                          null) {
+                                        missingFields.add('Arrival');
+                                      }
+                                      if (missingFields.isNotEmpty) {
+                                        showDialog(
+                                          // ignore: use_build_context_synchronously
+                                          context: context,
+                                          builder: (context) => CommonAlertDialog(
+                                            message:
+                                                'Please provide: ${missingFields.join(', ')}',
+                                          ),
+                                        );
+
+                                        // All fields are available
+                                        // Call API here
+                                      } else {
+                                        final bool
+                                        response = await doctorVisitController
+                                            .hiTechCompletion(
+                                              doctorId: doctorID,
+                                              date: currentDate,
+                                              name: AppConstants.userName,
+                                              arrivalTime:
+                                                  doctorVisitState
+                                                          .arrivedTime !=
+                                                      null
+                                                  ? formatTimeOfDayToApi(
+                                                      doctorVisitState
+                                                          .arrivedTime!,
+                                                    )
+                                                  : null,
+                                              startTime:
+                                                  doctorVisitState.startTime !=
+                                                      null
+                                                  ? formatTimeOfDayToApi(
+                                                      doctorVisitState
+                                                          .startTime!,
+                                                    )
+                                                  : null,
+
+                                              endTime:
+                                                  doctorVisitState.endTime !=
+                                                      null
+                                                  ? formatTimeOfDayToApi(
+                                                      doctorVisitState.endTime!,
+                                                    )
+                                                  : null,
+                                              feedback: doctorVisitState
+                                                  .feedbackController
+                                                  .text,
+                                              image: doctorVisitState.imagePath,
+
+                                              place: doctorVisitState
+                                                  .placeController
+                                                  .text,
+                                            );
                                         // ignore: use_build_context_synchronously
-                                        context: context,
-                                        builder: (context) => CommonAlertDialog(
-                                          message:
-                                              'Please provide: ${missingFields.join(', ')}',
-                                        ),
+                                        context.pop();
+                                        await homeScreenController
+                                            .getDoctorsVisit();
+                                        doctorVisitController.updateResponse(
+                                          '',
+                                        );
+                                        if (response == true) {
+                                          ref.invalidate(doctorVisitProvider);
+                                        }
+                                        doctorVisitState.feedbackController
+                                            .clear();
+                                        doctorVisitState.placeController
+                                            .clear();
+                                      }
+                                    } catch (e) {
+                                      log(
+                                        "harshal==================${e.toString()}",
                                       );
 
-                                      // All fields are available
-                                      // Call API here
-                                    } else {
-                                      await doctorVisitController
-                                          .isGoingAndCompletionLocationSend(
-                                            isCompleted: true,
-                                            doctorID: doctorID,
-                                            date: currentDate,
-                                            startLocation: mapUrl,
-                                            startTime:
-                                                doctorVisitState.startTime !=
-                                                    null
-                                                ? formatTimeOfDayToApi(
-                                                    doctorVisitState.startTime!,
-                                                  )
-                                                : null,
-                                            endLocation: mapUrl,
-                                            endTime:
-                                                doctorVisitState.endTime != null
-                                                ? formatTimeOfDayToApi(
-                                                    doctorVisitState.endTime!,
-                                                  )
-                                                : null,
-                                            feedback: doctorVisitState
-                                                .feedbackController
-                                                .text,
-                                            detKey: AppConstants.detKey,
-                                            workstatus: '1',
-                                            base64Image:
-                                                doctorVisitState.base64toApi,
-                                          );
-                                      // ignore: use_build_context_synchronously
-                                      context.pop();
-                                      await homeScreenController
-                                          .getDoctorsVisit();
-                                      doctorVisitController.updateResponse('');
-                                      doctorVisitState.feedbackController
-                                          .clear();
-                                    }
-                                  } catch (e) {
-                                    log(
-                                      "harshal==================${e.toString()}",
-                                    );
-
-                                    if (context.mounted) {
-                                      ScaffoldMessenger.of(
-                                        context,
-                                      ).showSnackBar(
-                                        SnackBar(
-                                          content: Text(
-                                            e.toString(),
-                                            style: TextStyle(
-                                              color: AppColors.appWhite,
-                                              fontWeight: FontWeight.bold,
+                                      if (context.mounted) {
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              e.toString(),
+                                              style:
+                                                  AppTextStyles.anekMalayalam(
+                                                    color: AppColors.appWhite,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                            ),
+                                            backgroundColor: Colors.blue,
+                                            behavior: SnackBarBehavior.floating,
+                                            margin: EdgeInsets.only(
+                                              bottom:
+                                                  MediaQuery.of(
+                                                    context,
+                                                  ).size.height -
+                                                  120,
+                                              left: 16,
+                                              right: 16,
                                             ),
                                           ),
-                                          backgroundColor: Colors.blue,
-                                          behavior: SnackBarBehavior.floating,
-                                          margin: EdgeInsets.only(
-                                            bottom:
-                                                MediaQuery.of(
-                                                  context,
-                                                ).size.height -
-                                                120,
-                                            left: 16,
-                                            right: 16,
-                                          ),
-                                        ),
-                                      );
+                                        );
+                                      }
                                     }
                                   }
                                 }
-                              }
-                            : () {},
-                        child: doctorVisitState.isComplete == true
-                            ? SizedBox(
-                                height: 20,
-                                width: 20,
-                                child: CircularProgressIndicator(
-                                  color: AppColors.appWhite,
-                                  strokeWidth: 2,
-                                ),
-                              )
-                            : Center(
-                                child: Text(
-                                  "Completed",
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
+                              : () {},
+                          child: doctorVisitState.isComplete == true
+                              ? SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    color: AppColors.appWhite,
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              : Center(
+                                  child: Text(
+                                    "Completed",
+                                    style: AppTextStyles.anekMalayalam(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
-                              ),
+                        ),
                       ),
-                    ),
+                    if (AppConstants.isHiTech == false)
+                      Expanded(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            fixedSize: const Size(double.maxFinite, 50),
+                            backgroundColor:
+                                homeScreenState
+                                        .doctorsListAPI[index]
+                                        .drIsGoing ==
+                                    true
+                                ? AppColors.appPrimaryRed
+                                : const Color.fromARGB(255, 243, 163, 156),
+                          ),
+                          onPressed:
+                              homeScreenState.doctorsListAPI[index].drIsGoing ==
+                                  true
+                              ? () async {
+                                  bool isConnected =
+                                      await checkInternetConnection();
+                                  log("1========${isConnected.toString()}");
+
+                                  if (isConnected) {
+                                    log("Internet ON");
+                                  } else {
+                                    log("2========${isConnected.toString()}");
+                                    log("Internet OFF");
+                                  }
+
+                                  if (isConnected == true) {
+                                    try {
+                                      final String doctorID = homeScreenState
+                                          .doctorsListAPI[index]
+                                          .drId
+                                          .toString();
+
+                                      Position position =
+                                          await getCurrentLocation();
+                                      String currentTime = DateTime.now()
+                                          .toIso8601String();
+                                      String currentDate = DateFormat(
+                                        'yyyy-MM-dd',
+                                      ).format(DateTime.now());
+                                      String mapUrl =
+                                          "https://www.google.com/maps?q=${position.latitude},${position.longitude}";
+
+                                      log("Time: $currentTime");
+                                      log("Date: $currentDate");
+                                      log("Lat: ${position.latitude}");
+                                      log("Lng: ${position.longitude}");
+                                      log(mapUrl);
+                                      final missingFields = <String>[];
+
+                                      if (doctorVisitState.startTime == null) {
+                                        missingFields.add('Start time');
+                                      }
+                                      if (doctorVisitState.endTime == null) {
+                                        missingFields.add('End time');
+                                      }
+                                      if (doctorVisitState
+                                          .base64Image
+                                          .isEmpty) {
+                                        missingFields.add('Selfie');
+                                      }
+                                      if (missingFields.isNotEmpty) {
+                                        showDialog(
+                                          // ignore: use_build_context_synchronously
+                                          context: context,
+                                          builder: (context) => CommonAlertDialog(
+                                            message:
+                                                'Please provide: ${missingFields.join(', ')}',
+                                          ),
+                                        );
+
+                                        // All fields are available
+                                        // Call API here
+                                      } else {
+                                        await doctorVisitController
+                                            .isGoingAndCompletionLocationSend(
+                                              isCompleted: true,
+                                              doctorID: doctorID,
+                                              date: currentDate,
+                                              startLocation: mapUrl,
+                                              startTime:
+                                                  doctorVisitState.startTime !=
+                                                      null
+                                                  ? formatTimeOfDayToApi(
+                                                      doctorVisitState
+                                                          .startTime!,
+                                                    )
+                                                  : null,
+                                              endLocation: mapUrl,
+                                              endTime:
+                                                  doctorVisitState.endTime !=
+                                                      null
+                                                  ? formatTimeOfDayToApi(
+                                                      doctorVisitState.endTime!,
+                                                    )
+                                                  : null,
+                                              feedback: doctorVisitState
+                                                  .feedbackController
+                                                  .text,
+                                              detKey: AppConstants.detKey,
+                                              workstatus: '1',
+                                              base64Image:
+                                                  doctorVisitState.base64toApi,
+                                            );
+                                        // ignore: use_build_context_synchronously
+                                        context.pop();
+                                        await homeScreenController
+                                            .getDoctorsVisit();
+                                        doctorVisitController.updateResponse(
+                                          '',
+                                        );
+                                        doctorVisitState.feedbackController
+                                            .clear();
+                                      }
+                                    } catch (e) {
+                                      log(
+                                        "harshal==================${e.toString()}",
+                                      );
+
+                                      if (context.mounted) {
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              e.toString(),
+                                              style:
+                                                  AppTextStyles.anekMalayalam(
+                                                    color: AppColors.appWhite,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                            ),
+                                            backgroundColor: Colors.blue,
+                                            behavior: SnackBarBehavior.floating,
+                                            margin: EdgeInsets.only(
+                                              bottom:
+                                                  MediaQuery.of(
+                                                    context,
+                                                  ).size.height -
+                                                  120,
+                                              left: 16,
+                                              right: 16,
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                    }
+                                  }
+                                }
+                              : () {},
+                          child: doctorVisitState.isComplete == true
+                              ? SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    color: AppColors.appWhite,
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              : Center(
+                                  child: Text(
+                                    "Completed",
+                                    style: AppTextStyles.anekMalayalam(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                        ),
+                      ),
                   ],
                 ),
               ],
@@ -892,7 +1172,7 @@ class VisitCompletionScreen extends ConsumerWidget {
   InputDecoration _inputDecoration(String hint) {
     return InputDecoration(
       hintText: hint,
-
+      hintStyle: AppTextStyles.anekMalayalam(),
       filled: true,
       fillColor: AppColors.appTextFieldRed,
       border: OutlineInputBorder(

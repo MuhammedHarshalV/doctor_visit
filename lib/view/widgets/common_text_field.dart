@@ -1,3 +1,4 @@
+import 'package:doctor_visit/core/theme/app_texts/app_texts.dart';
 import 'package:doctor_visit/core/theme/colors/appcolors.dart';
 import 'package:flutter/material.dart';
 
@@ -22,7 +23,7 @@ class CommonTextField extends StatelessWidget {
       children: [
         Text(
           label,
-          style: TextStyle(
+          style:  AppTextStyles.anekMalayalam(
             color: AppColors.appPrimaryRed,
             fontWeight: FontWeight.bold,
             fontSize: 14,
@@ -36,6 +37,7 @@ class CommonTextField extends StatelessWidget {
           },
           decoration: InputDecoration(
             hintText: hint,
+            hintStyle:  AppTextStyles.anekMalayalam(),
             prefixIcon: Icon(icon, color: const Color(0xFFE53935), size: 20),
             filled: true,
             fillColor: const Color(0xFFFFEBEE),

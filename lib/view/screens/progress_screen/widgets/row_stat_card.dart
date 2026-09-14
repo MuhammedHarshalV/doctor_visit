@@ -1,3 +1,4 @@
+import 'package:doctor_visit/core/theme/app_texts/app_texts.dart';
 import 'package:flutter/material.dart';
 
 class StatCard extends StatelessWidget {
@@ -36,11 +37,17 @@ class StatCard extends StatelessWidget {
             const SizedBox(height: 12),
             Text(
               value,
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: AppTextStyles.anekMalayalam(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             Text(
               label,
-              style: const TextStyle(color: Colors.grey, fontSize: 12),
+              style: AppTextStyles.anekMalayalam(
+                color: Colors.grey,
+                fontSize: 12,
+              ),
             ),
           ],
         ),

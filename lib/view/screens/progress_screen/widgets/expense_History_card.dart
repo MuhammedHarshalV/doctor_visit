@@ -1,5 +1,6 @@
 // ignore: file_names
 import 'package:doctor_visit/controller/expense_controller/expense_controller.dart';
+import 'package:doctor_visit/core/theme/app_texts/app_texts.dart';
 import 'package:doctor_visit/core/theme/colors/appcolors.dart';
 import 'package:doctor_visit/view/screens/progress_screen/widgets/food_card.dart';
 import 'package:doctor_visit/view/screens/progress_screen/widgets/weekly_expense_card.dart';
@@ -43,7 +44,9 @@ class ExpenseHistoryCard extends ConsumerWidget {
                 SizedBox(width: 12),
                 Text(
                   "Expense History",
-                  style: TextStyle(fontWeight: FontWeight.w600),
+                  style: AppTextStyles.anekMalayalam(
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
                 Spacer(),
 
@@ -90,6 +93,15 @@ class ExpenseHistoryCard extends ConsumerWidget {
                         .length,
                     (index) => FoodCard(
                       isWeekly: true,
+                      isApproved:
+                          progressState
+                                  .weeklyExpenseSeperatedDate[progressState
+                                      .weeklyListIndex]
+                                  .expenses![index]
+                                  .expIsApproved ==
+                              true
+                          ? true
+                          : false,
                       title:
                           progressState
                               .weeklyExpenseSeperatedDate[progressState
@@ -110,6 +122,20 @@ class ExpenseHistoryCard extends ConsumerWidget {
                           .expenses![index]
                           .expAmt
                           .toString(),
+                      isApproavedAmount:
+                          progressState
+                                  .weeklyExpenseSeperatedDate[progressState
+                                      .weeklyListIndex]
+                                  .expenses![index]
+                                  .expIsApproved ==
+                              true
+                          ? progressState
+                                .weeklyExpenseSeperatedDate[progressState
+                                    .weeklyListIndex]
+                                .expenses![index]
+                                .expApprovedAmt
+                                .toString()
+                          : null,
                       imageUrl: '',
                       onEdit: () {},
                     ),

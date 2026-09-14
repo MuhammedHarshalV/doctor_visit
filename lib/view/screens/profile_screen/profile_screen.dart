@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:doctor_visit/controller/profile_details_controller/profile_details_controller.dart';
+import 'package:doctor_visit/core/theme/app_texts/app_texts.dart';
 import 'package:doctor_visit/core/theme/colors/appcolors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -93,14 +95,95 @@ class ProfileScreen extends ConsumerWidget {
                           CircleAvatar(
                             radius: 40,
                             backgroundColor: Colors.white,
-                            child: Text(
-                              profileState.profileDetails.first.name![0],
-                              style: TextStyle(
-                                fontSize: 32,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.appPrimaryRed,
-                              ),
+                            //                       backgroundImage: Image.network(
+                            //                        profileState.profileDetails.first.image ?? '',
+                            // width: 80,
+                            // height: 80,
+                            // fit: BoxFit.cover,errorBuilder: ,
+                            //                       ),
+                            child: ClipOval(
+                              child:
+                                  (profileState.profileDetails.first.image ??
+                                          '')
+                                      .isNotEmpty
+                                  ? CachedNetworkImage(
+                                      imageUrl:
+                                          profileState
+                                              .profileDetails
+                                              .first
+                                              .image ??
+                                          '',
+                                      width: 80,
+                                      height: 80,
+                                      fit: BoxFit.cover,
+
+                                      placeholder: (context, url) {
+                                        return const SizedBox(
+                                          width: 40,
+                                          height: 40,
+                                          child: Center(
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2,
+                                            ),
+                                          ),
+                                        );
+                                      },
+
+                                      errorWidget: (context, url, error) {
+                                        return Center(
+                                          child: Text(
+                                            profileState
+                                                        .profileDetails
+                                                        .first
+                                                        .name
+                                                        ?.isNotEmpty ==
+                                                    true
+                                                ? profileState
+                                                      .profileDetails
+                                                      .first
+                                                      .name![0]
+                                                      .toUpperCase()
+                                                : '',
+                                            style: AppTextStyles.anekMalayalam(
+                                              fontSize: 32,
+                                              fontWeight: FontWeight.bold,
+                                              color: AppColors.appPrimaryRed,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    )
+                                  : Center(
+                                      child: Text(
+                                        profileState
+                                                    .profileDetails
+                                                    .first
+                                                    .name
+                                                    ?.isNotEmpty ==
+                                                true
+                                            ? profileState
+                                                  .profileDetails
+                                                  .first
+                                                  .name![0]
+                                                  .toUpperCase()
+                                            : '',
+                                        style: AppTextStyles.anekMalayalam(
+                                          fontSize: 32,
+                                          fontWeight: FontWeight.bold,
+                                          color: AppColors.appPrimaryRed,
+                                        ),
+                                      ),
+                                    ),
                             ),
+
+                            // Text(
+                            //   profileState.profileDetails.first.name![0],
+                            //   style: AppTextStyles.anekMalayalam(
+                            //     fontSize: 32,
+                            //     fontWeight: FontWeight.bold,
+                            //     color: AppColors.appPrimaryRed,
+                            //   ),
+                            // ),
                           ),
                           const SizedBox(height: 10),
                           Text(
@@ -110,7 +193,7 @@ class ProfileScreen extends ConsumerWidget {
                                     false)
                                 ? profileState.profileDetails.first.name!
                                 : 'Name not available',
-                            style: TextStyle(
+                            style: AppTextStyles.anekMalayalam(
                               color: Colors.white,
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
@@ -123,7 +206,7 @@ class ProfileScreen extends ConsumerWidget {
                                     false)
                                 ? profileState.profileDetails.first.email!
                                 : 'example@gmail.com',
-                            style: TextStyle(
+                            style: AppTextStyles.anekMalayalam(
                               color: Colors.white70,
                               fontSize: 14,
                             ),
@@ -147,7 +230,7 @@ class ProfileScreen extends ConsumerWidget {
 
                       Text(
                         'DETAILS',
-                        style: TextStyle(
+                        style: AppTextStyles.anekMalayalam(
                           color: Colors.grey,
                           fontWeight: FontWeight.bold,
                           fontSize: 12,
@@ -255,7 +338,10 @@ Widget buildSettingsItem(IconData icon, String title) {
             maxLines: 3,
             overflow: TextOverflow.ellipsis,
             title,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+            style: AppTextStyles.anekMalayalam(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ),
       ],

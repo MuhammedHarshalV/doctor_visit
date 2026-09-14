@@ -1,3 +1,4 @@
+import 'package:doctor_visit/core/theme/app_texts/app_texts.dart';
 import 'package:doctor_visit/core/theme/colors/appcolors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -122,7 +123,7 @@ class TypeTextFormField extends StatelessWidget {
               : null,
           border: InputBorder.none,
           hintText: hintText,
-          hintStyle: TextStyle(color: AppColors.appBlack),
+          hintStyle: AppTextStyles.anekMalayalam(color: AppColors.appBlack),
           labelText: null,
 
           labelStyle: TextStyle(color: AppColors.appPrimaryRed),
@@ -172,13 +173,28 @@ class TypeTextFormField extends StatelessWidget {
       ),
       items: isIncentive == true
           ? [
-              PopupMenuItem(value: 'Yes', child: Text('Yes')),
-              PopupMenuItem(value: 'No', child: Text('No')),
+              PopupMenuItem(
+                value: 'Yes',
+                child: Text('Yes', style: AppTextStyles.anekMalayalam()),
+              ),
+              PopupMenuItem(
+                value: 'No',
+                child: Text('No', style: AppTextStyles.anekMalayalam()),
+              ),
             ]
           : [
-              PopupMenuItem(value: 'Male', child: Text('Male')),
-              PopupMenuItem(value: 'Female', child: Text('Female')),
-              PopupMenuItem(value: 'Others', child: Text('Others')),
+              PopupMenuItem(
+                value: 'Male',
+                child: Text('Male', style: AppTextStyles.anekMalayalam()),
+              ),
+              PopupMenuItem(
+                value: 'Female',
+                child: Text('Female', style: AppTextStyles.anekMalayalam()),
+              ),
+              PopupMenuItem(
+                value: 'Others',
+                child: Text('Others', style: AppTextStyles.anekMalayalam()),
+              ),
             ],
     );
 

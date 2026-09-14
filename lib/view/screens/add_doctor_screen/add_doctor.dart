@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:doctor_visit/controller/add_doctor_controller/add_doctor_controller.dart';
 import 'package:doctor_visit/controller/bottom_nav_screen/bottom_nav_controller.dart';
+import 'package:doctor_visit/core/theme/app_texts/app_texts.dart';
 import 'package:doctor_visit/core/theme/colors/appcolors.dart';
 
 import 'package:doctor_visit/view/widgets/common_appbar.dart';
@@ -46,16 +47,19 @@ class AddDoctorScreen extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       "Add Doctor",
-                      style: TextStyle(
+                      style: AppTextStyles.anekMalayalam(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const Text(
+                    Text(
                       "Quickly register a doctor for today's visits",
-                      style: TextStyle(color: Colors.grey, fontSize: 14),
+                      style: AppTextStyles.anekMalayalam(
+                        color: Colors.grey,
+                        fontSize: 14,
+                      ),
                     ),
                     const SizedBox(height: 30),
                     TopText(heading: 'Doctor Name *'),
@@ -154,7 +158,10 @@ class AddDoctorScreen extends ConsumerWidget {
                               final item = state.finalSpecialityList[index];
 
                               return ListTile(
-                                title: Text(item.desc ?? ''),
+                                title: Text(
+                                  item.desc ?? '',
+                                  style: AppTextStyles.anekMalayalam(),
+                                ),
                                 onTap: () {
                                   log(
                                     "Before: ${state.doctorSpecialityController.text}",
@@ -259,7 +266,10 @@ class AddDoctorScreen extends ConsumerWidget {
                               final item = state.finalAreaList[index];
 
                               return ListTile(
-                                title: Text(item.desc ?? ''),
+                                title: Text(
+                                  item.desc ?? '',
+                                  style: AppTextStyles.anekMalayalam(),
+                                ),
                                 onTap: () {
                                   state.areaIdController.text = item.desc ?? '';
 
@@ -364,7 +374,10 @@ class AddDoctorScreen extends ConsumerWidget {
                               final item = state.finalClinicList[index];
 
                               return ListTile(
-                                title: Text(item.ahMstPName ?? ''),
+                                title: Text(
+                                  item.ahMstPName ?? '',
+                                  style: AppTextStyles.anekMalayalam(),
+                                ),
                                 onTap: () {
                                   state.doctorClinicController.text =
                                       item.ahMstPName ?? '';
@@ -389,7 +402,7 @@ class AddDoctorScreen extends ConsumerWidget {
                       },
                     ),
                     SizedBox(height: 10),
-                  
+
                     _sectionTitle("Incentive"),
                     SizedBox(height: 5),
                     TypeTextFormField(
@@ -498,7 +511,7 @@ class AddDoctorScreen extends ConsumerWidget {
                                   )
                                 : Text(
                                     "Save Doctor",
-                                    style: TextStyle(
+                                    style: AppTextStyles.anekMalayalam(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.white,
@@ -541,8 +554,11 @@ class AddDoctorScreen extends ConsumerWidget {
         return PopupMenuItem<int>(
           value: isClinic == true ? item.ahMstKey : item.key,
           child: isClinic == true
-              ? Text(item.ahMstPName ?? '')
-              : Text(item.desc ?? ''),
+              ? Text(
+                  item.ahMstPName ?? '',
+                  style: AppTextStyles.anekMalayalam(),
+                )
+              : Text(item.desc ?? '', style: AppTextStyles.anekMalayalam()),
         );
       }).toList(),
     );
@@ -573,7 +589,7 @@ class AddDoctorScreen extends ConsumerWidget {
         padding: const EdgeInsets.only(bottom: 5),
         child: Text(
           title,
-          style: TextStyle(
+          style: AppTextStyles.anekMalayalam(
             color: AppColors.appPrimaryRed,
             fontWeight: FontWeight.bold,
             fontSize: 14,
@@ -607,7 +623,7 @@ class TopText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       heading,
-      style: TextStyle(
+      style: AppTextStyles.anekMalayalam(
         color: AppColors.appPrimaryRed,
         fontWeight: FontWeight.bold,
       ),

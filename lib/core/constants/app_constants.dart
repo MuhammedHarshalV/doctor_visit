@@ -7,4 +7,5 @@ class AppConstants {
   static String detKey = '';
   static String date = '';
   static bool isProAssign = false;
+  static bool isHiTech = false;
 }

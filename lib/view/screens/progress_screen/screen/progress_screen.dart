@@ -1,6 +1,7 @@
 import 'package:doctor_visit/controller/expense_controller/expense_controller.dart';
 import 'package:doctor_visit/core/constants/app_constants.dart';
 import 'package:doctor_visit/core/routes/app_route_names.dart';
+import 'package:doctor_visit/core/theme/app_texts/app_texts.dart';
 import 'package:doctor_visit/core/theme/colors/appcolors.dart';
 import 'package:doctor_visit/view/screens/progress_screen/widgets/main_progress_card.dart';
 import 'package:doctor_visit/view/screens/progress_screen/widgets/row_stat_card.dart';
@@ -49,16 +50,16 @@ class ProgressScreen extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                     Text(
                       "Progress",
-                      style: TextStyle(
+                      style:  AppTextStyles.anekMalayalam(
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const Text(
+                     Text(
                       "Today's visit summary",
-                      style: TextStyle(color: Colors.grey),
+                      style:  AppTextStyles.anekMalayalam(color: Colors.grey),
                     ),
                     if (AppConstants.isProAssign == true) SizedBox(height: 16),
                     if (AppConstants.isProAssign == true)
@@ -83,7 +84,7 @@ class ProgressScreen extends ConsumerWidget {
                               children: [
                                 Text(
                                   'Assign Doctors',
-                                  style: TextStyle(
+                                  style:  AppTextStyles.anekMalayalam(
                                     color: AppColors.appPrimaryRed,
                                     fontWeight: FontWeight.bold,
                                   ),
