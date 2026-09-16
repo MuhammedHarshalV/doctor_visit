@@ -343,7 +343,7 @@ class TotalSpentCard extends ConsumerWidget {
 
   String getExpenseKey({
     required int description,
-    required List<Mastervalue> expenseKeyList,
+    required List<Accountvalue> expenseKeyList,
   }) {
     String expenseDescription;
 
@@ -369,10 +369,11 @@ class TotalSpentCard extends ConsumerWidget {
     }
 
     for (final item in expenseKeyList) {
-      if (item.desc?.trim().toUpperCase() == expenseDescription.toUpperCase()) {
-        log('Expense: ${item.desc}, Key: ${item.mstrkey}');
+      if (item.pname?.trim().toUpperCase() ==
+          expenseDescription.toUpperCase()) {
+        log('Expense: ${item.pname}, Key: ${item.ahmstkey}');
 
-        return item.mstrkey.toString();
+        return item.ahmstkey.toString();
       }
     }
 

@@ -9,7 +9,7 @@ class GetExpenseKeys {
   static Future<dynamic> getExpenseKeys() async {
     try {
       final response = await GetApiServices.callApi(
-        queryParams: {"CmpyId": 0, "type": "Masters"},
+        queryParams: {"CmpyId": 0, "type": "AccountHeads"},
         url: ApiConstants.expenseKey,
       );
 

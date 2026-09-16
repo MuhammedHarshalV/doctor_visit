@@ -40,11 +40,11 @@ class ExpenseController extends StateNotifier<ExpenseState> {
   //expense keys
   Future<void> getExpenseKeys() async {
     ExpenseKeysResponseModel? response = await GetExpenseKeys.getExpenseKeys();
-    if (response == null || response.mastervalues?.isEmpty != false) {
+    if (response == null || response.accountvalues?.isEmpty != false) {
       return;
     }
-    final expenseList = response.mastervalues!
-        .where((item) => item.mstrType?.toLowerCase() == 'expense')
+    final expenseList = response.accountvalues!
+        .where((item) => item.type?.toLowerCase() == 'expense')
         .toList();
 
     state = state.copyWith(expenseKeyList: expenseList);

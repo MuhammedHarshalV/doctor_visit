@@ -13,22 +13,16 @@ String expenseKeysResponseModelToJson(ExpenseKeysResponseModel data) =>
 class ExpenseKeysResponseModel {
   bool? success;
   String? message;
-  int? invno;
-  dynamic accountvalues;
-  List<Mastervalue>? mastervalues;
-  dynamic testvalues;
-  dynamic testRefValues;
-  dynamic feeMstDtls;
+  num? invno;
+  List<Accountvalue>? accountvalues;
+  List<dynamic>? testRefValues;
 
   ExpenseKeysResponseModel({
     this.success,
     this.message,
     this.invno,
     this.accountvalues,
-    this.mastervalues,
-    this.testvalues,
     this.testRefValues,
-    this.feeMstDtls,
   });
 
   factory ExpenseKeysResponseModel.fromJson(Map<String, dynamic> json) =>
@@ -36,63 +30,51 @@ class ExpenseKeysResponseModel {
         success: json["success"],
         message: json["message"],
         invno: json["invno"],
-        accountvalues: json["Accountvalues"],
-        mastervalues: json["Mastervalues"] == null
+        accountvalues: json["Accountvalues"] == null
             ? []
-            : List<Mastervalue>.from(
-                json["Mastervalues"]!.map((x) => Mastervalue.fromJson(x)),
+            : List<Accountvalue>.from(
+                json["Accountvalues"]!.map((x) => Accountvalue.fromJson(x)),
               ),
-        testvalues: json["Testvalues"],
-        testRefValues: json["testRefValues"],
-        feeMstDtls: json["feeMstDtls"],
+        testRefValues: json["testRefValues"] == null
+            ? []
+            : List<dynamic>.from(json["testRefValues"]!.map((x) => x)),
       );
 
   Map<String, dynamic> toJson() => {
     "success": success,
     "message": message,
     "invno": invno,
-    "Accountvalues": accountvalues,
-    "Mastervalues": mastervalues == null
+    "Accountvalues": accountvalues == null
         ? []
-        : List<dynamic>.from(mastervalues!.map((x) => x.toJson())),
-    "Testvalues": testvalues,
-    "testRefValues": testRefValues,
-    "feeMstDtls": feeMstDtls,
+        : List<dynamic>.from(accountvalues!.map((x) => x.toJson())),
+    "testRefValues": testRefValues == null
+        ? []
+        : List<dynamic>.from(testRefValues!.map((x) => x)),
   };
 }
 
-class Mastervalue {
-  int? mstrkey;
-  String? desc;
-  String? mstrType;
-  num? mstrvalue;
-  String? mstrdetails;
-  String? mstrcode;
+class Accountvalue {
+  num? ahmstkey;
+  String? pname;
+  String? type;
+  String? grpid;
+  num? hospid;
 
-  Mastervalue({
-    this.mstrkey,
-    this.desc,
-    this.mstrType,
-    this.mstrvalue,
-    this.mstrdetails,
-    this.mstrcode,
-  });
+  Accountvalue({this.ahmstkey, this.pname, this.type, this.grpid, this.hospid});
 
-  factory Mastervalue.fromJson(Map<String, dynamic> json) => Mastervalue(
-    mstrkey: json["Mstrkey"],
-    desc: json["Desc"],
-    mstrType: json["MstrType"],
-    mstrvalue: json["Mstrvalue"],
-    mstrdetails: json["Mstrdetails"],
-    mstrcode: json["Mstrcode"],
+  factory Accountvalue.fromJson(Map<String, dynamic> json) => Accountvalue(
+    ahmstkey: json["Ahmstkey"],
+    pname: json["Pname"],
+    type: json["Type"],
+    grpid: json["Grpid"],
+    hospid: json["Hospid"],
   );
 
   Map<String, dynamic> toJson() => {
-    "Mstrkey": mstrkey,
-    "Desc": desc,
-    "MstrType": mstrType,
-    "Mstrvalue": mstrvalue,
-    "Mstrdetails": mstrdetails,
-    "Mstrcode": mstrcode,
+    "Ahmstkey": ahmstkey,
+    "Pname": pname,
+    "Type": type,
+    "Grpid": grpid,
+    "Hospid": hospid,
   };
 }

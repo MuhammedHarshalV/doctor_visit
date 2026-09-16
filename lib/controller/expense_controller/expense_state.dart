@@ -23,7 +23,7 @@ class ExpenseState {
   final List<Expense> todayExpenseList;
   final List<WeeklyExpenseResponseModel> weeklyExpenseHistory;
   final List<ExpenseLists> weeklyExpenseSeperatedDate;
-  final List<Mastervalue> expenseKeyList;
+  final List<Accountvalue> expenseKeyList;
 
   final int category;
 
@@ -60,7 +60,7 @@ class ExpenseState {
     num? progressValue,
     int? category,
     List<ExpenseLists>? weeklyExpenseSeperatedDate,
-    List<Mastervalue>? expenseKeyList,
+    List<Accountvalue>? expenseKeyList,
     List<WeeklyExpenseResponseModel>? weeklyExpenseHistory,
     num? totalExpense,
     num? weekEotalExpense,

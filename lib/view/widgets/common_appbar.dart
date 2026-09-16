@@ -5,7 +5,6 @@ import 'package:doctor_visit/view/screens/profile_screen/profile_screen.dart';
 import 'package:doctor_visit/view/widgets/switch_botton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 
 class CommonAppBar extends ConsumerWidget implements PreferredSizeWidget {
