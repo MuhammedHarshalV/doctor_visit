@@ -39,9 +39,10 @@ class VisitController extends StateNotifier<DoctorVisitCompletion> {
     required String? endLocation,
     required String? endTime,
     required String? feedback,
-    required String? detKey,
+
     required String? workstatus,
     required String? base64Image,
+    
   }) async {
     try {
       if (isStart == true) state = state.copyWith(isLoading: true);
@@ -49,10 +50,11 @@ class VisitController extends StateNotifier<DoctorVisitCompletion> {
 
       final WorkCompletionAndStartDutyResponseModel response =
           await PostWorkStartGoingApi.postWorkStartGoingApi(
+         
             date: date,
             startTime: startTime,
             endTime: endTime,
-            detKey: detKey,
+
             doctorID: doctorID,
             feedback: feedback,
             workstatus: workstatus,

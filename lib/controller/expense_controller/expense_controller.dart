@@ -3,16 +3,21 @@ import 'dart:typed_data';
 
 import 'package:doctor_visit/apis/expenses/edit_today_expense_api.dart';
 import 'package:doctor_visit/apis/expenses/expense_key_checking_api.dart';
+import 'package:doctor_visit/apis/expenses/get_kilometer_api.dart';
 import 'package:doctor_visit/apis/expenses/progress_percentage_api.dart';
 import 'package:doctor_visit/apis/expenses/today_expense_get_api.dart';
 import 'package:doctor_visit/apis/expenses/weekly_expense_history_api.dart';
+import 'package:doctor_visit/apis/work_completion_api/km_enter_api.dart';
 import 'package:doctor_visit/controller/expense_controller/expense_state.dart';
 import 'package:doctor_visit/core/api_errors/api_errors.dart';
+import 'package:doctor_visit/core/constants/app_constants.dart';
+import 'package:doctor_visit/core/theme/colors/appcolors.dart';
 import 'package:doctor_visit/model/expense_keys/get_expense_keys_response_model.dart';
 
 import 'package:doctor_visit/model/progress_percentage/progress_percentage_response_model.dart';
 import 'package:doctor_visit/model/progress_percentage/today_expense_history_response_model.dart';
 import 'package:doctor_visit/model/progress_percentage/weekly_expense_response_model.dart';
+import 'package:doctor_visit/model/work_completion_and_start_duty/work_completion_and_start_duty_response_model.dart';
 
 import 'package:flutter/material.dart';
 
@@ -28,10 +33,72 @@ class ExpenseController extends StateNotifier<ExpenseState> {
         ),
       ) {
     iniatialCall();
+    getKilometerApi();
+  }
+  // get kilometer api
+  Future<void> getKilometerApi() async {
+    final response = await GetKilometerApi.getKilometerApi();
+    if (response != null && response["Status"] == true) {
+      final result = response["result"];
+
+      if (result != null) {
+        startKmController.text = result["ProMst_StartKM"]?.toString() ?? '';
+
+        endKmController.text = result["ProMst_EndKM"]?.toString() ?? '';
+      } else {
+        startKmController.clear();
+        endKmController.clear();
+      }
+    }
+  }
+
+  final TextEditingController startKmController = TextEditingController();
+  final TextEditingController endKmController = TextEditingController();
+
+  Future<void> kmEnterApi({
+    required num? startKm,
+    required num? endKm,
+    required BuildContext context,
+  }) async {
+    try {
+      state = state.copyWith(isKmStart: true);
+
+      final WorkCompletionAndStartDutyResponseModel response =
+          await KmEnterApi.kmEnterApi(
+            date: AppConstants.date,
+            endKm: endKm,
+            startKm: startKm,
+          );
+      if (response.status == true) {}
+      log('==============$response');
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'KM updated successfully',
+            style: TextStyle(
+              color: AppColors.appWhite,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          backgroundColor: AppColors.appGreen,
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.symmetric(horizontal: 16, vertical: 70),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    } catch (e) {
+      log(e.toString());
+    } finally {
+      state = state.copyWith(isKmStart: false);
+    }
   }
 
   Future<void> iniatialCall() async {
-    await getExpenseKeys();
+    getExpenseKeys();
     await getProgressPercentage();
     await todayExpenseHistory();
     await weeklyExpensesHistory();
@@ -154,7 +221,7 @@ ${state.expenseKeyList}
   Future<void> weeklyExpensesHistory() async {
     final WeeklyExpenseResponseModel? response =
         await WeeklyExpenseHistoryApi.weeklyExpenseHistoryApi();
-    if (response == null) {
+    if (response == null || (response.expenseList ?? []).isEmpty) {
       state = state.copyWith(weeklyExpenseHistory: [], totalExpense: 0);
       return;
     }

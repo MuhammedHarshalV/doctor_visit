@@ -156,7 +156,8 @@ class LoginController extends StateNotifier<LoginState> {
           AppConstants.yearID = response.yrId.toString();
           AppConstants.isProAssign = response.proAssignDr ?? false;
           AppConstants.isHiTech = response.isPro2 ?? false;
-
+          AppConstants.mstKey = (response.mstKey ?? 0).toString();
+          AppConstants.detKey = (response.detKey ?? 0).toString();
           await mstKeyAndDetKeyChecking();
           // ignore: use_build_context_synchronously
           AppConstants.isHiTech
@@ -177,44 +178,32 @@ class LoginController extends StateNotifier<LoginState> {
 
   //mstKey checking
   Future<void> mstKeyAndDetKeyChecking() async {
-    String currentDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    DateFormat('yyyy-MM-dd').format(DateTime.now());
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? mstKey = prefs.getString('mst_key');
-    final String? detKey = prefs.getString('det_key');
+
     final String? date = prefs.getString('Today_date');
     final String? url = prefs.getString('BaseURL');
     if (url == null) {
       await prefs.setString('BaseURL', state.baseUrlController.text);
     }
 
-    if (mstKey != null && mstKey.isNotEmpty) {
-      AppConstants.mstKey = mstKey;
-    }
-    if (url != null && url.isNotEmpty) {
-      AppConstants.baseUrl = url;
-    }
-    if (detKey != null && detKey.isNotEmpty) {
-      AppConstants.detKey = detKey;
-    }
     if (date != null && date.isNotEmpty) {
       AppConstants.date = date;
     }
 
-    log('Stored mstkey : $mstKey');
-    log('Stored detKey : $detKey');
     log('Stored date : $date');
     log('Stored baseUrl : $url');
 
-    if (AppConstants.date != currentDate) {
-      await prefs.setString('mst_key', '');
+    // if (AppConstants.date != currentDate) {
+    //   await prefs.setString('mst_key', '');
 
-      AppConstants.mstKey = '';
+    //   AppConstants.mstKey = '';
 
-      log('mstkey :${AppConstants.mstKey}');
-      log('detkey :${AppConstants.detKey}');
-      log('date : ${AppConstants.date}');
-      log('baseUrl : ${AppConstants.baseUrl}');
-    }
+    //   log('mstkey :${AppConstants.mstKey}');
+    //   log('detkey :${AppConstants.detKey}');
+    //   log('date : ${AppConstants.date}');
+    //   log('baseUrl : ${AppConstants.baseUrl}');
+    // }
   }
 }
 

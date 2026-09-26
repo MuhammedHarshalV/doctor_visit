@@ -10,13 +10,14 @@ import 'package:doctor_visit/view/widgets/common_appbar.dart';
 import 'package:doctor_visit/view/screens/progress_screen/widgets/expense_history_card.dart';
 import 'package:doctor_visit/view/screens/progress_screen/widgets/expense_add_card.dart';
 import 'package:doctor_visit/view/screens/progress_screen/widgets/today_expense_card.dart';
+import 'package:doctor_visit/view/widgets/common_title_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 class ProgressScreen extends ConsumerWidget {
-  const ProgressScreen({super.key});
+  ProgressScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -50,16 +51,16 @@ class ProgressScreen extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                     Text(
+                    Text(
                       "Progress",
-                      style:  AppTextStyles.anekMalayalam(
+                      style: AppTextStyles.anekMalayalam(
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                     Text(
+                    Text(
                       "Today's visit summary",
-                      style:  AppTextStyles.anekMalayalam(color: Colors.grey),
+                      style: AppTextStyles.anekMalayalam(color: Colors.grey),
                     ),
                     if (AppConstants.isProAssign == true) SizedBox(height: 16),
                     if (AppConstants.isProAssign == true)
@@ -84,7 +85,7 @@ class ProgressScreen extends ConsumerWidget {
                               children: [
                                 Text(
                                   'Assign Doctors',
-                                  style:  AppTextStyles.anekMalayalam(
+                                  style: AppTextStyles.anekMalayalam(
                                     color: AppColors.appPrimaryRed,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -149,7 +150,125 @@ class ProgressScreen extends ConsumerWidget {
                         ),
                       ],
                     ),
+                    if (AppConstants.isHiTech == false)
+                      Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: AppColors.appGrey),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            children: [
+                              const SizedBox(height: 10),
 
+                              CommonTitleText(title: "Start km"),
+
+                              TextFormField(
+                                controller:
+                                    progressController.startKmController,
+                                keyboardType:
+                                    const TextInputType.numberWithOptions(
+                                      decimal: true,
+                                    ),
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                    RegExp(r'^\d*\.?\d{0,2}'),
+                                  ),
+                                ],
+                                // maxLines: 4,
+                                //maxLength: 1000,
+                                decoration: _inputDecoration('Enter km'),
+                              ),
+
+                              const SizedBox(height: 10),
+
+                              CommonTitleText(title: "End km"),
+
+                              TextFormField(
+                                controller: progressController.endKmController,
+                                keyboardType:
+                                    const TextInputType.numberWithOptions(
+                                      decimal: true,
+                                    ),
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                    RegExp(r'^\d*\.?\d{0,2}'),
+                                  ),
+                                ],
+                                // maxLines: 4,
+                                //maxLength: 1000,
+                                decoration: _inputDecoration('Enter km'),
+                              ),
+
+                              const SizedBox(height: 10),
+                              InkWell(
+                                splashColor: Colors.transparent,
+                                highlightColor: Colors.transparent,
+                                focusColor: Colors.transparent,
+                                hoverColor: Colors.transparent,
+                                onTap:
+                                    progressController
+                                            .startKmController
+                                            .text
+                                            .isEmpty &&
+                                        progressController
+                                            .endKmController
+                                            .text
+                                            .isEmpty
+                                    ? () {}
+                                    : () async {
+                                        await progressController.kmEnterApi(
+                                          startKm: num.tryParse(
+                                            progressController
+                                                .startKmController
+                                                .text,
+                                          ),
+                                          endKm: num.tryParse(
+                                            progressController
+                                                .endKmController
+                                                .text,
+                                          ),
+                                          context: context,
+                                        );
+                                      },
+                                child: Container(
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.appPrimaryRed,
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  child: Center(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10),
+                                      child: progressState.isKmStart
+                                          ? SizedBox(
+                                              height: 20,
+                                              width: 20,
+                                              child: Center(
+                                                child:
+                                                    CircularProgressIndicator(
+                                                      color: AppColors.appWhite,
+                                                    ),
+                                              ),
+                                            )
+                                          : Text(
+                                              'Submit',
+                                              style:
+                                                  AppTextStyles.anekMalayalam(
+                                                    color: AppColors.appWhite,
+                                                    fontWeight: FontWeight.w700,
+                                                    fontSize: 17,
+                                                  ),
+                                            ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     const SizedBox(height: 32),
                     TotalSpentCard(),
                     const SizedBox(height: 16),
@@ -163,6 +282,19 @@ class ProgressScreen extends ConsumerWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  InputDecoration _inputDecoration(String hint) {
+    return InputDecoration(
+      hintText: hint,
+      hintStyle: AppTextStyles.anekMalayalam(),
+      filled: true,
+      fillColor: AppColors.appTextFieldRed,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: BorderSide.none,
       ),
     );
   }

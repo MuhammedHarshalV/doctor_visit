@@ -26,7 +26,7 @@ import 'package:intl/intl.dart';
 
 class VisitCompletionScreen extends ConsumerWidget {
   final int index;
-  const VisitCompletionScreen({super.key, required this.index});
+  VisitCompletionScreen({super.key, required this.index});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -137,7 +137,7 @@ class VisitCompletionScreen extends ConsumerWidget {
                                         endLocation: null,
                                         endTime: null,
                                         feedback: null,
-                                        detKey: null,
+
                                         workstatus: "0",
                                       );
                                   if (doctorVisitState.response.isEmpty) {
@@ -396,7 +396,7 @@ class VisitCompletionScreen extends ConsumerWidget {
                           ),
                         ),
 
-                      const SizedBox(height: 10),
+                      if (AppConstants.isHiTech) const SizedBox(height: 10),
 
                       /// TIME PICKER
                       CommonTitleText(title: "Start Time *"),
@@ -653,12 +653,13 @@ class VisitCompletionScreen extends ConsumerWidget {
                                                         feedback: visitState
                                                             .feedbackController
                                                             .text,
-                                                        detKey:
-                                                            doctorID.drIsGoing ==
-                                                                true
-                                                            ? AppConstants
-                                                                  .detKey
-                                                            : null,
+                                                        // detKey:
+                                                        //     doctorID.drIsGoing ==
+                                                        //         true
+                                                        //     ? AppConstants
+                                                        //           .detKey
+                                                        //     : null,
+
                                                         // AppConstants.detKey,
                                                         workstatus: '2',
                                                         base64Image: null,
@@ -1059,7 +1060,8 @@ class VisitCompletionScreen extends ConsumerWidget {
                                               feedback: doctorVisitState
                                                   .feedbackController
                                                   .text,
-                                              detKey: AppConstants.detKey,
+
+                                              // detKey: AppConstants.detKey,
                                               workstatus: '1',
                                               base64Image:
                                                   doctorVisitState.base64toApi,

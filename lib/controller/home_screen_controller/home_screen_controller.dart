@@ -31,7 +31,7 @@ class HomeScreenNotifier extends StateNotifier<HomeScreenState> {
   //get doctors visit list api
 
   Future<void> getDoctorsVisit() async {
-    if (AppConstants.mstKey.isNotEmpty) {
+    if (AppConstants.mstKey.isNotEmpty && AppConstants.mstKey != '0') {
       state = state.copyWith(isOn: true);
     }
     try {
@@ -80,26 +80,21 @@ class HomeScreenNotifier extends StateNotifier<HomeScreenState> {
       if (response.status == true) {
         state = state.copyWith(workRetatedData: response.data);
 
-        if (AppConstants.mstKey.isEmpty) {
-          await prefs.setString(
-            'mst_key',
-            response.data?.proMstKey?.toString() ?? '',
-          );
-          await prefs.setString(
-            'det_key',
-            response.data?.proDetKey?.toString() ?? '',
-          );
-          await prefs.setString('Today_date', currentDate);
-          AppConstants.mstKey = response.data?.proMstKey?.toString() ?? '';
-          AppConstants.detKey = response.data?.proDetKey?.toString() ?? '';
-          AppConstants.date = currentDate;
-          log('date : ${AppConstants.date}');
-          log('mstkey :${AppConstants.mstKey}');
-          log('detkey :${AppConstants.detKey}');
-        }
+        await prefs.setString(
+          'mst_key',
+          response.data?.proMstKey?.toString() ?? '',
+        );
+
+        await prefs.setString('Today_date', currentDate);
+        AppConstants.mstKey = response.data?.proMstKey?.toString() ?? '';
+
+        AppConstants.date = currentDate;
+        log('date : ${AppConstants.date}');
+        log('mstkey :${AppConstants.mstKey}');
+        log('detkey :${AppConstants.detKey}');
 
         log('Stored mstkey : ${AppConstants.mstKey}');
-        log('Stored detKey : ${AppConstants.detKey}');
+
         log('stored date : ${AppConstants.date}');
       }
       log('work update details : $response');

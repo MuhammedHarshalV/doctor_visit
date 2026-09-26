@@ -18,6 +18,8 @@ class LoginResponseModel {
   int? yrId;
   bool? proAssignDr;
   bool? isPro2;
+  int? mstKey;
+  int? detKey;
 
   LoginResponseModel({
     this.success,
@@ -27,6 +29,8 @@ class LoginResponseModel {
     this.yrId,
     this.proAssignDr,
     this.isPro2,
+    this.mstKey,
+    this.detKey,
   });
 
   factory LoginResponseModel.fromJson(Map<String, dynamic> json) =>
@@ -38,6 +42,8 @@ class LoginResponseModel {
         yrId: json["YrId"],
         proAssignDr: json["ProAssignDr"],
         isPro2: json["isPro2"],
+        mstKey: json["mstKey"],
+        detKey: json["detKey"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -48,5 +54,7 @@ class LoginResponseModel {
     "YrId": yrId,
     "ProAssignDr": proAssignDr,
     "isPro2": isPro2,
+    "mstKey": mstKey,
+    "detKey": detKey,
   };
 }

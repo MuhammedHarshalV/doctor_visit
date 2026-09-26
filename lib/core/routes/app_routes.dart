@@ -77,7 +77,7 @@ final GoRouter router = GoRouter(
       path: AppRouteNames.progressScreen.route,
       name: AppRouteNames.progressScreen.name,
       builder: (BuildContext context, GoRouterState state) {
-        return const ProgressScreen();
+        return ProgressScreen();
       },
     ),
     GoRoute(

@@ -55,7 +55,7 @@ class CustomInputField extends StatelessWidget {
             contentPadding: const EdgeInsets.symmetric(vertical: 16),
           ),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 10),
       ],
     );
   }

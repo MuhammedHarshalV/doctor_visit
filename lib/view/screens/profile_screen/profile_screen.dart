@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:doctor_visit/controller/profile_details_controller/profile_details_controller.dart';
@@ -130,6 +131,9 @@ class ProfileScreen extends ConsumerWidget {
                                       },
 
                                       errorWidget: (context, url, error) {
+                                        log('IMAGE URL: $url');
+                                        log('IMAGE ERROR: $error');
+
                                         return Center(
                                           child: Text(
                                             profileState

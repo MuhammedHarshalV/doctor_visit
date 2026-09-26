@@ -46,7 +46,7 @@ class GetApiServices {
       log("===================================");
 
       final response = await dio.get(
-        "${AppConstants.baseUrl}$url",
+        "${AppConstants.baseUrl.trim()}$url",
         data: body,
         queryParameters: queryParams,
         options: Options(
@@ -161,7 +161,7 @@ class PostApiServices {
       log("===================================");
 
       final response = await dio.post(
-        "${AppConstants.baseUrl}$url",
+        "${AppConstants.baseUrl.trim()}$url",
         data: body,
         queryParameters: queryParams,
         options: Options(

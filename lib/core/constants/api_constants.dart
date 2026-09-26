@@ -18,4 +18,5 @@ class ApiConstants {
   static String weeklyAssignedDoctorHistory = 'ProDctrList';
   static String deleteAssignedDoctor = 'DeleteAssignedDoctor';
   static String expenseKey = '/api/LabInvoiceSaveUpdate';
+  static String getKilometer = 'getKM/';
 }

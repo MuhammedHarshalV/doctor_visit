@@ -11,7 +11,7 @@ class PostWorkStartGoingApi {
     required String date,
     required String? startTime,
     required String? endTime,
-    required String? detKey,
+
     required String doctorID,
     required String? feedback,
     required String? workstatus,
@@ -32,9 +32,6 @@ class PostWorkStartGoingApi {
 
       proDet["ProDet_DrId"] = doctorID;
 
-      if (detKey != null) {
-        proDet["ProDet_Key"] = detKey;
-      }
       if (startLocation != null) {
         proDet["ProDet_StartLoc"] = startLocation;
       }
@@ -57,11 +54,11 @@ class PostWorkStartGoingApi {
       final response = await PostApiServices.callApi(
         body: {
           "IsUpdate": true,
-          "ProMst_Key": AppConstants.mstKey,
+
           "ProMst_ProId": AppConstants.employeeID,
           "ProMst_Date": date,
           "ProMst_YrId": AppConstants.yearID,
-
+       
           "proDet": [proDet],
         },
         url: "${ApiConstants.baseUrl}${ApiConstants.workStartCompletevisit}",

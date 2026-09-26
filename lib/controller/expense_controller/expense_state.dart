@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 
 class ExpenseState {
   final bool isEditLoading;
+  final bool isKmStart;
+
   final num totalExpense;
   final Uint8List base64Image;
   final int weeklyListIndex;
@@ -33,6 +35,7 @@ class ExpenseState {
     this.weekEotalExpense = 0,
     this.weeklyListIndex = 0,
     this.isEditLoading = false,
+    this.isKmStart = false,
     this.progressValue = 0,
     this.totalExpense = 0,
     this.expenseKeyList = const [],
@@ -52,6 +55,7 @@ class ExpenseState {
 
   ExpenseState copyWith({
     String? base64toApi,
+    bool? isKmStart,
     TextEditingController? amountController,
     TextEditingController? descriptionController,
     Uint8List? base64Image,
@@ -79,6 +83,7 @@ class ExpenseState {
       weekEotalExpense: weekEotalExpense ?? this.weekEotalExpense,
       descriptionController:
           descriptionController ?? this.descriptionController,
+      isKmStart: isKmStart ?? this.isKmStart,
       amountController: amountController ?? this.amountController,
       progressValue: progressValue ?? this.progressValue,
       totalExpense: totalExpense ?? this.totalExpense,
