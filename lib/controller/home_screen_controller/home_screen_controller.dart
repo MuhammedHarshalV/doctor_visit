@@ -7,6 +7,7 @@ import 'package:doctor_visit/core/constants/app_constants.dart';
 
 import 'package:doctor_visit/model/doctos_assign_get/doctors_assign_response_model.dart';
 import 'package:doctor_visit/model/work_completion_and_start_duty/work_completion_and_start_duty_response_model.dart';
+import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -57,6 +58,7 @@ class HomeScreenNotifier extends StateNotifier<HomeScreenState> {
 
   //work start and off api
   Future<void> startAndOffDuty({
+    required BuildContext? context,
     required String date,
     String? starttime,
     String? startLocation,
@@ -68,6 +70,7 @@ class HomeScreenNotifier extends StateNotifier<HomeScreenState> {
       String currentDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
       final WorkCompletionAndStartDutyResponseModel? response =
           await PostWorkStartApi.postWorkStartApi(
+            context:context,
             date: date,
             startTime: starttime,
             startLocation: startLocation,

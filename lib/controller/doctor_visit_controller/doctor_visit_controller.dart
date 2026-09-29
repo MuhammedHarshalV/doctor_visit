@@ -32,6 +32,7 @@ class VisitController extends StateNotifier<DoctorVisitCompletion> {
   Future<void> isGoingAndCompletionLocationSend({
     bool? isStart = false,
     bool? isCompleted = false,
+    required BuildContext? context,
     required String doctorID,
     required String date,
     required String? startLocation,
@@ -41,8 +42,7 @@ class VisitController extends StateNotifier<DoctorVisitCompletion> {
     required String? feedback,
 
     required String? workstatus,
-    required String? base64Image,
-    
+    required String? selfie,
   }) async {
     try {
       if (isStart == true) state = state.copyWith(isLoading: true);
@@ -50,17 +50,16 @@ class VisitController extends StateNotifier<DoctorVisitCompletion> {
 
       final WorkCompletionAndStartDutyResponseModel response =
           await PostWorkStartGoingApi.postWorkStartGoingApi(
-         
             date: date,
             startTime: startTime,
             endTime: endTime,
-
+            context: context,
             doctorID: doctorID,
             feedback: feedback,
             workstatus: workstatus,
             startLocation: startLocation,
             endLocation: endLocation,
-            base64Image: base64Image,
+            selfie: selfie,
           );
       if (response.status == true) {
         final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -165,10 +164,6 @@ class VisitController extends StateNotifier<DoctorVisitCompletion> {
 
   void setArrivedTime(TimeOfDay? time) {
     state = state.copyWith(arrivedTime: time);
-  }
-
-  void updateImage(Uint8List? image) {
-    state = state.copyWith(base64Image: image);
   }
 
   void base64ToApiUpdate(String imageString) {

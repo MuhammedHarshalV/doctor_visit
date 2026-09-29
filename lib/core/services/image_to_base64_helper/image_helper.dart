@@ -4,6 +4,8 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:doctor_visit/core/theme/colors/appcolors.dart';
+import 'package:doctor_visit/main.dart';
+import 'package:doctor_visit/view/screens/visit_completion_screen/gps_camera_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -61,7 +63,7 @@ class ImageHelper {
               children: [
                 ListTile(
                   leading: const Icon(Icons.camera_alt),
-                  title: const Text('Camera',),
+                  title: const Text('Camera'),
                   onTap: () async {
                     final image = await picker.pickImage(
                       source: ImageSource.camera,
@@ -94,6 +96,26 @@ class ImageHelper {
           );
         },
       );
+    }
+  }
+
+  static Future<XFile?> pickSelfieWithDetails({
+    required BuildContext context,
+  }) async {
+    try {
+      final File? image = await Navigator.push<File>(
+        context,
+        MaterialPageRoute(builder: (_) => const GpsCameraScreen()),
+      );
+
+      if (image == null) {
+        return null;
+      }
+
+      return XFile(image.path);
+    } catch (e) {
+      debugPrint('Selfie capture error: $e');
+      return null;
     }
   }
 }

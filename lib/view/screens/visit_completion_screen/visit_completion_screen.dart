@@ -11,6 +11,7 @@ import 'package:doctor_visit/core/services/location_services/location_services.d
 import 'package:doctor_visit/core/theme/app_texts/app_texts.dart';
 import 'package:doctor_visit/core/theme/colors/appcolors.dart';
 import 'package:doctor_visit/view/screens/home_screen/widget/alert_dialog.dart';
+import 'package:doctor_visit/view/screens/visit_completion_screen/image_by_details.dart';
 import 'package:doctor_visit/view/screens/visit_completion_screen/image_container.dart';
 
 import 'package:doctor_visit/view/widgets/common_title_text.dart';
@@ -79,16 +80,6 @@ class VisitCompletionScreen extends ConsumerWidget {
                               true
                           ? () {}
                           : () async {
-                              bool isConnected =
-                                  await checkInternetConnection();
-                              log("1========${isConnected.toString()}");
-
-                              if (isConnected) {
-                                log("Internet ON");
-                              } else {
-                                log("2========${isConnected.toString()}");
-                                log("Internet OFF");
-                              }
                               bool isAnyStarted = homeScreenState.doctorsListAPI
                                   .any((element) => element.drIsGoing == true);
 
@@ -100,7 +91,6 @@ class VisitCompletionScreen extends ConsumerWidget {
                                               .doctorsListAPI[index]
                                               .drIsGoing ==
                                           false) &&
-                                  isConnected == true &&
                                   isAnyStarted == false) {
                                 try {
                                   final String doctorID = homeScreenState
@@ -129,7 +119,7 @@ class VisitCompletionScreen extends ConsumerWidget {
                                   await doctorVisitController
                                       .isGoingAndCompletionLocationSend(
                                         isStart: true,
-                                        base64Image: null,
+                                        selfie: null,
                                         doctorID: doctorID,
                                         date: currentDate,
                                         startLocation: mapUrl,
@@ -137,7 +127,7 @@ class VisitCompletionScreen extends ConsumerWidget {
                                         endLocation: null,
                                         endTime: null,
                                         feedback: null,
-
+                                        context: context,
                                         workstatus: "0",
                                       );
                                   if (doctorVisitState.response.isEmpty) {
@@ -184,39 +174,6 @@ class VisitCompletionScreen extends ConsumerWidget {
                                               .doctorsListAPI[index]
                                               .drIsGoing ==
                                           false) &&
-                                  isConnected == false) {
-                                if (context.mounted) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      // padding: EdgeInsets.all(10),
-                                      content: Text(
-                                        "No internet connection. Please try again when the network is available.",
-                                        style: AppTextStyles.anekMalayalam(
-                                          color: AppColors.appBlack,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      backgroundColor: AppColors.appWhite,
-                                      behavior: SnackBarBehavior.floating,
-                                      margin: EdgeInsets.only(
-                                        bottom:
-                                            MediaQuery.of(context).size.height -
-                                            120,
-                                        left: 16,
-                                        right: 16,
-                                      ),
-                                    ),
-                                  );
-                                }
-                              } else if ((homeScreenState
-                                              .doctorsListAPI[index]
-                                              .drIsGoing ==
-                                          null ||
-                                      homeScreenState
-                                              .doctorsListAPI[index]
-                                              .drIsGoing ==
-                                          false) &&
-                                  isConnected == true &&
                                   isAnyStarted == true) {
                                 if (context.mounted) {
                                   showDialog(
@@ -280,49 +237,22 @@ class VisitCompletionScreen extends ConsumerWidget {
                           //  Step 1 — Pick image
 
                           final XFile? image = AppConstants.isHiTech == false
-                              ? await ImageHelper.pickImage(
+                              ? await ImageHelper.pickSelfieWithDetails(
                                   context: context,
-                                  isSelfie: true,
                                 )
                               : await ImageHelperBytes.pickImage(
                                   context: context,
                                 );
 
-                          if (AppConstants.isHiTech) {
-                            if (image == null) return;
-                            doctorVisitController.setImagePath(image.path);
-                          } else {
-                            if (image == null) return;
-
-                            //  Step 2 — Convert to base64
-                            final String? base64String =
-                                await ImageHelper.imageToBase64(image.path);
-                            if (base64String == null) return;
-
-                            //  Step 3 — Convert to bytes for display
-                            final Uint8List? bytes = ImageHelper.base64ToBytes(
-                              base64String,
-                            );
-                            if (bytes == null) return;
-
-                            //  Step 4 — Save to controller
-                            doctorVisitController.updateImage(bytes);
-
-                            log(
-                              "Image ready. Base64 KB: ${(base64String.length / 1024).toStringAsFixed(1)}",
-                            );
-                            doctorVisitController.base64ToApiUpdate(
-                              base64String,
-                            );
-                          }
-
-                          // log('harshal image : $base64String');
+                          if (image == null) return;
+                          doctorVisitController.setImagePath(image.path);
                         },
-                        child: ImageContainerClarity(
-                          state: doctorVisitState,
-                          controller: doctorVisitController,
-                          imagePurpose: 'Selfie',
-                        ),
+                        child: ImageByDetails(),
+                        // ImageContainerClarity(
+                        //   state: doctorVisitState,
+                        //   controller: doctorVisitController,
+                        //   imagePurpose: 'Selfie',
+                        // ),
                       ),
 
                       if (AppConstants.isHiTech) const SizedBox(height: 10),
@@ -612,110 +542,83 @@ class VisitCompletionScreen extends ConsumerWidget {
                                                     ),
                                               );
                                             } else {
-                                              bool isConnected =
-                                                  await checkInternetConnection();
-                                              log(
-                                                "1========${isConnected.toString()}",
-                                              );
+                                              try {
+                                                final doctorID = homeScreenState
+                                                    .doctorsListAPI[index];
 
-                                              if (isConnected) {
-                                                log("Internet ON");
-                                              } else {
-                                                log(
-                                                  "2========${isConnected.toString()}",
-                                                );
-                                                log("Internet OFF");
-                                              }
+                                                String currentDate = DateFormat(
+                                                  'yyyy-MM-dd',
+                                                ).format(DateTime.now());
 
-                                              if (isConnected == true) {
-                                                try {
-                                                  final doctorID =
-                                                      homeScreenState
-                                                          .doctorsListAPI[index];
+                                                log("Date: $currentDate");
 
-                                                  String currentDate =
-                                                      DateFormat(
-                                                        'yyyy-MM-dd',
-                                                      ).format(DateTime.now());
+                                                visitController
+                                                    .isGoingAndCompletionLocationSend(
+                                                      context: context,
+                                                      isCompleted: true,
+                                                      doctorID: doctorID.drId
+                                                          .toString(),
+                                                      date: currentDate,
+                                                      startLocation: null,
+                                                      startTime: null,
+                                                      endLocation: null,
+                                                      endTime: null,
+                                                      feedback: visitState
+                                                          .feedbackController
+                                                          .text,
 
-                                                  log("Date: $currentDate");
-
-                                                  visitController
-                                                      .isGoingAndCompletionLocationSend(
-                                                        isCompleted: true,
-                                                        doctorID: doctorID.drId
-                                                            .toString(),
-                                                        date: currentDate,
-                                                        startLocation: null,
-                                                        startTime: null,
-                                                        endLocation: null,
-                                                        endTime: null,
-                                                        feedback: visitState
-                                                            .feedbackController
-                                                            .text,
-                                                        // detKey:
-                                                        //     doctorID.drIsGoing ==
-                                                        //         true
-                                                        //     ? AppConstants
-                                                        //           .detKey
-                                                        //     : null,
-
-                                                        // AppConstants.detKey,
-                                                        workstatus: '2',
-                                                        base64Image: null,
-                                                      );
-
-                                                  await homeScreenController
-                                                      .getDoctorsVisit();
-                                                  visitController
-                                                      .updateResponse('');
-                                                  visitState.feedbackController
-                                                      .clear();
-                                                  visitState.placeController
-                                                      .clear();
-
-                                                  // ignore: use_build_context_synchronously
-                                                  context.pop();
-                                                  // ignore: use_build_context_synchronously
-                                                  context.pop();
-                                                } catch (e) {
-                                                  log(
-                                                    "harshal==================${e.toString()}",
-                                                  );
-
-                                                  if (context.mounted) {
-                                                    ScaffoldMessenger.of(
-                                                      context,
-                                                    ).showSnackBar(
-                                                      SnackBar(
-                                                        content: Text(
-                                                          e.toString(),
-                                                          style:
-                                                              AppTextStyles.anekMalayalam(
-                                                                color: AppColors
-                                                                    .appWhite,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                              ),
-                                                        ),
-                                                        backgroundColor:
-                                                            Colors.blue,
-                                                        behavior:
-                                                            SnackBarBehavior
-                                                                .floating,
-                                                        margin: EdgeInsets.only(
-                                                          bottom:
-                                                              MediaQuery.of(
-                                                                context,
-                                                              ).size.height -
-                                                              120,
-                                                          left: 16,
-                                                          right: 16,
-                                                        ),
-                                                      ),
+                                                      workstatus: '2',
+                                                      isStart: null,
+                                                      selfie:
+                                                          visitState.imagePath,
                                                     );
-                                                  }
+
+                                                await homeScreenController
+                                                    .getDoctorsVisit();
+                                                visitController.updateResponse(
+                                                  '',
+                                                );
+                                                visitState.feedbackController
+                                                    .clear();
+                                                visitState.placeController
+                                                    .clear();
+
+                                                // ignore: use_build_context_synchronously
+                                                context.pop();
+                                                // ignore: use_build_context_synchronously
+                                                context.pop();
+                                              } catch (e) {
+                                                if (context.mounted) {
+                                                  ScaffoldMessenger.of(
+                                                    context,
+                                                  ).showSnackBar(
+                                                    SnackBar(
+                                                      content: Text(
+                                                        e.toString(),
+                                                        style:
+                                                            AppTextStyles.anekMalayalam(
+                                                              color: AppColors
+                                                                  .appWhite,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                      ),
+                                                      backgroundColor:
+                                                          Colors.blue,
+                                                      behavior: SnackBarBehavior
+                                                          .floating,
+                                                      margin: EdgeInsets.only(
+                                                        bottom:
+                                                            MediaQuery.of(
+                                                              context,
+                                                            ).size.height -
+                                                            120,
+                                                        left: 16,
+                                                        right: 16,
+                                                      ),
+                                                    ),
+                                                  );
                                                 }
                                               }
                                             }
@@ -728,7 +631,11 @@ class VisitCompletionScreen extends ConsumerWidget {
                                                   BorderRadius.circular(6),
                                             ),
                                           ),
-                                          child: visitState.isLoading == true
+                                          child:
+                                              ref
+                                                      .read(doctorVisitProvider)
+                                                      .isLoading ==
+                                                  true
                                               ? Text(
                                                   "Loading",
                                                   style:
@@ -976,140 +883,133 @@ class VisitCompletionScreen extends ConsumerWidget {
                               homeScreenState.doctorsListAPI[index].drIsGoing ==
                                   true
                               ? () async {
-                                  bool isConnected =
-                                      await checkInternetConnection();
-                                  log("1========${isConnected.toString()}");
+                                  // bool isConnected =
+                                  //     await checkInternetConnection();
+                                  // log("1========${isConnected.toString()}");
 
-                                  if (isConnected) {
-                                    log("Internet ON");
-                                  } else {
-                                    log("2========${isConnected.toString()}");
-                                    log("Internet OFF");
-                                  }
+                                  // if (isConnected) {
+                                  //   log("Internet ON");
+                                  // } else {
+                                  //   log("2========${isConnected.toString()}");
+                                  //   log("Internet OFF");
+                                  // }
 
-                                  if (isConnected == true) {
-                                    try {
-                                      final String doctorID = homeScreenState
-                                          .doctorsListAPI[index]
-                                          .drId
-                                          .toString();
+                                  //if (isConnected == true) {
+                                  try {
+                                    final String doctorID = homeScreenState
+                                        .doctorsListAPI[index]
+                                        .drId
+                                        .toString();
 
-                                      Position position =
-                                          await getCurrentLocation();
-                                      String currentTime = DateTime.now()
-                                          .toIso8601String();
-                                      String currentDate = DateFormat(
-                                        'yyyy-MM-dd',
-                                      ).format(DateTime.now());
-                                      String mapUrl =
-                                          "https://www.google.com/maps?q=${position.latitude},${position.longitude}";
+                                    Position position =
+                                        await getCurrentLocation();
+                                    String currentTime = DateTime.now()
+                                        .toIso8601String();
+                                    String currentDate = DateFormat(
+                                      'yyyy-MM-dd',
+                                    ).format(DateTime.now());
+                                    String mapUrl =
+                                        "https://www.google.com/maps?q=${position.latitude},${position.longitude}";
 
-                                      log("Time: $currentTime");
-                                      log("Date: $currentDate");
-                                      log("Lat: ${position.latitude}");
-                                      log("Lng: ${position.longitude}");
-                                      log(mapUrl);
-                                      final missingFields = <String>[];
+                                    log("Time: $currentTime");
+                                    log("Date: $currentDate");
+                                    log("Lat: ${position.latitude}");
+                                    log("Lng: ${position.longitude}");
+                                    log(mapUrl);
+                                    final missingFields = <String>[];
 
-                                      if (doctorVisitState.startTime == null) {
-                                        missingFields.add('Start time');
-                                      }
-                                      if (doctorVisitState.endTime == null) {
-                                        missingFields.add('End time');
-                                      }
-                                      if (doctorVisitState
-                                          .base64Image
-                                          .isEmpty) {
-                                        missingFields.add('Selfie');
-                                      }
-                                      if (missingFields.isNotEmpty) {
-                                        showDialog(
-                                          // ignore: use_build_context_synchronously
-                                          context: context,
-                                          builder: (context) => CommonAlertDialog(
-                                            message:
-                                                'Please provide: ${missingFields.join(', ')}',
-                                          ),
-                                        );
-
-                                        // All fields are available
-                                        // Call API here
-                                      } else {
-                                        await doctorVisitController
-                                            .isGoingAndCompletionLocationSend(
-                                              isCompleted: true,
-                                              doctorID: doctorID,
-                                              date: currentDate,
-                                              startLocation: mapUrl,
-                                              startTime:
-                                                  doctorVisitState.startTime !=
-                                                      null
-                                                  ? formatTimeOfDayToApi(
-                                                      doctorVisitState
-                                                          .startTime!,
-                                                    )
-                                                  : null,
-                                              endLocation: mapUrl,
-                                              endTime:
-                                                  doctorVisitState.endTime !=
-                                                      null
-                                                  ? formatTimeOfDayToApi(
-                                                      doctorVisitState.endTime!,
-                                                    )
-                                                  : null,
-                                              feedback: doctorVisitState
-                                                  .feedbackController
-                                                  .text,
-
-                                              // detKey: AppConstants.detKey,
-                                              workstatus: '1',
-                                              base64Image:
-                                                  doctorVisitState.base64toApi,
-                                            );
+                                    if (doctorVisitState.startTime == null) {
+                                      missingFields.add('Start time');
+                                    }
+                                    if (doctorVisitState.endTime == null) {
+                                      missingFields.add('End time');
+                                    }
+                                    if (doctorVisitState.imagePath.isEmpty) {
+                                      missingFields.add('Selfie');
+                                    }
+                                    if (missingFields.isNotEmpty) {
+                                      showDialog(
                                         // ignore: use_build_context_synchronously
-                                        context.pop();
-                                        await homeScreenController
-                                            .getDoctorsVisit();
-                                        doctorVisitController.updateResponse(
-                                          '',
-                                        );
-                                        doctorVisitState.feedbackController
-                                            .clear();
-                                      }
-                                    } catch (e) {
-                                      log(
-                                        "harshal==================${e.toString()}",
+                                        context: context,
+                                        builder: (context) => CommonAlertDialog(
+                                          message:
+                                              'Please provide: ${missingFields.join(', ')}',
+                                        ),
                                       );
 
-                                      if (context.mounted) {
-                                        ScaffoldMessenger.of(
-                                          context,
-                                        ).showSnackBar(
-                                          SnackBar(
-                                            content: Text(
-                                              e.toString(),
-                                              style:
-                                                  AppTextStyles.anekMalayalam(
-                                                    color: AppColors.appWhite,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                            ),
-                                            backgroundColor: Colors.blue,
-                                            behavior: SnackBarBehavior.floating,
-                                            margin: EdgeInsets.only(
-                                              bottom:
-                                                  MediaQuery.of(
-                                                    context,
-                                                  ).size.height -
-                                                  120,
-                                              left: 16,
-                                              right: 16,
+                                      // All fields are available
+                                      // Call API here
+                                    } else {
+                                      await doctorVisitController
+                                          .isGoingAndCompletionLocationSend(
+                                            context: context,
+                                            isCompleted: true,
+                                            doctorID: doctorID,
+                                            date: currentDate,
+                                            startLocation: mapUrl,
+                                            startTime:
+                                                doctorVisitState.startTime !=
+                                                    null
+                                                ? formatTimeOfDayToApi(
+                                                    doctorVisitState.startTime!,
+                                                  )
+                                                : null,
+                                            endLocation: mapUrl,
+                                            endTime:
+                                                doctorVisitState.endTime != null
+                                                ? formatTimeOfDayToApi(
+                                                    doctorVisitState.endTime!,
+                                                  )
+                                                : null,
+                                            feedback: doctorVisitState
+                                                .feedbackController
+                                                .text,
+
+                                            // detKey: AppConstants.detKey,
+                                            workstatus: '1',
+                                            selfie: doctorVisitState.imagePath,
+                                          );
+                                      // ignore: use_build_context_synchronously
+                                      context.pop();
+                                      await homeScreenController
+                                          .getDoctorsVisit();
+                                      doctorVisitController.updateResponse('');
+                                      doctorVisitState.feedbackController
+                                          .clear();
+                                    }
+                                  } catch (e) {
+                                    log(
+                                      "harshal==================${e.toString()}",
+                                    );
+
+                                    if (context.mounted) {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            e.toString(),
+                                            style: AppTextStyles.anekMalayalam(
+                                              color: AppColors.appWhite,
+                                              fontWeight: FontWeight.bold,
                                             ),
                                           ),
-                                        );
-                                      }
+                                          backgroundColor: Colors.blue,
+                                          behavior: SnackBarBehavior.floating,
+                                          margin: EdgeInsets.only(
+                                            bottom:
+                                                MediaQuery.of(
+                                                  context,
+                                                ).size.height -
+                                                120,
+                                            left: 16,
+                                            right: 16,
+                                          ),
+                                        ),
+                                      );
                                     }
                                   }
+                                  //
                                 }
                               : () {},
                           child: doctorVisitState.isComplete == true

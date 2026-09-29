@@ -8,7 +8,7 @@ class DoctorVisitCompletion {
 
   final String base64toApi;
   final String imagePath;
-  final Uint8List base64Image;
+
   //final String fileImage;
   final bool isLoading;
   final bool isComplete;
@@ -40,13 +40,13 @@ class DoctorVisitCompletion {
     this.isCompleted = false,
     required this.feedbackController,
     required this.placeController,
-  }) : base64Image = base64Image ?? Uint8List(0);
+  });
 
   DoctorVisitCompletion copyWith({
     String? base64toApi,
     TextEditingController? feedbackController,
     TextEditingController? placeController,
-    Uint8List? base64Image,
+
     // String? fileImage,
     bool? isLoading,
     bool? isComplete,
@@ -63,7 +63,7 @@ class DoctorVisitCompletion {
     return DoctorVisitCompletion(
       base64toApi: base64toApi ?? this.base64toApi,
       feedbackController: feedbackController ?? this.feedbackController,
-      base64Image: base64Image ?? this.base64Image,
+
       // fileImage: fileImage ?? this.fileImage,
       startTime: startTime == _marker
           ? this.startTime

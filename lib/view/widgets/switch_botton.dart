@@ -25,20 +25,13 @@ class CustomSwitchButton extends ConsumerWidget {
         //2 network of location off  yes
         //3 network on location on   yes
         //4 network of location on
-
-        bool isConnected = await checkInternetConnection();
-        log("1========${isConnected.toString()}");
-
-        if (isConnected) {
-          log("Internet ON");
-        } else {
-          log("2========${isConnected.toString()}");
-          log("Internet OFF");
+        final bool hasInternet = await checkInternetConnection();
+        if (hasInternet == false) {
+          return;
         }
 
-        if (homeState.isOn == false && isConnected == true) {
+        if (homeState.isOn == false) {
           try {
-            log(homeState.isOn.toString());
             homeController.setIsOn(true);
             Position position = await getCurrentLocation();
             String currentTime = DateTime.now().toIso8601String();
@@ -54,31 +47,11 @@ class CustomSwitchButton extends ConsumerWidget {
             log("Lng: ${position.longitude}");
             log(mapUrl);
             homeController.startAndOffDuty(
+              context: context,
               date: currentDate,
               starttime: currentTime,
               startLocation: mapUrl,
             );
-            // if (context.mounted) {
-            //   ScaffoldMessenger.of(context).showSnackBar(
-            //     SnackBar(
-            //       content: Text(
-            //         "Location sent at ${currentTime.hour}: ${currentTime.minute}  $mapUrl",
-            //         style: TextStyle(
-            //           color: AppColors.appWhite,
-            //           fontWeight: FontWeight.bold,
-            //         ),
-            //       ),
-            //       backgroundColor: Colors.green,
-            //       behavior: SnackBarBehavior.floating,
-            //       margin: EdgeInsets.only(
-            //         bottom: MediaQuery.of(context).size.height - 120,
-            //         left: 16,
-            //         right: 16,
-            //       ),
-            //     ),
-            //   );
-            // }
-            //  Example: send to API / show / store
           } catch (e) {
             log("harshal==================${e.toString()}");
             homeController.setIsOn(false);
@@ -103,29 +76,7 @@ class CustomSwitchButton extends ConsumerWidget {
               );
             }
           }
-        } else if (homeState.isOn == false && isConnected == false) {
-          if (context.mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                // padding: EdgeInsets.all(10),
-                content: Text(
-                  "No internet connection. Please try again when the network is available.",
-                  style: AppTextStyles.anekMalayalam(
-                    color: AppColors.appBlack,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                backgroundColor: AppColors.appWhite,
-                behavior: SnackBarBehavior.floating,
-                margin: EdgeInsets.only(
-                  bottom: MediaQuery.of(context).size.height - 120,
-                  left: 16,
-                  right: 16,
-                ),
-              ),
-            );
-          }
-        } else if (homeState.isOn == true && isConnected == true) {
+        } else if (homeState.isOn == true) {
           try {
             log(homeState.isOn.toString());
             homeController.setIsOn(false);
@@ -144,6 +95,7 @@ class CustomSwitchButton extends ConsumerWidget {
             log("Lng: ${position.longitude}");
             log(mapUrl);
             homeController.startAndOffDuty(
+              context: context,
               date: currentDate,
               endtime: currentTime,
               endLocation: mapUrl,
@@ -168,28 +120,6 @@ class CustomSwitchButton extends ConsumerWidget {
                 ),
               );
             }
-          }
-        } else {
-          if (context.mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                // padding: EdgeInsets.all(10),
-                content: Text(
-                  "No internet connection. Please try again when the network is available.",
-                  style: AppTextStyles.anekMalayalam(
-                    color: AppColors.appBlack,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                backgroundColor: AppColors.appWhite,
-                behavior: SnackBarBehavior.floating,
-                margin: EdgeInsets.only(
-                  bottom: MediaQuery.of(context).size.height - 120,
-                  left: 16,
-                  right: 16,
-                ),
-              ),
-            );
           }
         }
         // update via Riverpod
