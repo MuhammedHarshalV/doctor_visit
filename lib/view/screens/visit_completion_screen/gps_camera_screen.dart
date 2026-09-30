@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:camera/camera.dart';
+import 'package:doctor_visit/core/theme/colors/appcolors.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 
@@ -15,7 +16,8 @@ import 'package:path_provider/path_provider.dart';
 // =====================================================
 
 class GpsCameraScreen extends StatefulWidget {
-  const GpsCameraScreen({super.key});
+  final bool isSelfie;
+  const GpsCameraScreen({super.key, required this.isSelfie});
 
   @override
   State<GpsCameraScreen> createState() => _GpsCameraScreenState();
@@ -48,7 +50,9 @@ class _GpsCameraScreenState extends State<GpsCameraScreen> {
     await _getLocation();
 
     // FRONT CAMERA DEFAULT
-    await _initializeCamera(CameraLensDirection.front);
+    await _initializeCamera(
+      widget.isSelfie ? CameraLensDirection.front : CameraLensDirection.back,
+    );
   }
 
   // ===================================================
@@ -458,24 +462,32 @@ class _GpsCameraScreenState extends State<GpsCameraScreen> {
             // =========================================
             // TOP BUTTONS
             // =========================================
-            // Positioned(
-            //   top: 15,
-            //   left: 15,
-            //   right: 15,
-            //   child: Row(
-            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //     children: [
-            //       _circleButton(
-            //         icon: Icons.close,
-            //         onTap: () {
-            //           Navigator.pop(context);
-            //         },
-            //       ),
-
-            //       _circleButton(icon: Icons.cameraswitch, onTap: _switchCamera),
-            //     ],
-            //   ),
-            // ),
+            Positioned(
+              top: 15,
+              left: 15,
+              right: 15,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  // _circleButton(
+                  //   icon: Icons.close,
+                  //   onTap: () {
+                  //     Navigator.pop(context);
+                  //   },
+                  // ),
+                  IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: Icon(
+                      Icons.arrow_back,
+                      color: AppColors.appWhite,
+                      size: 40,
+                    ),
+                  ),
+                ],
+              ),
+            ),
 
             // =========================================
             // LOCATION OVERLAY
@@ -483,7 +495,7 @@ class _GpsCameraScreenState extends State<GpsCameraScreen> {
             Positioned(
               left: 15,
               right: 15,
-              bottom: 120,
+              bottom: widget.isSelfie ? 120 : 160,
               child: Container(
                 padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
@@ -584,7 +596,7 @@ class _GpsCameraScreenState extends State<GpsCameraScreen> {
             // CAPTURE BUTTON
             // =========================================
             Positioned(
-              bottom: 25,
+              bottom: widget.isSelfie ? 25 : 80,
               left: 0,
               right: 0,
               child: Center(

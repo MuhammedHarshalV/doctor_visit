@@ -12,7 +12,6 @@ import 'package:doctor_visit/core/theme/app_texts/app_texts.dart';
 import 'package:doctor_visit/core/theme/colors/appcolors.dart';
 import 'package:doctor_visit/view/screens/home_screen/widget/alert_dialog.dart';
 import 'package:doctor_visit/view/screens/visit_completion_screen/image_by_details.dart';
-import 'package:doctor_visit/view/screens/visit_completion_screen/image_container.dart';
 
 import 'package:doctor_visit/view/widgets/common_title_text.dart';
 import 'package:doctor_visit/core/services/image_to_base64_helper/image_helper.dart';
@@ -238,6 +237,7 @@ class VisitCompletionScreen extends ConsumerWidget {
 
                           final XFile? image = AppConstants.isHiTech == false
                               ? await ImageHelper.pickSelfieWithDetails(
+                                  isSelfie: true,
                                   context: context,
                                 )
                               : await ImageHelperBytes.pickImage(

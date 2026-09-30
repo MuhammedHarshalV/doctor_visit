@@ -18,6 +18,7 @@ class ImageByDetails extends ConsumerWidget {
         Container(
           height: 170,
           width: double.infinity,
+          //
           decoration: BoxDecoration(
             color: AppColors.appTextFieldRed,
             borderRadius: BorderRadius.circular(12),

@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:doctor_visit/controller/expense_controller/expense_controller.dart';
 import 'package:doctor_visit/core/constants/app_constants.dart';
 import 'package:doctor_visit/core/routes/app_route_names.dart';
+import 'package:doctor_visit/core/services/image_to_base64_helper/image_helper.dart';
 import 'package:doctor_visit/core/theme/app_texts/app_texts.dart';
 import 'package:doctor_visit/core/theme/colors/appcolors.dart';
 import 'package:doctor_visit/view/screens/progress_screen/widgets/main_progress_card.dart';
@@ -15,6 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ProgressScreen extends ConsumerWidget {
   ProgressScreen({super.key});
@@ -165,6 +169,9 @@ class ProgressScreen extends ConsumerWidget {
                               CommonTitleText(title: "Start km"),
 
                               TextFormField(
+                                onTapOutside: (event) {
+                                  FocusManager.instance.primaryFocus?.unfocus();
+                                },
                                 controller:
                                     progressController.startKmController,
                                 keyboardType:
@@ -186,6 +193,9 @@ class ProgressScreen extends ConsumerWidget {
                               CommonTitleText(title: "End km"),
 
                               TextFormField(
+                                onTapOutside: (event) {
+                                  FocusManager.instance.primaryFocus?.unfocus();
+                                },
                                 controller: progressController.endKmController,
                                 keyboardType:
                                     const TextInputType.numberWithOptions(
@@ -200,7 +210,338 @@ class ProgressScreen extends ConsumerWidget {
                                 //maxLength: 1000,
                                 decoration: _inputDecoration('Enter km'),
                               ),
+                              const SizedBox(height: 10),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Stack(
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () async {
+                                            //  Step 1 — Pick image
 
+                                            final XFile? image =
+                                                await ImageHelper.pickSelfieWithDetails(
+                                                  context: context,
+                                                  isSelfie: false,
+                                                );
+
+                                            if (image == null) return;
+                                            progressController.storeImageStart(
+                                              image.path,
+                                            );
+                                          },
+                                          child: Container(
+                                            height: 150,
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                color: AppColors.appGrey,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                              image:
+                                                  (progressState
+                                                          .startImagePath
+                                                          .isNotEmpty ||
+                                                      progressState
+                                                          .startNetworkImageUrl
+                                                          .isNotEmpty)
+                                                  ? DecorationImage(
+                                                      image:
+                                                          progressState
+                                                              .startImagePath
+                                                              .isEmpty
+                                                          ? NetworkImage(
+                                                              progressState
+                                                                  .startNetworkImageUrl,
+                                                            )
+                                                          : FileImage(
+                                                              File(
+                                                                progressState
+                                                                    .startImagePath,
+                                                              ),
+                                                            ),
+
+                                                      fit: BoxFit.cover,
+                                                    )
+                                                  : null,
+                                            ),
+                                            child: Center(
+                                              child:
+                                                  (progressState
+                                                          .startImagePath
+                                                          .isEmpty &&
+                                                      progressState
+                                                          .startNetworkImageUrl
+                                                          .isEmpty)
+                                                  ? Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Icon(
+                                                          Icons
+                                                              .camera_alt_outlined,
+                                                          size: 30,
+                                                        ),
+                                                        SizedBox(height: 5),
+                                                        Text(
+                                                          "Tap to capture\nStartKM Meter",
+                                                          style:
+                                                              AppTextStyles.anekMalayalam(),
+                                                        ),
+                                                      ],
+                                                    )
+                                                  : null,
+                                            ),
+                                          ),
+                                        ),
+                                        if (progressState
+                                                .startImagePath
+                                                .isNotEmpty ||
+                                            progressState
+                                                .startNetworkImageUrl
+                                                .isNotEmpty)
+                                          Positioned(
+                                            top: 8,
+                                            right: 8,
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Container(
+                                                  padding: const EdgeInsets.all(
+                                                    6,
+                                                  ),
+                                                  decoration: BoxDecoration(
+                                                    // ignore: deprecated_member_use
+                                                    color: AppColors.appBlack
+                                                        .withValues(alpha: .7),
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                  child: Icon(
+                                                    Icons.edit,
+                                                    color: AppColors.appWhite,
+                                                    size: 20,
+                                                  ),
+                                                ),
+                                                SizedBox(width: 8),
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    showDialog(
+                                                      context: context,
+                                                      builder: (_) => Dialog(
+                                                        child: InteractiveViewer(
+                                                          child:
+                                                              progressState
+                                                                  .startImagePath
+                                                                  .isEmpty
+                                                              ? Image.network(
+                                                                  progressState
+                                                                      .startNetworkImageUrl,
+                                                                  fit: BoxFit
+                                                                      .contain,
+                                                                )
+                                                              : Image.file(
+                                                                  File(
+                                                                    progressState
+                                                                        .startImagePath,
+                                                                  ),
+                                                                  fit: BoxFit
+                                                                      .contain,
+                                                                ),
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                  child: Container(
+                                                    padding:
+                                                        const EdgeInsets.all(6),
+                                                    decoration: BoxDecoration(
+                                                      // ignore: deprecated_member_use
+                                                      color: AppColors.appBlack
+                                                          .withValues(alpha: .7),
+                                                      shape: BoxShape.circle,
+                                                    ),
+                                                    child: Icon(
+                                                      Icons.visibility,
+                                                      color: AppColors.appWhite,
+                                                      size: 20,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                      ],
+                                    ),
+                                  ),
+
+                                  const SizedBox(width: 10),
+
+                                  Expanded(
+                                    child: Stack(
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () async {
+                                            //  Step 1 — Pick image
+
+                                            final XFile? image =
+                                                await ImageHelper.pickSelfieWithDetails(
+                                                  context: context,
+                                                  isSelfie: false,
+                                                );
+
+                                            if (image == null) return;
+                                            progressController.storeImageEnd(
+                                              image.path,
+                                            );
+                                          },
+                                          child: Container(
+                                            height: 150,
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                color: AppColors.appGrey,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                              image:
+                                                  (progressState
+                                                          .endImagePath
+                                                          .isNotEmpty ||
+                                                      progressState
+                                                          .endNetworkImageUrl
+                                                          .isNotEmpty)
+                                                  ? DecorationImage(
+                                                      image:
+                                                          progressState
+                                                              .endImagePath
+                                                              .isEmpty
+                                                          ? NetworkImage(
+                                                              progressState
+                                                                  .endNetworkImageUrl,
+                                                            )
+                                                          : FileImage(
+                                                              File(
+                                                                progressState
+                                                                    .endImagePath,
+                                                              ),
+                                                            ),
+
+                                                      fit: BoxFit.cover,
+                                                    )
+                                                  : null,
+                                            ),
+                                            child: Center(
+                                              child:
+                                                  (progressState
+                                                          .endImagePath
+                                                          .isEmpty &&
+                                                      progressState
+                                                          .endNetworkImageUrl
+                                                          .isEmpty)
+                                                  ? Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Icon(
+                                                          Icons
+                                                              .camera_alt_outlined,
+                                                          size: 30,
+                                                        ),
+                                                        SizedBox(height: 5),
+                                                        Text(
+                                                          "Tap to capture\nStartKM Meter",
+                                                          style:
+                                                              AppTextStyles.anekMalayalam(),
+                                                        ),
+                                                      ],
+                                                    )
+                                                  : null,
+                                            ),
+                                          ),
+                                        ),
+                                        if (progressState
+                                                .endImagePath
+                                                .isNotEmpty ||
+                                            progressState
+                                                .endNetworkImageUrl
+                                                .isNotEmpty)
+                                          Positioned(
+                                            top: 8,
+                                            right: 8,
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Container(
+                                                  padding: const EdgeInsets.all(
+                                                    6,
+                                                  ),
+                                                  decoration: BoxDecoration(
+                                                    // ignore: deprecated_member_use
+                                                    color: AppColors.appBlack
+                                                        .withValues(alpha: .7),
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                  child: Icon(
+                                                    Icons.edit,
+                                                    color: AppColors.appWhite,
+                                                    size: 20,
+                                                  ),
+                                                ),
+                                                SizedBox(width: 8),
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    showDialog(
+                                                      context: context,
+                                                      builder: (_) => Dialog(
+                                                        child: InteractiveViewer(
+                                                          child:
+                                                              progressState
+                                                                  .endImagePath
+                                                                  .isEmpty
+                                                              ? Image.network(
+                                                                  progressState
+                                                                      .endNetworkImageUrl,
+                                                                  fit: BoxFit
+                                                                      .contain,
+                                                                )
+                                                              : Image.file(
+                                                                  File(
+                                                                    progressState
+                                                                        .endImagePath,
+                                                                  ),
+                                                                  fit: BoxFit
+                                                                      .contain,
+                                                                ),
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                  child: Container(
+                                                    padding:
+                                                        const EdgeInsets.all(6),
+                                                    decoration: BoxDecoration(
+                                                      // ignore: deprecated_member_use
+                                                      color: AppColors.appBlack
+                                                          .withValues(alpha: .7),
+                                                      shape: BoxShape.circle,
+                                                    ),
+                                                    child: Icon(
+                                                      Icons.visibility,
+                                                      color: AppColors.appWhite,
+                                                      size: 20,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
                               const SizedBox(height: 10),
                               InkWell(
                                 splashColor: Colors.transparent,
@@ -219,6 +560,18 @@ class ProgressScreen extends ConsumerWidget {
                                     ? () {}
                                     : () async {
                                         await progressController.kmEnterApi(
+                                          start:
+                                              (progressState.startImagePath
+                                                  .trim()
+                                                  .isNotEmpty)
+                                              ? progressState.startImagePath
+                                              : null,
+                                          end:
+                                              (progressState.endImagePath
+                                                  .trim()
+                                                  .isNotEmpty)
+                                              ? progressState.endImagePath
+                                              : null,
                                           startKm: num.tryParse(
                                             progressController
                                                 .startKmController
@@ -229,6 +582,7 @@ class ProgressScreen extends ConsumerWidget {
                                                 .endKmController
                                                 .text,
                                           ),
+
                                           context: context,
                                         );
                                       },

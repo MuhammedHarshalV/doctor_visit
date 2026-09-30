@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:doctor_visit/apis/work_completion_api/hi-tech_completion_api.dart';

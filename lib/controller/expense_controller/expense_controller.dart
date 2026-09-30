@@ -10,7 +10,6 @@ import 'package:doctor_visit/apis/expenses/weekly_expense_history_api.dart';
 import 'package:doctor_visit/apis/work_completion_api/km_enter_api.dart';
 import 'package:doctor_visit/controller/expense_controller/expense_state.dart';
 import 'package:doctor_visit/core/api_errors/api_errors.dart';
-import 'package:doctor_visit/core/constants/app_constants.dart';
 import 'package:doctor_visit/core/theme/colors/appcolors.dart';
 import 'package:doctor_visit/model/expense_keys/get_expense_keys_response_model.dart';
 
@@ -23,6 +22,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 
 class ExpenseController extends StateNotifier<ExpenseState> {
   ExpenseController()
@@ -45,11 +45,39 @@ class ExpenseController extends StateNotifier<ExpenseState> {
         startKmController.text = result["ProMst_StartKM"]?.toString() ?? '';
 
         endKmController.text = result["ProMst_EndKM"]?.toString() ?? '';
+        state = state.copyWith(
+          startNetworkImageUrl: result["ProMst_StartKMImg"] ?? '',
+          endNetworkImageUrl: result["ProMst_EndKMImg"] ?? '',
+        );
       } else {
         startKmController.clear();
         endKmController.clear();
       }
     }
+  }
+
+  void clearNetworkImageUrlStart(String path) {
+    state = state.copyWith(startNetworkImageUrl: '', startImagePath: path);
+  }
+
+  void clearimagePathStart(String path) {
+    state = state.copyWith(startNetworkImageUrl: '', startImagePath: '');
+  }
+
+  void clearNetworkImageUrlEnd(String path) {
+    state = state.copyWith(endNetworkImageUrl: '', endImagePath: path);
+  }
+
+  void clearimagePathEnd(String path) {
+    state = state.copyWith(endNetworkImageUrl: '', endImagePath: '');
+  }
+
+  void storeImageStart(String path) {
+    state = state.copyWith(startNetworkImageUrl: '', startImagePath: path);
+  }
+
+  void storeImageEnd(String path) {
+    state = state.copyWith(endNetworkImageUrl: '', endImagePath: path);
   }
 
   final TextEditingController startKmController = TextEditingController();
@@ -59,13 +87,17 @@ class ExpenseController extends StateNotifier<ExpenseState> {
     required num? startKm,
     required num? endKm,
     required BuildContext context,
+    required String? start,
+    required String? end,
   }) async {
     try {
       state = state.copyWith(isKmStart: true);
-
+      String currentDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
       final WorkCompletionAndStartDutyResponseModel response =
           await KmEnterApi.kmEnterApi(
-            date: AppConstants.date,
+            startKmPhoto: start,
+            endKmPhoto: end,
+            date: currentDate,
             endKm: endKm,
             startKm: startKm,
           );

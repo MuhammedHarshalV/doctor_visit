@@ -13,6 +13,13 @@ class ExpenseState {
 
   final num totalExpense;
   final Uint8List base64Image;
+  final String imagePath;
+  final String startImagePath;
+  final String startNetworkImageUrl;
+
+  final String endImagePath;
+  final String endNetworkImageUrl;
+
   final int weeklyListIndex;
   num? weekEotalExpense;
   final String base64toApi;
@@ -30,6 +37,11 @@ class ExpenseState {
   final int category;
 
   ExpenseState({
+    this.imagePath = '',
+    this.startImagePath = '',
+    this.startNetworkImageUrl = '',
+    this.endImagePath = '',
+    this.endNetworkImageUrl = '',
     this.base64toApi = '',
     Uint8List? base64Image,
     this.weekEotalExpense = 0,
@@ -55,6 +67,11 @@ class ExpenseState {
 
   ExpenseState copyWith({
     String? base64toApi,
+    String? imagePath,
+    String? startImagePath,
+    String? startNetworkImageUrl,
+    String? endImagePath,
+    String? endNetworkImageUrl,
     bool? isKmStart,
     TextEditingController? amountController,
     TextEditingController? descriptionController,
@@ -89,6 +106,11 @@ class ExpenseState {
       totalExpense: totalExpense ?? this.totalExpense,
       base64Image: base64Image ?? this.base64Image,
       isExpanded: isExpanded ?? this.isExpanded,
+      imagePath: imagePath ?? this.imagePath,
+      startImagePath: startImagePath ?? this.startImagePath,
+      startNetworkImageUrl: startNetworkImageUrl ?? this.startNetworkImageUrl,
+      endImagePath: endImagePath ?? this.endImagePath,
+      endNetworkImageUrl: endNetworkImageUrl ?? this.endNetworkImageUrl,
       weeklyExpenseHistory: weeklyExpenseHistory ?? this.weeklyExpenseHistory,
       expenseKeyList: expenseKeyList ?? this.expenseKeyList,
       todayExpenseList: todayExpenseList ?? this.todayExpenseList,
