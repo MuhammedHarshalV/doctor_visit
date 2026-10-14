@@ -4,6 +4,7 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   connectivity_plus
+  ffmpeg_kit_flutter_new
   file_selector_windows
   geolocator_windows
   url_launcher_windows

@@ -7,11 +7,13 @@ import 'package:doctor_visit/controller/doctor_visit_controller/doctor_visit_con
 import 'package:doctor_visit/controller/home_screen_controller/home_screen_controller.dart';
 import 'package:doctor_visit/core/constants/app_constants.dart';
 import 'package:doctor_visit/core/services/image_to_base64_helper/image_helper_bytes.dart';
+import 'package:doctor_visit/core/services/image_to_base64_helper/video_helper.dart';
 import 'package:doctor_visit/core/services/location_services/location_services.dart';
 import 'package:doctor_visit/core/theme/app_texts/app_texts.dart';
 import 'package:doctor_visit/core/theme/colors/appcolors.dart';
 import 'package:doctor_visit/view/screens/home_screen/widget/alert_dialog.dart';
 import 'package:doctor_visit/view/screens/visit_completion_screen/image_by_details.dart';
+import 'package:doctor_visit/view/screens/visit_completion_screen/video_by_details.dart';
 
 import 'package:doctor_visit/view/widgets/common_title_text.dart';
 import 'package:doctor_visit/core/services/image_to_base64_helper/image_helper.dart';
@@ -254,8 +256,30 @@ class VisitCompletionScreen extends ConsumerWidget {
                         //   imagePurpose: 'Selfie',
                         // ),
                       ),
+                      SizedBox(height: 10),
+                      if (!AppConstants.isHiTech)
+                        CommonTitleText(title: "Video *"),
+                      if (!AppConstants.isHiTech)
+                        GestureDetector(
+                          onTap: () async {
+                            //  Step 1 — Pick image
+                            XFile? video = await VideoHelper.videoWithDetails(
+                              isSelfie: false,
+                              context: context,
+                            );
 
-                      if (AppConstants.isHiTech) const SizedBox(height: 10),
+                            if (video == null) return;
+                            doctorVisitController.setVideoPath(video.path);
+                          },
+                          child: VideoDetails(),
+                          // ImageContainerClarity(
+                          //   state: doctorVisitState,
+                          //   controller: doctorVisitController,
+                          //   imagePurpose: 'Selfie',
+                          // ),
+                        ),
+                      if (!AppConstants.isHiTech) const SizedBox(height: 10),
+
                       if (AppConstants.isHiTech)
                         CommonTitleText(title: "Arrival Time *"),
                       if (AppConstants.isHiTech)

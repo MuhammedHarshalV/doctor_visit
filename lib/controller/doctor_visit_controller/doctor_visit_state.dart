@@ -8,7 +8,8 @@ class DoctorVisitCompletion {
 
   final String base64toApi;
   final String imagePath;
-
+  final String videoPath;
+  final String thumbnailPath;
   //final String fileImage;
   final bool isLoading;
   final bool isComplete;
@@ -24,6 +25,8 @@ class DoctorVisitCompletion {
   final String place;
 
   DoctorVisitCompletion({
+    this.thumbnailPath = '',
+    this.videoPath = '',
     this.base64toApi = '',
     this.isLoading = false,
     this.isComplete = false,
@@ -46,8 +49,8 @@ class DoctorVisitCompletion {
     String? base64toApi,
     TextEditingController? feedbackController,
     TextEditingController? placeController,
-
-    // String? fileImage,
+    String? videoPath,
+    String? thumbnailPath,
     bool? isLoading,
     bool? isComplete,
     String? place,
@@ -63,8 +66,8 @@ class DoctorVisitCompletion {
     return DoctorVisitCompletion(
       base64toApi: base64toApi ?? this.base64toApi,
       feedbackController: feedbackController ?? this.feedbackController,
-
-      // fileImage: fileImage ?? this.fileImage,
+      videoPath: videoPath ?? this.videoPath,
+      thumbnailPath: thumbnailPath ?? this.thumbnailPath,
       startTime: startTime == _marker
           ? this.startTime
           : startTime as TimeOfDay?,

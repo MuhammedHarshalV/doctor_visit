@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:doctor_visit/apis/work_completion_api/hi-tech_completion_api.dart';
@@ -10,7 +11,10 @@ import 'package:doctor_visit/model/work_completion_and_start_duty/is_going_respo
 import 'package:doctor_visit/model/work_completion_and_start_duty/work_completion_and_start_duty_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
 
 class VisitController extends StateNotifier<DoctorVisitCompletion> {
   VisitController()
@@ -171,6 +175,35 @@ class VisitController extends StateNotifier<DoctorVisitCompletion> {
 
   void setImagePath(String imagePath) {
     state = state.copyWith(imagePath: imagePath);
+  }
+
+  Future<void> setVideoPath(String videoPath) async {
+    try {
+      if (videoPath.isEmpty) {
+        state = state.copyWith(videoPath: '', thumbnailPath: '');
+        return;
+      }
+
+      final Directory tempDir = await getTemporaryDirectory();
+
+      final String? thumbnailPath = await VideoThumbnail.thumbnailFile(
+        video: videoPath,
+        thumbnailPath: tempDir.path,
+        imageFormat: ImageFormat.JPEG,
+        maxWidth: 600,
+        quality: 80,
+        timeMs: 1000,
+      );
+
+      state = state.copyWith(
+        videoPath: videoPath,
+        thumbnailPath: thumbnailPath ?? '',
+      );
+    } catch (e) {
+      debugPrint('Video thumbnail error: $e');
+
+      state = state.copyWith(videoPath: videoPath, thumbnailPath: '');
+    }
   }
 
   void updateResponse(String response) {
